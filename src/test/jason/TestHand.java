@@ -7,6 +7,7 @@ import java.util.*;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests the Hand class methods.
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class TestHand {
 
     private List<List<Card>> mockHand;
+    Hand realHand;
 
     @Before
     public void setup() {
@@ -40,29 +42,26 @@ public class TestHand {
         List<Card> greenCards = new ArrayList<>();
         greenCards.add(new Card(Deck.GREEN, Deck.TWO));
         mockHand.add(greenCards);
+
+        // Adding same cards as mockHand, but in a random order.
+        realHand = new Hand();
+        realHand.addCard(new Card(Deck.BLUE, Deck.NINE));
+        realHand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR));
+        realHand.addCard(new Card(Deck.YELLOW, Deck.SIX));
+        realHand.addCard(new Card(Deck.GREEN, Deck.TWO));
+        realHand.addCard(new Card(Deck.BLUE, Deck.ONE));
+        realHand.addCard(new Card(Deck.YELLOW, Deck.REVERSE));
+        realHand.addCard(new Card(Deck.BLUE, Deck.WILD));
     }
     
     @Test
     public void testHand_addCard() {
-        Hand hand = new Hand();
-        hand.addCard(new Card(Deck.BLUE, Deck.NINE));
-        hand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR));
-        hand.addCard(new Card(Deck.YELLOW, Deck.SIX));
-        hand.addCard(new Card(Deck.GREEN, Deck.TWO));
-        hand.addCard(new Card(Deck.BLUE, Deck.ONE));
-        hand.addCard(new Card(Deck.YELLOW, Deck.REVERSE));
-        hand.addCard(new Card(Deck.BLUE, Deck.WILD));
-
         List<Card> allMockHandCards = getAllCardsFromMockHand(mockHand);
-        List<Card> allHandCards = hand.getAllCards();
-
-        if(allMockHandCards.size() == allHandCards.size()) {
-            for (int i = 0; i < allMockHandCards.size(); i++) {
-                assertEquals(allHandCards.get(i).getColor(), allMockHandCards.get(i).getColor());
-                assertEquals(allHandCards.get(i).getFace(), allMockHandCards.get(i).getFace());
-            }
-        } else {
-            fail("allMockHandCards.size() must be the same as allHandCards.size() to compare.");
+        List<Card> allHandCards = realHand.getAllCards();
+        try {
+            assertFalse(mismatchFound(allHandCards, allMockHandCards));
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
 
     }
@@ -77,8 +76,24 @@ public class TestHand {
         return cards;
     }
 
-    private List<Card> getAllCardsForTest2(Hand hand) {
-        return null;
+    @Test
+    public void testHand_getColorList() {
+
+    }
+
+    private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws Exception {
+        boolean mismatchFound = false;
+        if(cList1.size() == cList2.size()) {
+            for (int i = 0; i < cList1.size(); i++) {
+                if (!(cList1.get(i).getColor().equalsIgnoreCase(cList2.get(i).getColor())
+                        && cList1.get(i).getFace().equalsIgnoreCase(cList2.get(i).getFace()))) {
+                    mismatchFound = true;
+                }
+            }
+        } else {
+            throw new Exception("cList1 must be the same size as cList2.");
+        }
+        return mismatchFound;
     }
 
 }
