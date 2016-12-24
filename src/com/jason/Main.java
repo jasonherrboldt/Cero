@@ -2,9 +2,14 @@ package com.jason;
 
 import java.util.regex.Pattern;
 
-public class Start {
+public class Main {
 
     public static void main(String[] args) {
+
+        /*
+            javac src/com/jason/*.java
+            java -cp ./src com.jason.Main
+         */
 
         /* uncomment out below for real game.
         sayLine("Greetings player one!");

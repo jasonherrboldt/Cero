@@ -91,7 +91,7 @@ public class Deck {
         Iterator<Card> iter = deck.iterator();
         while(iter.hasNext()) {
             Card c = iter.next();
-            Start.say(c.getColor() + " " + c.getFace());
+            Main.say(c.getColor() + " " + c.getFace());
         }
     }
     

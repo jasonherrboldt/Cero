@@ -56,11 +56,11 @@ public class Game {
     }
     
     public void playHand(Player player) {
-        Start.say(player.getName() + "'s turn.");
+        Main.say(player.getName() + "'s turn.");
         displayCurrentPlayedCard();
         
         Hand h = player.getHand();
-        Start.say(player.getName() + "'s hand:");
+        Main.say(player.getName() + "'s hand:");
         h.printHand();
         
 //        if(!isNumberCard(this.currentCard)) {
@@ -71,7 +71,7 @@ public class Game {
 //        }
         
         isPlayerOnesTurn = !isPlayerOnesTurn;
-        Start.say("");
+        Main.say("");
     }
     
     public boolean isNumberCard(Card card) {
@@ -85,23 +85,23 @@ public class Game {
     
     public void handleNonNumericCard() {
         if(currentCard.getFace().equalsIgnoreCase(Deck.SKIP)) {
-            Start.say("Handling first automatic move for " + Deck.SKIP + ".");
+            Main.say("Handling first automatic move for " + Deck.SKIP + ".");
             isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.REVERSE)) {
-            Start.say("Handling first automatic move for " + Deck.REVERSE + ".");
+            Main.say("Handling first automatic move for " + Deck.REVERSE + ".");
             isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.DRAW_TWO)) {
-            Start.say("Handling first automatic move for " + Deck.DRAW_TWO + ".");
+            Main.say("Handling first automatic move for " + Deck.DRAW_TWO + ".");
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.WILD)) {
-            Start.say("Handling first automatic move for " + Deck.WILD + ".");
+            Main.say("Handling first automatic move for " + Deck.WILD + ".");
         } else { // WILD_DRAW_FOUR
-            Start.say("Handling first automatic move for " + Deck.WILD_DRAW_FOUR + ".");
+            Main.say("Handling first automatic move for " + Deck.WILD_DRAW_FOUR + ".");
         }
        
     }
     
     private void displayCurrentPlayedCard() {
-        Start.say("The current played card is (" + currentCard.getColor() + ") " + currentCard.getFace());
+        Main.say("The current played card is (" + currentCard.getColor() + ") " + currentCard.getFace());
     }
     
     private void dealHands() {

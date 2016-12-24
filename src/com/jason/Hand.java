@@ -27,7 +27,7 @@ public class Hand {
     
     public void printHand() {
         for(Card c : this.hand) {
-            Start.say("(" + c.getColor() + ") " + c.getFace());
+            Main.say("(" + c.getColor() + ") " + c.getFace());
         }
     }
     
