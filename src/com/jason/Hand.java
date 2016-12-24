@@ -8,13 +8,36 @@ public class Hand {
     // Might require special handling for non-numeric cards, since all card values are strings.
 
     private List<Card> hand;
+    private List<Map<String, String>> handMap;
     
     public Hand() {
-        hand = new ArrayList<Card>();
+        hand = new ArrayList<>();
+        Map<String, String> map = new TreeMap<String, String>();
+        handMap = new ArrayList<>();
+        handMap.add(map);
     }
     
     public void addCard(Card card) {
         hand.add(card);
+        Map<String, String> m = findColorMap(card);
+        if(m != null) {
+            m.put(card.getFace(), card.getColor());
+        } else {
+            Map<String, String> newMap = new TreeMap<String, String>();
+            newMap.put(card.getFace(), card.getColor());
+            handMap.add(newMap);
+        }
+    }
+
+    public Map<String, String> findColorMap(Card card) {
+        if(handMap != null) {
+            for(Map<String, String> m : handMap) {
+                if(m.containsValue(card.getColor())) {
+                    return m;
+                }
+            }
+        }
+        return null;
     }
     
     public Card discard(int cardPosition) {
@@ -28,7 +51,6 @@ public class Hand {
     }
     
     public void printHand() {
-        // Collections.sort(hand, (Card c1, Card c2) -> c1.getFace().toLowerCase().compareTo(c2.getFace().toLowerCase()));
         for(Card c : this.hand) {
             Main.say("(" + c.getColor() + ") " + c.getFace());
         }
