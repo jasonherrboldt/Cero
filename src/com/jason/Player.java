@@ -29,7 +29,8 @@ public class Player {
     }
     
     public Card discard(String face, String color) {
-        return hand.discard(face, color);
+        // return hand.discard(face, color);
+        return null;
     }
     
     public String getName() {

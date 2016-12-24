@@ -1,11 +1,12 @@
 package test.jason;
 
-import com.jason.Main;
-import org.junit.Before;
-import org.junit.Test;
+import com.jason.*;
+import org.junit.*;
+import java.util.*;
 
-import java.util.Map;
-import java.util.TreeMap;
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the Hand class methods.
@@ -14,31 +15,77 @@ import java.util.TreeMap;
  */
 public class TestHand {
 
-
+    private List<List<Card>> mockHand;
 
     @Before
     public void setup() {
+        // Create a mock hand and mimic the implementation of Hand.addCard.
+        mockHand = new ArrayList<>();
+        
+        List<Card> blueCards = new ArrayList<>();
+        blueCards.add(new Card(Deck.BLUE, Deck.ONE));
+        blueCards.add(new Card(Deck.BLUE, Deck.NINE));
+        blueCards.add(new Card(Deck.BLUE, Deck.WILD));
+        mockHand.add(blueCards);
 
+        List<Card> redCards = new ArrayList<>();
+        redCards.add(new Card(Deck.RED, Deck.WILD_DRAW_FOUR));
+        mockHand.add(redCards);
+
+        List<Card> yellowCards = new ArrayList<>();
+        yellowCards.add(new Card(Deck.YELLOW, Deck.SIX));
+        yellowCards.add(new Card(Deck.YELLOW, Deck.REVERSE));
+        mockHand.add(yellowCards);
+
+        List<Card> greenCards = new ArrayList<>();
+        greenCards.add(new Card(Deck.GREEN, Deck.TWO));
+        mockHand.add(greenCards);
     }
-
+    
     @Test
-    public void test() {
-        Map<String, String> map = new TreeMap<>();
-        map.put("a", "0");
-        printMap(map);
-        map.put("b", "1");
-        printMap(map);
-        map.put("a", "1");
-        printMap(map);
+    public void testHand_addCard() {
+        Hand hand = new Hand();
+        hand.addCard(new Card(Deck.BLUE, Deck.NINE));
+        hand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR));
+        hand.addCard(new Card(Deck.YELLOW, Deck.SIX));
+        hand.addCard(new Card(Deck.GREEN, Deck.TWO));
+        hand.addCard(new Card(Deck.BLUE, Deck.ONE));
+        hand.addCard(new Card(Deck.YELLOW, Deck.REVERSE));
+        hand.addCard(new Card(Deck.BLUE, Deck.WILD));
+
+        List<Card> allMockHandCards = getAllCardsFromMockHand(mockHand);
+        List<Card> allHandCards = hand.getAllCards();
+
+        if(allMockHandCards.size() == allHandCards.size()) {
+            for (int i = 0; i < allMockHandCards.size(); i++) {
+                assertEquals(allHandCards.get(i).getColor(), allMockHandCards.get(i).getColor());
+                assertEquals(allHandCards.get(i).getFace(), allMockHandCards.get(i).getFace());
+            }
+        } else {
+            fail("allMockHandCards.size() must be the same as allHandCards.size() to compare.");
+        }
+
     }
 
-    private void printMap(Map<String, String> map) {
-        for(Map.Entry<String, String> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + ", " + entry.getValue());
+    private List<Card> getAllCardsFromMockHand(List<List<Card>> hand) {
+        List<Card> cards = new ArrayList<>();
+        for(List<Card> list : hand) {
+            for(Card c : list) {
+                cards.add(c);
+            }
         }
-        System.out.println("");
+        return cards;
     }
+
+    private List<Card> getAllCardsForTest2(Hand hand) {
+        return null;
+    }
+
 }
+
+
+
+
 
 
 

@@ -1,75 +1,76 @@
 package com.jason;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.*;
 
 public class Hand {
 
-    private List<Map<String, String>> hand;
+    private List<List<Card>> hand;
     
     public Hand() {
-        Map<String, String> map = new TreeMap<>();
         hand = new ArrayList<>();
-        hand.add(map);
     }
     
     public void addCard(Card card) {
-        Map<String, String> m = getColorMap(card);
-        if(m != null) {
-            m.put(card.getFace(), card.getColor());
+        List<Card> colorList = getColorList(card.getColor());
+        if(colorList != null) {
+            colorList.add(card);
+            sortColorList(colorList);
         } else {
-            Map<String, String> newMap = new TreeMap<>();
-            newMap.put(card.getFace(), card.getColor());
-            hand.add(newMap);
+            List<Card> newList = new ArrayList<>();
+            newList.add(card);
+            hand.add(newList);
         }
     }
 
-    public Map<String, String> getColorMap(Card card) {
-        for(Map<String, String> m : hand) {
-            if(m.containsValue(card.getColor())) {
-                return m;
+    public void sortColorList(List<Card> list) {
+        Collections.sort(list, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
+
+    }
+
+    @Nullable
+    public List<Card> getColorList(String color) {
+        for(List<Card> list : hand) {
+            if(list.size() > 0) {
+                if(list.get(0).getColor().equalsIgnoreCase(color)) {
+                    return list;
+                }
             }
         }
         return null;
     }
 
-    public Card discard(String face, String color) {
-        return findCard(face, color);
-    }
-
-    public Card findCard(String face, String color) {
-        for(Map<String, String> m : hand) {
-            if(m.containsKey(face) && m.containsValue(color)) {
-                return new Card(color, face);
-            }
-        }
+    public Card discard(Card card) {
         return null;
     }
     
-    public int getHandSize() {
+    public int getSize() {
         int count = 0;
-        for(Map<String, String> m : hand) {
-            count += m.size();
+        for(List<Card> list : hand) {
+            count += list.size();
         }
         return count;
     }
     
-    public List<Card> getCards() {
+    public List<Card> getAllCards() {
         List<Card> cards = new ArrayList<>();
-        for(Map<String, String> m : hand) {
-            for(Map.Entry<String, String> entry : m.entrySet()) {
-                // Main.say("(" + entry.getValue() + ") " + entry.getKey());
-                cards.add(new Card(entry.getKey(), entry.getValue()));
+        for(List<Card> list : hand) {
+            for(Card c : list) {
+                cards.add(c);
             }
         }
         return cards;
     }
 
-    public boolean hasColor() {
-        return true;
+    @Nullable
+    public Card getHighestFaceOfColor(String color) {
+        return null;
     }
 
-    public boolean hasNumber() {
-        return true;
+    @Nullable
+    public Card getNumberOfAnyColor(String number) {
+        return null;
     }
 }
 
