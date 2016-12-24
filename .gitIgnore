@@ -1,4 +1,4 @@
 .idea/
 Cero.iml
 out/
-.class
+src/com/jason/*.class
