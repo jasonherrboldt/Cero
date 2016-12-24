@@ -21,7 +21,7 @@ public class Game {
     
     public Game(String userName) {
         this.deck = new Deck();
-        this.player0 = new Player("Wopr", true);
+        this.player0 = new Player("Computer", true);
         this.player1 = new Player(userName, false);
         this.gameWinnerExists = false;
         this.deckWinnerExists = false;
@@ -60,11 +60,13 @@ public class Game {
     }
     
     public void playHand(Player player) {
-        Main.say(player.getName() + "'s turn.");
+        Main.out(player.getName() + "'s turn.");
         displayCurrentPlayedCard();
 
-        Main.say(player.getName() + "'s hand:");
+        Main.out(player.getName() + "'s hand:");
         // player.getHand().printHand();
+        Hand hand = player.getHand();
+        printHand(hand);
         
         if(isNumberCard(this.currentCard)) {
             // currentCard = player.discard(0);
@@ -74,7 +76,15 @@ public class Game {
         }
         
         isPlayerOnesTurn = !isPlayerOnesTurn;
-        Main.say("");
+        Main.out("");
+    }
+
+    private void printHand(Hand hand) {
+        int i = 1;
+        for(Card c : hand.getAllCards()) {
+            Main.out(i + ": " + getCardPrintString(c));
+            i++;
+        }
     }
     
     public boolean isNumberCard(Card card) {
@@ -88,23 +98,27 @@ public class Game {
     
     public void handleNonNumericCard() {
         if(currentCard.getFace().equalsIgnoreCase(Deck.SKIP)) {
-            Main.say("Handling first automatic move for " + Deck.SKIP + ".");
+            Main.out("Handling first automatic move for " + Deck.SKIP + ".");
             isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.REVERSE)) {
-            Main.say("Handling first automatic move for " + Deck.REVERSE + ".");
+            Main.out("Handling first automatic move for " + Deck.REVERSE + ".");
             isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.DRAW_TWO)) {
-            Main.say("Handling first automatic move for " + Deck.DRAW_TWO + ".");
+            Main.out("Handling first automatic move for " + Deck.DRAW_TWO + ".");
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.WILD)) {
-            Main.say("Handling first automatic move for " + Deck.WILD + ".");
+            Main.out("Handling first automatic move for " + Deck.WILD + ".");
         } else { // WILD_DRAW_FOUR
-            Main.say("Handling first automatic move for " + Deck.WILD_DRAW_FOUR + ".");
+            Main.out("Handling first automatic move for " + Deck.WILD_DRAW_FOUR + ".");
         }
        
     }
     
     private void displayCurrentPlayedCard() {
-        Main.say("The current played card is (" + currentCard.getColor() + ") " + currentCard.getFace());
+        Main.out("The current played card is " + getCardPrintString(currentCard));
+    }
+
+    private String getCardPrintString(Card card) {
+        return "(" + card.getColor() + ") " + card.getFace();
     }
     
     private void dealHands() {
@@ -113,7 +127,7 @@ public class Game {
         players.add(player1);
         for(Player p : players) {
             List<Card> cards = new ArrayList<Card>();
-            for(int i = 0; i < 8; i++) {
+            for(int i = 0; i < 7; i++) {
                 cards.add(deck.getNextCard());
             }
             p.setHand(cards);

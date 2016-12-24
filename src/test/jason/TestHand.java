@@ -78,10 +78,27 @@ public class TestHand {
 
     @Test
     public void testHand_getColorList() {
-
+        List<Card> realBlueCards = realHand.getColorList(Deck.BLUE);
+        List<Card> mockBlueCards = new ArrayList<>();
+        mockBlueCards.add(new Card(Deck.BLUE, Deck.ONE));
+        mockBlueCards.add(new Card(Deck.BLUE, Deck.NINE));
+        mockBlueCards.add(new Card(Deck.BLUE, Deck.WILD));
+        try {
+            assertFalse(mismatchFound(realBlueCards, mockBlueCards));
+        } catch (IllegalArgumentException e) {
+            fail(e.getMessage());
+        }
     }
 
-    private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws Exception {
+    /**
+     * Determine whether a pair of card lists have pseudo-identical values.
+     *
+     * @param cList1        The first list to examine.
+     * @param cList2        The second list to examine.
+     * @return              True if the lists are not pseudo-identical, false otherwise.
+     * @throws Exception    Blows up if two lists are not the same length.
+     */
+    private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws IllegalArgumentException {
         boolean mismatchFound = false;
         if(cList1.size() == cList2.size()) {
             for (int i = 0; i < cList1.size(); i++) {
@@ -91,7 +108,7 @@ public class TestHand {
                 }
             }
         } else {
-            throw new Exception("cList1 must be the same size as cList2.");
+            throw new IllegalArgumentException("cList1 must be the same size as cList2.");
         }
         return mismatchFound;
     }

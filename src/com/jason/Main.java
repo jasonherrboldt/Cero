@@ -14,11 +14,11 @@ public class Main {
         // comment out below for real game.
         /*
         sayNoReturn("Greetings player one!");
-        say("Please enter your name (no special characters): ");
+        out("Please enter your name (no special characters): ");
         String name = System.console().readLine();
         while(!isValid(name)) {
             sayNoReturn("Please try again.");
-            say("Allowed characters are a-z, A-Z, and space: ");
+            out("Allowed characters are a-z, A-Z, and space: ");
             name = System.console().readLine();
         }
         System.out.println("Welcome, " + name + "! Let's begin.");
@@ -44,7 +44,7 @@ public class Main {
         return !p.matcher(name).find();
     }
 
-    protected static void say(String s) {
+    protected static void out(String s) {
         System.out.println(s);
     }
 
