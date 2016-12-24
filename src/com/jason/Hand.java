@@ -1,9 +1,11 @@
 package com.jason;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Hand {
+
+    // Consider making hand a list of TreeMaps.
+    // Might require special handling for non-numeric cards, since all card values are strings.
 
     private List<Card> hand;
     
@@ -26,6 +28,7 @@ public class Hand {
     }
     
     public void printHand() {
+        // Collections.sort(hand, (Card c1, Card c2) -> c1.getFace().toLowerCase().compareTo(c2.getFace().toLowerCase()));
         for(Card c : this.hand) {
             Main.say("(" + c.getColor() + ") " + c.getFace());
         }

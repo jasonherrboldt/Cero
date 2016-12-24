@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+
+    // Add null checks everywhere you can. Use if/else or try/catch blocks,
+    // and have the exceptions ignore nulls and print warnings to the console.
     
     private Deck deck;
     private Player player0; // the computer
@@ -14,6 +17,7 @@ public class Game {
     private Card currentCard;
     private String currentColor;
     private int score;
+    private static final int FAKE_GAME_RUNS = 8;
     
     public Game(String userName) {
         this.deck = new Deck();
@@ -37,7 +41,7 @@ public class Game {
             this.currentColor = this.currentCard.getColor(); 
         
             // while(!deckWinnerExists) {
-            for(int i = 0; i < 8; i++) {
+            for(int i = 0; i < FAKE_GAME_RUNS; i++) {
                 if(isPlayerOnesTurn) {
                     playHand(player1);
                 } else {
@@ -58,10 +62,9 @@ public class Game {
     public void playHand(Player player) {
         Main.say(player.getName() + "'s turn.");
         displayCurrentPlayedCard();
-        
-        Hand h = player.getHand();
+
         Main.say(player.getName() + "'s hand:");
-        h.printHand();
+        player.getHand().printHand();
         
 //        if(!isNumberCard(this.currentCard)) {
 //            handleNonNumericCard();
