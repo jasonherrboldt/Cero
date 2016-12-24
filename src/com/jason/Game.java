@@ -69,8 +69,8 @@ public class Game {
 //        if(!isNumberCard(this.currentCard)) {
 //            handleNonNumericCard();
 //        } else {
-            currentCard = player.discard(0);
-            currentColor = currentCard.getColor();
+            // currentCard = player.discard(0);
+            // currentColor = currentCard.getColor();
 //        }
         
         isPlayerOnesTurn = !isPlayerOnesTurn;

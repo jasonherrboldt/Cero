@@ -4,55 +4,60 @@ import java.util.*;
 
 public class Hand {
 
-    // Consider making hand a list of TreeMaps.
-    // Might require special handling for non-numeric cards, since all card values are strings.
-
-    private List<Card> hand;
     private List<Map<String, String>> handMap;
     
     public Hand() {
-        hand = new ArrayList<>();
-        Map<String, String> map = new TreeMap<String, String>();
+        Map<String, String> map = new TreeMap<>();
         handMap = new ArrayList<>();
         handMap.add(map);
     }
     
     public void addCard(Card card) {
-        hand.add(card);
         Map<String, String> m = findColorMap(card);
         if(m != null) {
             m.put(card.getFace(), card.getColor());
         } else {
-            Map<String, String> newMap = new TreeMap<String, String>();
+            Map<String, String> newMap = new TreeMap<>();
             newMap.put(card.getFace(), card.getColor());
             handMap.add(newMap);
         }
     }
 
     public Map<String, String> findColorMap(Card card) {
-        if(handMap != null) {
-            for(Map<String, String> m : handMap) {
-                if(m.containsValue(card.getColor())) {
-                    return m;
-                }
+        for(Map<String, String> m : handMap) {
+            if(m.containsValue(card.getColor())) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public Card discard(String face, String color) {
+        return findCard(face, color);
+    }
+
+    public Card findCard(String face, String color) {
+        for(Map<String, String> m : handMap) {
+            if(m.containsKey(face) && m.containsValue(color)) {
+                return new Card(color, face);
             }
         }
         return null;
     }
     
-    public Card discard(int cardPosition) {
-        Card card = hand.get(cardPosition);
-        hand.remove(cardPosition);
-        return card;
-    }
-    
-    public int getCardCount() {
-        return hand.size();
+    public int getHandSize() {
+        int count = 0;
+        for(Map<String, String> m : handMap) {
+            count += m.size();
+        }
+        return count;
     }
     
     public void printHand() {
-        for(Card c : this.hand) {
-            Main.say("(" + c.getColor() + ") " + c.getFace());
+        for(Map<String, String> m : handMap) {
+            for(Map.Entry<String, String> entry : m.entrySet()) {
+                Main.say("(" + entry.getValue() + ") " + entry.getKey());
+            }
         }
     }
     

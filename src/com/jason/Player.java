@@ -28,8 +28,8 @@ public class Player {
         // hand.add(card);
     }
     
-    public Card discard(int cardPosition) {
-        return hand.discard(cardPosition);
+    public Card discard(String face, String color) {
+        return hand.discard(face, color);
     }
     
     public String getName() {
