@@ -64,14 +64,14 @@ public class Game {
         displayCurrentPlayedCard();
 
         Main.say(player.getName() + "'s hand:");
-        player.getHand().printHand();
+        // player.getHand().printHand();
         
-//        if(!isNumberCard(this.currentCard)) {
-//            handleNonNumericCard();
-//        } else {
+        if(isNumberCard(this.currentCard)) {
             // currentCard = player.discard(0);
-            // currentColor = currentCard.getColor();
-//        }
+            currentColor = currentCard.getColor();
+        } else {
+            handleNonNumericCard();
+        }
         
         isPlayerOnesTurn = !isPlayerOnesTurn;
         Main.say("");
