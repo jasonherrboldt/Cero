@@ -21,6 +21,8 @@ public class Game {
     
     public Game(String userName) {
         this.deck = new Deck();
+        deck.printDeck();
+        Main.out("");
         this.player0 = new Player("Computer", true);
         this.player1 = new Player(userName, false);
         this.gameWinnerExists = false;
@@ -102,8 +104,8 @@ public class Game {
         return !(face.equalsIgnoreCase(Deck.SKIP)
                 || face.equalsIgnoreCase(Deck.REVERSE)
                 || face.equalsIgnoreCase(Deck.DRAW_TWO)
-                || face.equalsIgnoreCase(Deck.WILD_DRAW_FOUR)
-                || face.equalsIgnoreCase(Deck.DRAW_FOUR));
+                || face.equalsIgnoreCase(Deck.WILD)
+                || face.equalsIgnoreCase(Deck.WILD_DRAW_FOUR));
     }
     
     public void handleNonNumericCard() {

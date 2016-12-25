@@ -5,6 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import com.jason.*;
 
+import java.util.Iterator;
+
 public class TestDeck {
 
     private Deck deck = new Deck();
@@ -17,7 +19,6 @@ public class TestDeck {
 
     @Test
     public void testDeck_deckSize() {
-        deck.printCards();
         assertEquals(this.deck.getDeckSize(), DECK_SIZE);
     }
 
@@ -43,6 +44,28 @@ public class TestDeck {
         deck.peekAtTopCard();
         int sizeAfterPeek = deck.getDeckSize();
         assertEquals(sizeBeforePeek, sizeAfterPeek);
+    }
+
+    @Test
+    public void testDeck_spotCheck() {
+        Iterator<Card> iter = deck.getDeck().iterator();
+        // A correct deck should have eight sixes and thirteen greens.
+        int sixCount = 0;
+        int greenCount = 0;
+        while(iter.hasNext()) {
+            Card card = iter.next();
+            if(card.getFace().equalsIgnoreCase(Deck.SIX)) {
+                sixCount++;
+            }
+            if(card.getColor().equalsIgnoreCase(Deck.GREEN)) {
+                greenCount++;
+            }
+        }
+        assertEquals(sixCount, 8);
+        assertEquals(greenCount, 25);
+
+        // assertEquals(sixCount, 1); // test the test - should fail
+        // assertEquals(greenCount, 1); // test the test - should fail
     }
 }
 

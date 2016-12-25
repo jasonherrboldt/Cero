@@ -5,11 +5,12 @@ import java.util.*;
 public class Deck {
 
     @SuppressWarnings("rawtypes")
-    Stack deck;
+    Stack<Card> deck;
     public static final String RED = "Red";
     public static final String YELLOW = "Yellow";
     public static final String GREEN = "Green";
     public static final String BLUE = "Blue";
+    public static final String COLORLESS = "Colorless";
     
     public static final String ZERO = "0";
     public static final String ONE = "1";
@@ -27,15 +28,13 @@ public class Deck {
     public static final String DRAW_TWO = "Draw Two";
     public static final String WILD = "Wild";
     public static final String WILD_DRAW_FOUR = "Wild Draw Four";
-    public static final String DRAW_FOUR = "Draw Four";
 
     /**
      * Public constructor.
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Deck() {
-        List<String> colors = new ArrayList<String>();
-        deck = new Stack();
+        List<String> colors = new ArrayList<>();
+        deck = new Stack<>();
         colors.add(RED);
         colors.add(YELLOW);
         colors.add(GREEN);
@@ -71,9 +70,9 @@ public class Deck {
         
         // Make wild and draw four cards.
         for(String c : colors) {
-            Card card = new Card (c, WILD_DRAW_FOUR);
+            Card card = new Card (COLORLESS, WILD);
             deck.push(card);
-            card = new Card (c, DRAW_FOUR);
+            card = new Card (COLORLESS, WILD_DRAW_FOUR);
             deck.push(card);
         }
     }
@@ -81,7 +80,7 @@ public class Deck {
     /**
      * Shuffle the deck.
      */
-    public void shuffle() {
+    public void shuffle() { // tested
         Collections.shuffle(deck);
     }
     
@@ -90,20 +89,8 @@ public class Deck {
      * 
      * @return  The size of the deck.
      */
-    public int getDeckSize() {
+    public int getDeckSize() { // tested
         return deck.size(); 
-    }
-    
-    /**
-     * Print the card faces to the console (for debug). 
-     */
-    public void printCards() {
-//         @SuppressWarnings("unchecked")
-//        Iterator<Card> iter = deck.iterator();
-//        while(iter.hasNext()) {
-//            Card c = iter.next();
-//            Main.out(c.getColor() + " " + c.getFace());
-//        }
     }
     
     /**
@@ -111,7 +98,7 @@ public class Deck {
      * 
      * @return the card on the top of the deck. 
      */
-    public Card getNextCard() {
+    public Card getNextCard() { // tested
         return (Card)deck.pop();
     }
     
@@ -120,8 +107,20 @@ public class Deck {
      * 
      * @return a copy of the top card on the deck. 
      */
-    public Card peekAtTopCard() {
+    public Card peekAtTopCard() { // tested
         return (Card)deck.peek();
+    }
+
+    public Stack<Card> getDeck() { // no test necessary
+        return deck;
+    }
+
+    public void printDeck() {
+        Iterator<Card> iter = getDeck().iterator();
+        while(iter.hasNext()) {
+            Card card = iter.next();
+            Main.out(card.getColor() + " " + card.getFace());
+        }
     }
     
 }
