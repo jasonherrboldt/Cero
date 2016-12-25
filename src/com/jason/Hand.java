@@ -16,12 +16,16 @@ public class Hand {
         List<Card> colorList = getColorList(card.getColor());
         if(colorList != null) {
             colorList.add(card);
+            // Sort the color group descending by face value.
             Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
         } else {
             List<Card> newList = new ArrayList<>();
             newList.add(card);
             hand.add(newList);
         }
+
+        // Sort the hand descending by color group size.
+        Collections.sort(hand, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
     }
 
     @Nullable
@@ -108,13 +112,19 @@ public class Hand {
     }
 
     @Nullable
-    public Card getNumberOfAnyColor(int number) {
+    public Card getNumberOfBestColor(int number) {
         // List<Card> cards = getAllCards();
         List<List<Card>> cards = new ArrayList<>();
         // Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
         // do something like this:
         Collections.sort(cards, (List<Card> l1, List<Card> l2) -> l1.size() - l2.size());
         return null;
+
+
+    }
+
+    public void sortColorsAscending() {
+
     }
 
     @Nullable

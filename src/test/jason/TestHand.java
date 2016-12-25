@@ -29,14 +29,14 @@ public class TestHand {
         blueCards.add(new Card(Deck.BLUE, Deck.WILD, 50));
         mockHand.add(blueCards);
 
-        List<Card> redCards = new ArrayList<>();
-        redCards.add(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 50));
-        mockHand.add(redCards);
-
         List<Card> yellowCards = new ArrayList<>();
         yellowCards.add(new Card(Deck.YELLOW, Deck.SIX, 6));
         yellowCards.add(new Card(Deck.YELLOW, Deck.REVERSE, 20));
         mockHand.add(yellowCards);
+
+        List<Card> redCards = new ArrayList<>();
+        redCards.add(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 50));
+        mockHand.add(redCards);
 
         List<Card> greenCards = new ArrayList<>();
         greenCards.add(new Card(Deck.GREEN, Deck.TWO, 2));
@@ -45,7 +45,7 @@ public class TestHand {
         // Adding same cards as mockHand, but in a random order.
         realHand = new Hand();
         realHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
-        realHand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 4));
+        realHand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 50));
         realHand.addCard(new Card(Deck.YELLOW, Deck.SIX, 6));
         realHand.addCard(new Card(Deck.GREEN, Deck.TWO, 2));
         realHand.addCard(new Card(Deck.BLUE, Deck.ONE, 1));
@@ -156,7 +156,7 @@ public class TestHand {
 
     @Test
     public void testHand_sumCards() {
-        assertEquals(realHand.sumCards(), 92);
+        assertEquals(realHand.sumCards(), 138);
     }
 
     @Test
