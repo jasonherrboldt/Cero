@@ -85,6 +85,13 @@ public class Hand {
         return cards;
     }
 
+    /**
+     * Get the highest value face card of a specified color.
+     *
+     * @param color     The color to search.
+     * @param numeric   Whether or not the search should include non-numeric cards.
+     * @return          The highest value card of the given color, or null if no card found.
+     */
     @Nullable
     public Card getHighestFace(String color, boolean numeric) { // tested
         int highestValue = numeric ? 9 : 50;
@@ -101,12 +108,12 @@ public class Hand {
     }
 
     @Nullable
-    public Card getHighestNonNumericFace(String color) {
-        return null;
-    }
-
-    @Nullable
-    public Card getNumberOfAnyColor(String number) {
+    public Card getNumberOfAnyColor(int number) {
+        // List<Card> cards = getAllCards();
+        List<List<Card>> cards = new ArrayList<>();
+        // Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
+        // do something like this:
+        Collections.sort(cards, (List<Card> l1, List<Card> l2) -> l1.size() - l2.size());
         return null;
     }
 
