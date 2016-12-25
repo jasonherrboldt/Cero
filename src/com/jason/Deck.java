@@ -4,8 +4,19 @@ import java.util.*;
 
 public class Deck {
 
-    @SuppressWarnings("rawtypes")
-    Stack<Card> deck;
+    /*
+
+        From unorules.com:
+
+        All number cards are the same value as the number on the card (e.g. a 9 is 9 points).
+        “Draw Two” – 20 Points, “Reverse” – 20 Points, “Skip” – 20 Points, “Wild” – 50 Points,
+        and “Wild Draw Four” – 50 Points. The first player to attain 500 points wins the game.
+     */
+
+    public static final int DECK_SIZE = 108;
+
+    private Stack<Card> deck;
+
     public static final String RED = "Red";
     public static final String YELLOW = "Yellow";
     public static final String GREEN = "Green";
@@ -115,7 +126,7 @@ public class Deck {
         return deck;
     }
 
-    public void printDeck() {
+    public void printDeck() { // no test necessary
         Iterator<Card> iter = getDeck().iterator();
         while(iter.hasNext()) {
             Card card = iter.next();

@@ -10,7 +10,6 @@ import java.util.Iterator;
 public class TestDeck {
 
     private Deck deck = new Deck();
-    private static final int DECK_SIZE = 108;
 
     @Before
     public void setup() {
@@ -19,7 +18,7 @@ public class TestDeck {
 
     @Test
     public void testDeck_deckSize() {
-        assertEquals(this.deck.getDeckSize(), DECK_SIZE);
+        assertEquals(this.deck.getDeckSize(), Deck.DECK_SIZE);
     }
 
     @Test

@@ -12,8 +12,7 @@ public class Hand {
         hand = new ArrayList<>();
     }
 
-    // tested
-    public void addCard(Card card) {
+    public void addCard(Card card) { // tested
         List<Card> colorList = getColorList(card.getColor());
         if(colorList != null) {
             colorList.add(card);
@@ -25,9 +24,8 @@ public class Hand {
         }
     }
 
-    // tested
     @Nullable
-    public List<Card> getColorList(String color) {
+    public List<Card> getColorList(String color) { // tested
         for(List<Card> list : hand) {
             if(list.size() > 0) {
                 if(list.get(0).getColor().equalsIgnoreCase(color)) {
@@ -38,8 +36,7 @@ public class Hand {
         return null;
     }
 
-    // tested
-    public void discard(Card card) throws IllegalArgumentException {
+    public void discard(Card card) throws IllegalArgumentException { // tested
         if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
         } else {
@@ -59,7 +56,7 @@ public class Hand {
         }
     }
 
-    public boolean hasCard(Card card) {
+    public boolean hasCard(Card card) { // tested
         boolean cardFound = false;
         List<Card> colorList = getColorList(card.getColor());
         for(Card c : colorList) {
@@ -70,7 +67,7 @@ public class Hand {
         return cardFound;
     }
     
-    public int getSize() {
+    public int getSize() { // tested in testHand_discard()
         int count = 0;
         for(List<Card> list : hand) {
             count += list.size();
@@ -78,7 +75,7 @@ public class Hand {
         return count;
     }
     
-    public List<Card> getAllCards() {
+    public List<Card> getAllCards() { // tested
         List<Card> cards = new ArrayList<>();
         for(List<Card> list : hand) {
             for(Card c : list) {
@@ -95,6 +92,11 @@ public class Hand {
 
     @Nullable
     public Card getNumberOfAnyColor(String number) {
+        return null;
+    }
+
+    @Nullable
+    public Card getWildOrWildDrawFour() {
         return null;
     }
 }

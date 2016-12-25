@@ -94,20 +94,6 @@ public class TestHand {
         }
         int tempRealHandSizeAfter = realHand.getSize();
         assertEquals(tempRealHandSizeBefore, (tempRealHandSizeAfter + 1));
-        // assertEquals(tempRealHandSizeBefore, (tempRealHandSizeAfter + 3)); // test the test - should fail
-
-        /*
-        Hand hand = new Hand();
-        Card yellowNine = new Card(Deck.YELLOW, Deck.NINE);
-        hand.addCard(yellowNine);
-        hand.addCard(new Card(Deck.YELLOW, Deck.ONE));
-        hand.addCard(new Card(Deck.RED, Deck.ZERO));
-        try {
-            hand.discard(yellowNine);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-        */
     }
 
     @Test
@@ -147,6 +133,18 @@ public class TestHand {
             }
         }
         return cards;
+    }
+
+    @Test
+    public void testHand_hasCard() {
+        assertTrue(realHand.hasCard(new Card(Deck.BLUE, Deck.NINE)));
+        assertFalse(realHand.hasCard(new Card(Deck.BLUE, Deck.EIGHT)));
+    }
+
+    @Test
+    public void testHand_getAllCards() {
+        List<Card> realCards = realHand.getAllCards();
+        assertEquals(realCards.size(), 7);
     }
 
 }
