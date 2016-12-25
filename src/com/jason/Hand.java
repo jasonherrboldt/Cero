@@ -86,7 +86,22 @@ public class Hand {
     }
 
     @Nullable
-    public Card getHighestFaceOfColor(String color) {
+    public Card getHighestFace(String color, boolean numeric) { // tested
+        int highestValue = numeric ? 9 : 50;
+        if(color != null) {
+            List<Card> colorList = getColorList(color);
+            Collections.sort(colorList, (Card c1, Card c2) -> c2.getValue() - (c1.getValue()));
+            for(Card c : colorList) {
+                if(c.getValue() <= highestValue) {
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public Card getHighestNonNumericFace(String color) {
         return null;
     }
 
@@ -100,7 +115,7 @@ public class Hand {
         return null;
     }
 
-    public int sumCards() {
+    public int sumCards() { // tested
         int handSum = 0;
         for(List<Card> list : hand) {
             for(Card c : list) {

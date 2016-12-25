@@ -16,6 +16,7 @@ public class TestHand {
 
     private List<List<Card>> mockHand;
     Hand realHand;
+    Hand getHighestTestHand;
 
     @Before
     public void setup() {
@@ -50,6 +51,14 @@ public class TestHand {
         realHand.addCard(new Card(Deck.BLUE, Deck.ONE, 1));
         realHand.addCard(new Card(Deck.YELLOW, Deck.REVERSE, 20));
         realHand.addCard(new Card(Deck.BLUE, Deck.WILD, 50));
+
+        getHighestTestHand = new Hand();
+        getHighestTestHand.addCard(new Card(Deck.RED, Deck.THREE, 3));
+        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.TWO, 2));
+        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.FOUR, 4));
+        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
+        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.REVERSE, 20));
+        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50));
     }
     
     @Test
@@ -148,6 +157,22 @@ public class TestHand {
     @Test
     public void testHand_sumCards() {
         assertEquals(realHand.sumCards(), 92);
+    }
+
+    @Test
+    public void testHand_getHighestFace_numeric() {
+        String color = Deck.BLUE;
+        Card inputCard = new Card(Deck.BLUE, Deck.NINE, 9);
+        Card outputCard = this.getHighestTestHand.getHighestFace(color, true);
+        assertTrue(inputCard.equals(outputCard));
+    }
+
+    @Test
+    public void testHand_getHighestFace_nonNumeric() {
+        String color = Deck.BLUE;
+        Card inputCard = new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50);
+        Card outputCard = this.getHighestTestHand.getHighestFace(color, false);
+        assertTrue(inputCard.equals(outputCard));
     }
 
 }
