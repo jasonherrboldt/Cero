@@ -54,7 +54,7 @@ public class Deck {
         // Make 0 - 9 of all four colors.
         for(String c : colors) {
             for(int i = 0; i < 10; i++) {
-                Card card = new Card(c, Integer.toString(i));
+                Card card = new Card(c, Integer.toString(i), i);
                 deck.push(card);
             }   
         }
@@ -62,7 +62,7 @@ public class Deck {
         // Make 1 - 9 of all four colors.
         for(String c : colors) {
             for(int i = 1; i < 10; i++) {
-                Card card = new Card(c, Integer.toString(i));
+                Card card = new Card(c, Integer.toString(i), i);
                 deck.push(card);
             }   
         }
@@ -70,20 +70,20 @@ public class Deck {
         // Make skip, reverse and draw two cards.
         for(int i = 0; i < 2; i++) {
             for(String c : colors) {
-                Card card = new Card(c, SKIP);
+                Card card = new Card(c, SKIP, 20);
                 deck.push(card);
-                card = new Card(c, REVERSE);
+                card = new Card(c, REVERSE, 20);
                 deck.push(card);
-                card = new Card(c, DRAW_TWO);
+                card = new Card(c, DRAW_TWO, 20);
                 deck.push(card);
             }
         }
         
         // Make wild and draw four cards.
         for(String c : colors) {
-            Card card = new Card (COLORLESS, WILD);
+            Card card = new Card (COLORLESS, WILD, 50);
             deck.push(card);
-            card = new Card (COLORLESS, WILD_DRAW_FOUR);
+            card = new Card (COLORLESS, WILD_DRAW_FOUR, 50);
             deck.push(card);
         }
     }

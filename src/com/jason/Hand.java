@@ -99,6 +99,16 @@ public class Hand {
     public Card getWildOrWildDrawFour() {
         return null;
     }
+
+    public int sumCards() {
+        int handSum = 0;
+        for(List<Card> list : hand) {
+            for(Card c : list) {
+                handSum += c.getValue();
+            }
+        }
+        return handSum;
+    }
 }
 
 

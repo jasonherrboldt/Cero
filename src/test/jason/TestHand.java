@@ -5,9 +5,7 @@ import org.junit.*;
 import java.util.*;
 
 import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * Tests the Hand class methods.
@@ -25,33 +23,33 @@ public class TestHand {
         mockHand = new ArrayList<>();
         
         List<Card> blueCards = new ArrayList<>();
-        blueCards.add(new Card(Deck.BLUE, Deck.ONE));
-        blueCards.add(new Card(Deck.BLUE, Deck.NINE));
-        blueCards.add(new Card(Deck.BLUE, Deck.WILD));
+        blueCards.add(new Card(Deck.BLUE, Deck.ONE, 1));
+        blueCards.add(new Card(Deck.BLUE, Deck.NINE, 9));
+        blueCards.add(new Card(Deck.BLUE, Deck.WILD, 50));
         mockHand.add(blueCards);
 
         List<Card> redCards = new ArrayList<>();
-        redCards.add(new Card(Deck.RED, Deck.WILD_DRAW_FOUR));
+        redCards.add(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 50));
         mockHand.add(redCards);
 
         List<Card> yellowCards = new ArrayList<>();
-        yellowCards.add(new Card(Deck.YELLOW, Deck.SIX));
-        yellowCards.add(new Card(Deck.YELLOW, Deck.REVERSE));
+        yellowCards.add(new Card(Deck.YELLOW, Deck.SIX, 6));
+        yellowCards.add(new Card(Deck.YELLOW, Deck.REVERSE, 20));
         mockHand.add(yellowCards);
 
         List<Card> greenCards = new ArrayList<>();
-        greenCards.add(new Card(Deck.GREEN, Deck.TWO));
+        greenCards.add(new Card(Deck.GREEN, Deck.TWO, 2));
         mockHand.add(greenCards);
 
         // Adding same cards as mockHand, but in a random order.
         realHand = new Hand();
-        realHand.addCard(new Card(Deck.BLUE, Deck.NINE));
-        realHand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR));
-        realHand.addCard(new Card(Deck.YELLOW, Deck.SIX));
-        realHand.addCard(new Card(Deck.GREEN, Deck.TWO));
-        realHand.addCard(new Card(Deck.BLUE, Deck.ONE));
-        realHand.addCard(new Card(Deck.YELLOW, Deck.REVERSE));
-        realHand.addCard(new Card(Deck.BLUE, Deck.WILD));
+        realHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
+        realHand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 4));
+        realHand.addCard(new Card(Deck.YELLOW, Deck.SIX, 6));
+        realHand.addCard(new Card(Deck.GREEN, Deck.TWO, 2));
+        realHand.addCard(new Card(Deck.BLUE, Deck.ONE, 1));
+        realHand.addCard(new Card(Deck.YELLOW, Deck.REVERSE, 20));
+        realHand.addCard(new Card(Deck.BLUE, Deck.WILD, 50));
     }
     
     @Test
@@ -70,9 +68,9 @@ public class TestHand {
     public void testHand_getColorList() {
         List<Card> realBlueCards = realHand.getColorList(Deck.BLUE);
         List<Card> mockBlueCards = new ArrayList<>();
-        mockBlueCards.add(new Card(Deck.BLUE, Deck.ONE));
-        mockBlueCards.add(new Card(Deck.BLUE, Deck.NINE));
-        mockBlueCards.add(new Card(Deck.BLUE, Deck.WILD));
+        mockBlueCards.add(new Card(Deck.BLUE, Deck.ONE, 1));
+        mockBlueCards.add(new Card(Deck.BLUE, Deck.NINE, 9));
+        mockBlueCards.add(new Card(Deck.BLUE, Deck.WILD, 50));
         try {
             assertFalse(mismatchFound(realBlueCards, mockBlueCards));
         } catch (IllegalArgumentException e) {
@@ -85,7 +83,7 @@ public class TestHand {
         // List<List<Card>> tempMockHand = mockHand;
         Hand tempRealHand = realHand;
         int tempRealHandSizeBefore = tempRealHand.getSize();
-        Card inTempRealHand = new Card(Deck.BLUE, Deck.NINE);
+        Card inTempRealHand = new Card(Deck.BLUE, Deck.NINE, 9);
         // Card inTempRealHand = new Card(Deck.BLUE, Deck.EIGHT); // test the test - should fail
         try {
             realHand.discard(inTempRealHand);
@@ -99,7 +97,7 @@ public class TestHand {
     @Test
     public void testHand_discard_exception() {
         Hand tempRealHand = realHand;
-        Card notInTempRealHand = new Card(Deck.GREEN, Deck.WILD);
+        Card notInTempRealHand = new Card(Deck.GREEN, Deck.WILD, 50);
         try {
             tempRealHand.discard(notInTempRealHand);
             fail();
@@ -137,14 +135,19 @@ public class TestHand {
 
     @Test
     public void testHand_hasCard() {
-        assertTrue(realHand.hasCard(new Card(Deck.BLUE, Deck.NINE)));
-        assertFalse(realHand.hasCard(new Card(Deck.BLUE, Deck.EIGHT)));
+        assertTrue(realHand.hasCard(new Card(Deck.BLUE, Deck.NINE, 9)));
+        assertFalse(realHand.hasCard(new Card(Deck.BLUE, Deck.EIGHT, 8)));
     }
 
     @Test
     public void testHand_getAllCards() {
         List<Card> realCards = realHand.getAllCards();
         assertEquals(realCards.size(), 7);
+    }
+
+    @Test
+    public void testHand_sumCards() {
+        assertEquals(realHand.sumCards(), 92);
     }
 
 }

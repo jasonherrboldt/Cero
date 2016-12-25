@@ -62,9 +62,6 @@ public class TestDeck {
         }
         assertEquals(sixCount, 8);
         assertEquals(greenCount, 25);
-
-        // assertEquals(sixCount, 1); // test the test - should fail
-        // assertEquals(greenCount, 1); // test the test - should fail
     }
 }
 

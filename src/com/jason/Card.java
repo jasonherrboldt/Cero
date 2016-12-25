@@ -4,6 +4,7 @@ public class Card {
     
     private String color;
     private String face;
+    private int value;
     
     /**
      * Public constructor.
@@ -11,9 +12,10 @@ public class Card {
      * @param color The color of the card.
      * @param face  The face of the card.
      */
-    public Card(String color, String face) {
+    public Card(String color, String face, int value) {
         this.color = color;
         this.face = face;
+        this.value = value;
     }
     
     /**
@@ -28,6 +30,10 @@ public class Card {
      */
     public String getFace() {
         return this.face;
+    }
+
+    public int getValue() {
+        return this.value;
     }
 
     public boolean equals(Card card) {

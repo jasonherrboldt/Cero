@@ -7,6 +7,10 @@ public class Player {
     private String name;
     private Hand hand;
     private boolean isComputer;
+    // strategy: cautious or bold
+    public enum Strategy {
+        CAUTIOUS, BOLD
+    }
     
     public Player(String name, boolean isComputer) {
         this.name = name;      

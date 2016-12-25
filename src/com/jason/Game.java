@@ -21,9 +21,10 @@ public class Game {
     
     public Game(String userName) {
         this.deck = new Deck();
-        deck.printDeck();
+        this.deck.printDeck();
         Main.out("");
         this.player0 = new Player("Computer", true);
+        // pick random player0 strategy
         this.player1 = new Player(userName, false);
         this.gameWinnerExists = false;
         this.deckWinnerExists = false;
@@ -64,12 +65,13 @@ public class Game {
     }
     
     public void playHand(Player player) {
+
         String playerName = player.getName();
         Main.out(playerName + "'s turn.");
         displayCurrentPlayedCard();
 
+        // Wrap this block in if player1 conditional:
         Main.out(playerName + "'s hand:");
-        // player.getHand().printHand();
         Hand hand = player.getHand();
         List<Card> handCards = hand.getAllCards();
         printCards(handCards);
@@ -109,6 +111,19 @@ public class Game {
     }
     
     public void handleNonNumericCard() {
+
+        /*
+            // use this to switch on player0's strategy
+            switch (player.Strategy) {
+                case BOLD:
+                    // todo
+                    break;
+
+                case CAUTIOUS:
+                    // todo
+                    break;
+         */
+
         if(currentCard.getFace().equalsIgnoreCase(Deck.SKIP)) {
             Main.out("Handling move for " + Deck.SKIP + ".");
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.REVERSE)) {
@@ -124,6 +139,19 @@ public class Game {
     
     public void handleNumericCard() {
         Main.out("Handling move for numeric card.");
+
+        /*
+            // use this to switch on player0's strategy
+            switch (player.Strategy) {
+                case BOLD:
+                    // todo
+                    break;
+
+                case CAUTIOUS:
+                    // todo
+                    break;
+         */
+
     }
     
     private void displayCurrentPlayedCard() {
