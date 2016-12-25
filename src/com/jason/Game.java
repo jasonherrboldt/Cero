@@ -20,16 +20,22 @@ public class Game {
     private static final int FAKE_GAME_RUNS = 8;
     
     public Game(String userName) {
-        this.deck = new Deck();
-        this.deck.printDeck();
+
+        deck = new Deck();
+        // deck.printDeck();
         Main.out("");
-        this.player0 = new Player("Computer", true);
-        // pick random player0 strategy
-        this.player1 = new Player(userName, false);
-        this.gameWinnerExists = false;
-        this.deckWinnerExists = false;
-        this.isPlayerOnesTurn = pickRandomPlayer();
-        this.score = 0;
+        player0 = new Player("Computer", true);
+        if(pickRandomBoolean()) {
+            player0.setStrategy(Player.STRATEGY_BOLD);
+        } else {
+            player0.setStrategy(Player.STRATEGY_CAUTIOUS);
+        }
+        player1 = new Player(userName, false);
+        player1.setStrategy(Player.STRATEGY_NEUTRAL);
+        gameWinnerExists = false;
+        deckWinnerExists = false;
+        isPlayerOnesTurn = pickRandomBoolean();
+        score = 0;
     }
     
     public void play() {
@@ -39,9 +45,9 @@ public class Game {
             deck.shuffle();
             
             dealHands();
-            
-            this.currentCard = deck.getNextCard();
-            this.currentColor = this.currentCard.getColor(); 
+
+            currentCard = deck.getNextCard();
+            currentColor = currentCard.getColor();
         
             // while(!deckWinnerExists) {
             for(int i = 0; i < FAKE_GAME_RUNS; i++) {
@@ -76,7 +82,7 @@ public class Game {
         List<Card> handCards = hand.getAllCards();
         printCards(handCards);
         
-        if(isNumberCard(this.currentCard)) {
+        if(isNumberCard(currentCard)) {
             handleNumericCard();
         } else {
             handleNonNumericCard();
@@ -179,7 +185,7 @@ public class Game {
         this.currentColor = color;
     }
     
-    public boolean pickRandomPlayer() {
+    public boolean pickRandomBoolean() {
         return Math.random() < 0.5; 
     }
         
