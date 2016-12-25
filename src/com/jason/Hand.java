@@ -16,17 +16,12 @@ public class Hand {
         List<Card> colorList = getColorList(card.getColor());
         if(colorList != null) {
             colorList.add(card);
-            sortColorList(colorList);
+            Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
         } else {
             List<Card> newList = new ArrayList<>();
             newList.add(card);
             hand.add(newList);
         }
-    }
-
-    public void sortColorList(List<Card> list) {
-        Collections.sort(list, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
-
     }
 
     @Nullable
@@ -41,8 +36,24 @@ public class Hand {
         return null;
     }
 
-    public Card discard(Card card) {
-        return null;
+    public void discard(Card card) throws IllegalArgumentException {
+        if(hasCard(card)) {
+            List<Card> colorList = getColorList(card.getColor());
+            colorList.remove(card);
+        } else {
+            throw new IllegalArgumentException("Card not in hand.");
+        }
+    }
+
+    public boolean hasCard(Card card) {
+        boolean cardFound = false;
+        List<Card> colorList = getColorList(card.getColor());
+        for(Card c : colorList) {
+            if(card.equals(c)) {
+                cardFound = true;
+            }
+        }
+        return cardFound;
     }
     
     public int getSize() {

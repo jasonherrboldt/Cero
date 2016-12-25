@@ -28,9 +28,8 @@ public class Player {
         // hand.add(card);
     }
     
-    public Card discard(String face, String color) {
-        // return hand.discard(face, color);
-        return null;
+    public void discard(Card card) {
+        hand.discard(card);
     }
     
     public String getName() {

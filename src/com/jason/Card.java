@@ -30,4 +30,8 @@ public class Card {
         return this.face;
     }
 
+    public boolean equals(Card card) {
+        return card.getColor().equalsIgnoreCase(this.color)
+                && card.getFace().equalsIgnoreCase(this.face);
+    }
 }

@@ -50,7 +50,8 @@ public class Game {
                 // update winner status
                 // if(checkForWinner) {
                     // gameWinnerExists = true;
-                }   
+                }
+                isPlayerOnesTurn = !isPlayerOnesTurn;
             }
         
             // }
@@ -66,22 +67,28 @@ public class Game {
         Main.out(player.getName() + "'s hand:");
         // player.getHand().printHand();
         Hand hand = player.getHand();
-        printHand(hand);
+        List<Card> handCards = hand.getAllCards();
+        printCards(handCards);
         
         if(isNumberCard(this.currentCard)) {
-            // currentCard = player.discard(0);
-            currentColor = currentCard.getColor();
+            handleNumericCard();
         } else {
             handleNonNumericCard();
         }
-        
-        isPlayerOnesTurn = !isPlayerOnesTurn;
+
+        // Discard the first card no matter what for debug.
+        int usersChoice = 0; // fake choice for debug.
+        Card cardToDiscard = handCards.get(usersChoice);
+        player.discard(cardToDiscard);
+        currentCard = cardToDiscard;
+        currentColor = currentCard.getColor();
+        Main.out(player.getName() + " discards " + getCardPrintString(cardToDiscard) + ".");
         Main.out("");
     }
 
-    private void printHand(Hand hand) {
+    private void printCards(List<Card> cards) {
         int i = 1;
-        for(Card c : hand.getAllCards()) {
+        for(Card c : cards) {
             Main.out(i + ": " + getCardPrintString(c));
             i++;
         }
@@ -98,19 +105,22 @@ public class Game {
     
     public void handleNonNumericCard() {
         if(currentCard.getFace().equalsIgnoreCase(Deck.SKIP)) {
-            Main.out("Handling first automatic move for " + Deck.SKIP + ".");
+            Main.out("Handling move for " + Deck.SKIP + ".");
             isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.REVERSE)) {
-            Main.out("Handling first automatic move for " + Deck.REVERSE + ".");
+            Main.out("Handling move for " + Deck.REVERSE + ".");
             isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.DRAW_TWO)) {
-            Main.out("Handling first automatic move for " + Deck.DRAW_TWO + ".");
+            Main.out("Handling move for " + Deck.DRAW_TWO + ".");
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.WILD)) {
-            Main.out("Handling first automatic move for " + Deck.WILD + ".");
+            Main.out("Handling move for " + Deck.WILD + ".");
         } else { // WILD_DRAW_FOUR
-            Main.out("Handling first automatic move for " + Deck.WILD_DRAW_FOUR + ".");
+            Main.out("Handling move for " + Deck.WILD_DRAW_FOUR + ".");
         }
-       
+    }
+    
+    public void handleNumericCard() {
+        Main.out("Handling move for numeric card.");
     }
     
     private void displayCurrentPlayedCard() {
