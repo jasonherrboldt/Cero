@@ -52,6 +52,7 @@ public class Game {
                     // gameWinnerExists = true;
                 }
                 isPlayerOnesTurn = !isPlayerOnesTurn;
+                boolean x = isPlayerOnesTurn;
             }
         
             // }
@@ -61,10 +62,11 @@ public class Game {
     }
     
     public void playHand(Player player) {
-        Main.out(player.getName() + "'s turn.");
+        String playerName = player.getName();
+        Main.out(playerName + "'s turn.");
         displayCurrentPlayedCard();
 
-        Main.out(player.getName() + "'s hand:");
+        Main.out(playerName + "'s hand:");
         // player.getHand().printHand();
         Hand hand = player.getHand();
         List<Card> handCards = hand.getAllCards();
@@ -82,7 +84,8 @@ public class Game {
         player.discard(cardToDiscard);
         currentCard = cardToDiscard;
         currentColor = currentCard.getColor();
-        Main.out(player.getName() + " discards " + getCardPrintString(cardToDiscard) + ".");
+        Main.out(playerName + " discards " + getCardPrintString(cardToDiscard) + ".");
+        Main.out(playerName + " now holds " + player.getHand().getSize() + " cards.");
         Main.out("");
     }
 
@@ -106,10 +109,8 @@ public class Game {
     public void handleNonNumericCard() {
         if(currentCard.getFace().equalsIgnoreCase(Deck.SKIP)) {
             Main.out("Handling move for " + Deck.SKIP + ".");
-            isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.REVERSE)) {
             Main.out("Handling move for " + Deck.REVERSE + ".");
-            isPlayerOnesTurn = !isPlayerOnesTurn;
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.DRAW_TWO)) {
             Main.out("Handling move for " + Deck.DRAW_TWO + ".");
         } else if (currentCard.getFace().equalsIgnoreCase(Deck.WILD)) {

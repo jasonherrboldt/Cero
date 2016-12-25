@@ -80,6 +80,48 @@ public class TestHand {
         }
     }
 
+    @Test
+    public void testHand_discard() {
+        // List<List<Card>> tempMockHand = mockHand;
+        Hand tempRealHand = realHand;
+        int tempRealHandSizeBefore = tempRealHand.getSize();
+        Card inTempRealHand = new Card(Deck.BLUE, Deck.NINE);
+        // Card inTempRealHand = new Card(Deck.BLUE, Deck.EIGHT); // test the test - should fail
+        try {
+            realHand.discard(inTempRealHand);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        int tempRealHandSizeAfter = realHand.getSize();
+        assertEquals(tempRealHandSizeBefore, (tempRealHandSizeAfter + 1));
+        // assertEquals(tempRealHandSizeBefore, (tempRealHandSizeAfter + 3)); // test the test - should fail
+
+        /*
+        Hand hand = new Hand();
+        Card yellowNine = new Card(Deck.YELLOW, Deck.NINE);
+        hand.addCard(yellowNine);
+        hand.addCard(new Card(Deck.YELLOW, Deck.ONE));
+        hand.addCard(new Card(Deck.RED, Deck.ZERO));
+        try {
+            hand.discard(yellowNine);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        */
+    }
+
+    @Test
+    public void testHand_discard_exception() {
+        Hand tempRealHand = realHand;
+        Card notInTempRealHand = new Card(Deck.GREEN, Deck.WILD);
+        try {
+            tempRealHand.discard(notInTempRealHand);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(), "Card not in hand.");
+        }
+    }
+
     // Private helper methods:
 
     private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws IllegalArgumentException {

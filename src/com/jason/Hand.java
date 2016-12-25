@@ -11,7 +11,8 @@ public class Hand {
     public Hand() {
         hand = new ArrayList<>();
     }
-    
+
+    // tested
     public void addCard(Card card) {
         List<Card> colorList = getColorList(card.getColor());
         if(colorList != null) {
@@ -24,6 +25,7 @@ public class Hand {
         }
     }
 
+    // tested
     @Nullable
     public List<Card> getColorList(String color) {
         for(List<Card> list : hand) {
@@ -36,12 +38,24 @@ public class Hand {
         return null;
     }
 
+    // tested
     public void discard(Card card) throws IllegalArgumentException {
-        if(hasCard(card)) {
-            List<Card> colorList = getColorList(card.getColor());
-            colorList.remove(card);
-        } else {
+        if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
+        } else {
+            List<Card> colorList = getColorList(card.getColor());
+            int index = -1;
+            int i = 0;
+            for(Card c : colorList) {
+                if(c.equals(card)) {
+                    index = i;
+                }
+            }
+            if(index == -1 || index > colorList.size() - 1) {
+                throw new IllegalArgumentException("Card not in hand.");
+            } else {
+                colorList.remove(index);
+            }
         }
     }
 
