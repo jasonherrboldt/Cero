@@ -7,11 +7,14 @@ public class Main {
     public static void main(String[] args) {
 
         /*
-            javac src/com/jason/*.java
-            java -cp ./src com.jason.Main
+         * To run via command line:
+         *
+         *     cd [root]
+         *     javac src/com/jason/*.java
+         *     java -cp ./src com.jason.Main
          */
 
-        // comment out below for real game.
+        // Uncomment out this block to run interactive game.
         /*
         sayNoReturn("Greetings player one!");
         out("Please enter your name (no special characters): ");
@@ -27,8 +30,8 @@ public class Main {
         game.play();
         */
 
-        // shortcut to game.
-        Game game = new Game("Michael Jackson");
+        // Shortcut to game (debug).
+        Game game = new Game("David Lightman");
         game.play();
 
     }
@@ -44,10 +47,20 @@ public class Main {
         return !p.matcher(name).find();
     }
 
+    /**
+     * Shortcut to System.out.println().
+     *
+     * @param s The string to getPrintString.
+     */
     protected static void out(String s) {
         System.out.println(s);
     }
 
+    /**
+     * Shortcut to System.out.getPrintString().
+     *
+     * @param s The string to getPrintString.
+     */
     protected static void sayNoReturn(String s) {
         System.out.print(s);
     }

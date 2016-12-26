@@ -1,8 +1,5 @@
 package com.jason;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Card {
     
     private String color;
@@ -67,13 +64,57 @@ public class Card {
         return this.value;
     }
 
-    public boolean equals(Card card) {
+    /**
+     * Determines if another card is equal to this card.
+     *
+     * @param card  The card to compare.
+     * @return      True if the cards have the same color and face value, false otherwise.
+     */
+    public boolean equals(Card card) { // tested
         return card.getColor().equalsIgnoreCase(this.color)
                 && card.getFace().equalsIgnoreCase(this.face);
     }
 
+    /**
+     * Determines if this card has a numeric face value.
+     *
+     * @param cvm   A CardValueReader object to map the face value to an int.
+     * @return      True if this card has a numeric face value, false otherwise.
+     */
     public boolean isNumberCard(CardValueMap cvm) {
         int faceVal = cvm.getValue(face);
         return faceVal >= 0 && faceVal < 10;
     }
+
+    public boolean isColorlessCard() {
+        return face.equalsIgnoreCase(WILD) || face.equalsIgnoreCase(WILD_DRAW_FOUR);
+    }
+
+    public String getPrintString() {
+        if(isColorlessCard()) {
+            return getFace();
+        } else {
+            return "(" + getColor() + ") " + getFace();
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

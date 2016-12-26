@@ -9,7 +9,7 @@ public class Game {
      * TODO:
      *
      * 1) Add null checks everywhere you can. Use if/else or try/catch blocks,
-     *    and have the exceptions ignore nulls and print warnings to the console.
+     *    and have the exceptions ignore nulls and getPrintString warnings to the console.
      *
      *  2) Space out the console output for computer steps; make it look like the
      *     computer is thinking about what its doing, instead of just showing a dump
@@ -18,11 +18,16 @@ public class Game {
      *  3) Add javadocs to every method.
      *
      *  4) Make sure every method is public and tested.
+     *
+     *  5) Wouldn't it be cool if player2 could keep track of what strategy it used for each deck,
+     *     and whether or not it won that deck? It could then pick future strategies by whichever
+     *     strategy produced the most wins.
+     *
      */
     
     private Deck deck;
-    private Player player0; // the computer
     private Player player1; // the user
+    private Player player2; // the computer
     private boolean gameWinnerExists;
     private boolean deckWinnerExists;
     private boolean isPlayerOnesTurn;
@@ -36,13 +41,12 @@ public class Game {
 
         cvm = new CardValueMap();
         deck = new Deck();
-        // deck.printDeck(); // debug
         Main.out("");
-        player0 = new Player("Computer", true);
+        player2 = new Player("Computer", true);
         if(pickRandomBoolean()) {
-            player0.setStrategy(Player.STRATEGY_BOLD);
+            player2.setStrategy(Player.STRATEGY_BOLD);
         } else {
-            player0.setStrategy(Player.STRATEGY_CAUTIOUS);
+            player2.setStrategy(Player.STRATEGY_CAUTIOUS);
         }
         player1 = new Player(userName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
@@ -68,7 +72,7 @@ public class Game {
                 if(isPlayerOnesTurn) {
                     playHand(player1);
                 } else {
-                    playHand(player0);
+                    playHand(player2);
                     
                 // update winner status
                 // if(checkForWinner) {
@@ -91,11 +95,11 @@ public class Game {
 
         // Wrap this block in if player1 conditional:
         Main.out(playerName + "'s hand:");
-        Hand hand = player.getHand();
-        List<Card> handCards = hand.getAllCards();
-        printCards(handCards);
-        
-        // if(isNumberCard(currentCard)) {
+        // Hand hand = player.getHand();
+        // List<Card> handCards = hand.getAllCards();
+        // printCards(handCards);
+        player.showCards();
+
         if(currentCard.isNumberCard(cvm)) {
             handleNumericCard();
         } else {
@@ -103,32 +107,18 @@ public class Game {
         }
 
         // Discard the first card no matter what for debug.
+        /*
         int usersChoice = 0; // fake choice for debug.
-        Card cardToDiscard = handCards.get(usersChoice);
+        Card cardToDiscard = handCards.get(usersChoice); // I don't like this - should go through player object.
         player.discard(cardToDiscard);
         currentCard = cardToDiscard;
         currentColor = currentCard.getColor();
         Main.out(playerName + " discards " + getCardPrintString(cardToDiscard) + ".");
         Main.out(playerName + " now holds " + player.getHand().getSize() + " cards.");
+        */
         Main.out("");
-    }
 
-    private void printCards(List<Card> cards) {
-        int i = 1;
-        for(Card c : cards) {
-            Main.out(i + ": " + getCardPrintString(c));
-            i++;
-        }
     }
-    
-//    public boolean isNumberCard(Card card) {
-//        String face = card.getFace();
-//        return !(face.equalsIgnoreCase(Card.SKIP)
-//                || face.equalsIgnoreCase(Card.REVERSE)
-//                || face.equalsIgnoreCase(Card.DRAW_TWO)
-//                || face.equalsIgnoreCase(Card.WILD)
-//                || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR));
-//    }
     
     public void handleNonNumericCard() {
         if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
@@ -149,16 +139,12 @@ public class Game {
     }
     
     private void displayCurrentPlayedCard() {
-        Main.out("The current played card is " + getCardPrintString(currentCard));
-    }
-
-    private String getCardPrintString(Card card) {
-        return "(" + card.getColor() + ") " + card.getFace();
+        Main.out("The current played card is " + currentCard.getPrintString());
     }
     
     private void dealHands() {
         List<Player> players = new ArrayList<Player>();
-        players.add(player0);
+        players.add(player2);
         players.add(player1);
         for(Player p : players) {
             List<Card> cards = new ArrayList<Card>();

@@ -150,6 +150,14 @@ public class Hand {
         }
         return handSum;
     }
+
+    public void showCards() {
+        int i = 1;
+        for(Card c : getAllCards()) {
+            Main.out(i + ": " + c.getPrintString());
+            i++;
+        }
+    }
 }
 
 
