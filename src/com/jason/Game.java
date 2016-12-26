@@ -15,9 +15,6 @@ public class Game {
     /*
      * TODO:
      *
-     *    Add null checks everywhere you can. Use if/else or try/catch blocks,
-     *    and have the exceptions ignore nulls and getPrintString warnings to the console.
-     *
      *    Space out the console output for computer steps; make it look like the
      *    computer is thinking about what its doing, instead of just showing a dump
      *    of steps to the user. Might be fun to have it complain if it has to draw more
@@ -151,7 +148,10 @@ public class Game {
         Main.out("");
 
     }
-    
+
+    /**
+     * Display the current played card.
+     */
     private void displayCurrentPlayedCard() {
         Main.out("The current played card is " + currentCard.getPrintString());
     }
@@ -180,16 +180,3 @@ public class Game {
     }
         
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

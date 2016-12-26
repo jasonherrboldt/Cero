@@ -27,6 +27,8 @@ public class Deck {
         colors.add(Card.YELLOW);
         colors.add(Card.GREEN);
         colors.add(Card.BLUE);
+
+        // Make a new deck.
         
         // Make 0 - 9 of all four colors.
         for(String c : colors) {

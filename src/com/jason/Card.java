@@ -52,6 +52,9 @@ public class Card {
      * @param cvm   The CardValueMap object used to find the numeric value of the card.
      */
     public Card(String color, String face, CardValueMap cvm) {
+        if(cvm == null) {
+            Main.out("WARN: Card constructor received a null CardValueMap object.");
+        }
         if(color.equalsIgnoreCase(Card.COLORLESS) && (!face.equalsIgnoreCase(Card.WILD) && !face.equalsIgnoreCase(Card.WILD_DRAW_FOUR))) {
             Main.out("WARN: Card constructor incorrectly called with colorless color and face " + face);
         }
@@ -90,6 +93,9 @@ public class Card {
      * @return      True if the cards have the same color and face value, false otherwise.
      */
     public boolean equals(Card card) { // tested
+        if(card == null) {
+            Main.out("WARN: trying to compare a null card to this card.");
+        }
         return card.getColor().equalsIgnoreCase(this.color)
                 && card.getFace().equalsIgnoreCase(this.face);
     }

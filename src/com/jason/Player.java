@@ -30,24 +30,28 @@ public class Player {
      * @param currentCard The current played card.
      */
     public void move(Card currentCard) {
-        if(isComputer()) {
-            if(currentCard.isNumberCard()) {
-                Main.out("Handing move for numeric card.");
-            } else {
-                if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
-                    Main.out("Handling move for " + Card.SKIP + ".");
-                } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
-                    Main.out("Handling move for " + Card.REVERSE + ".");
-                } else if (currentCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                    Main.out("Handling move for " + Card.DRAW_TWO + ".");
-                } else if (currentCard.getFace().equalsIgnoreCase(Card.WILD)) {
-                    Main.out("Handling move for " + Card.WILD + ".");
-                } else { // WILD_DRAW_FOUR
-                    Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
-                }
-            }
+        if(currentCard == null) {
+            Main.out("ERROR: null card passed to move. Cannot make any move.");
         } else {
-            Main.out("Ask the user what to do.");
+            if(isComputer()) {
+                if(currentCard.isNumberCard()) {
+                    Main.out("Handing move for numeric card.");
+                } else {
+                    if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
+                        Main.out("Handling move for " + Card.SKIP + ".");
+                    } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
+                        Main.out("Handling move for " + Card.REVERSE + ".");
+                    } else if (currentCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                        Main.out("Handling move for " + Card.DRAW_TWO + ".");
+                    } else if (currentCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                        Main.out("Handling move for " + Card.WILD + ".");
+                    } else { // WILD_DRAW_FOUR
+                        Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
+                    }
+                }
+            } else {
+                Main.out("Ask the user what to do.");
+            }
         }
     }
 

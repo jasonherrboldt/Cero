@@ -18,6 +18,9 @@ public class Hand {
     }
 
     public void addCard(Card card) { // tested
+        if(card == null) {
+            Main.out("WARN: addCard handed a null card.");
+        }
         List<Card> colorList = getColorList(card.getColor());
         if(colorList != null) {
             colorList.add(card);
@@ -57,6 +60,9 @@ public class Hand {
      * @throws IllegalArgumentException     If card not found in hand.
      */
     public void discard(Card card) throws IllegalArgumentException { // tested
+        if(card == null) {
+            Main.out("WARN: discard received a null card.");
+        }
         if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
         } else {
@@ -82,15 +88,19 @@ public class Hand {
      * @param card  The card to check.
      * @return      True if the card is present in the deck, false otherwise.
      */
-    public boolean hasCard(Card card) { // tested
-        boolean cardFound = false;
-        List<Card> colorList = getColorList(card.getColor());
-        for(Card c : colorList) {
-            if(card.equals(c)) {
-                cardFound = true;
+    public boolean hasCard(Card card) throws IllegalArgumentException { // tested
+        if(card != null) {
+            boolean cardFound = false;
+            List<Card> colorList = getColorList(card.getColor());
+            for(Card c : colorList) {
+                if(card.equals(c)) {
+                    cardFound = true;
+                }
             }
+            return cardFound;
+        } else {
+            throw new IllegalArgumentException("ERROR: null card handed to hasCard.");
         }
-        return cardFound;
     }
 
     /**
