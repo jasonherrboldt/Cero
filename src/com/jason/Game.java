@@ -106,7 +106,7 @@ public class Game {
         Main.out(playerName + "'s hand:");
         player.showCards();
 
-        player.move(currentCard, cvm);
+        player.move(currentCard);
 
         // Discard the first card no matter what (for debug).
         int usersChoice = 0; // fake choice for debug.

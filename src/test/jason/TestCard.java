@@ -7,11 +7,15 @@ import static org.junit.Assert.*;
 
 public class TestCard {
 
+    Card colorlessCard;
+    Card colorCard;
     private CardValueMap cvm;
 
     @Before
     public void setup() {
         cvm = new CardValueMap();
+        colorlessCard = new Card(Card.COLORLESS, Card.WILD, cvm);
+        colorCard = new Card(Card.RED, Card.TWO, cvm);
     }
 
     @Test
@@ -29,10 +33,32 @@ public class TestCard {
         Card numericCard = new Card(Card.YELLOW, Card.FOUR, cvm);
         Card nonNumericCard = new Card(Card.YELLOW, Card.WILD, cvm);
 
-        assertTrue(numericCard.isNumberCard(cvm));
-        assertFalse(nonNumericCard.isNumberCard(cvm));
+        assertTrue(numericCard.isNumberCard());
+        assertFalse(nonNumericCard.isNumberCard());
+    }
+
+    @Test
+    public void testCard_isColorlessCard() {
+        assertTrue(colorlessCard.isColorlessCard());
+        assertFalse(colorCard.isColorlessCard());
+    }
+
+    @Test
+    public void testCard_getPrintString() {
+        assertTrue(colorlessCard.getPrintString().equals("Wild"));
+        assertTrue(colorCard.getPrintString().equals("(Red) 2"));
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

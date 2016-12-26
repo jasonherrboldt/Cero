@@ -24,9 +24,9 @@ public class Player {
         strategy = "";
     }
 
-    public void move(Card currentCard, CardValueMap cvm) {
+    public void move(Card currentCard) {
         if(isComputer()) {
-            if(currentCard.isNumberCard(cvm)) {
+            if(currentCard.isNumberCard()) {
                 Main.out("Handing move for numeric card.");
             } else {
                 if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {

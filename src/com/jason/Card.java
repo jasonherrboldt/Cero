@@ -41,6 +41,8 @@ public class Card {
     public static final String DRAW_TWO = "Draw Two";
     public static final String WILD = "Wild";
     public static final String WILD_DRAW_FOUR = "Wild Draw Four";
+
+    CardValueMap cvm;
     
     /**
      * Public constructor.
@@ -50,6 +52,10 @@ public class Card {
      * @param cvm   The CardValueMap object used to find the numeric value of the card.
      */
     public Card(String color, String face, CardValueMap cvm) {
+        if(color.equalsIgnoreCase(Card.COLORLESS) && (!face.equalsIgnoreCase(Card.WILD) && !face.equalsIgnoreCase(Card.WILD_DRAW_FOUR))) {
+            Main.out("WARN: Card constructor incorrectly called with colorless color and face " + face);
+        }
+        this.cvm = cvm;
         this.color = color;
         this.face = face;
         try {
@@ -91,19 +97,26 @@ public class Card {
     /**
      * Determines if this card has a numeric face value.
      *
-     * @param cvm   A CardValueReader object to map the face value to an int.
      * @return      True if this card has a numeric face value, false otherwise.
      */
-    public boolean isNumberCard(CardValueMap cvm) {
+    public boolean isNumberCard() { // tested
         int faceVal = cvm.getValue(face);
         return faceVal >= 0 && faceVal < 10;
     }
 
-    public boolean isColorlessCard() {
+    /**
+     * @return true if the card is colorless (e.g. wild), false otherwise.
+     */
+    public boolean isColorlessCard() { // tested
         return face.equalsIgnoreCase(WILD) || face.equalsIgnoreCase(WILD_DRAW_FOUR);
     }
 
-    public String getPrintString() {
+    /**
+     * Get the string needed to print card properties to the console.
+     *
+     * @return The string to print.
+     */
+    public String getPrintString() { // tested
         if(isColorlessCard()) {
             return getFace();
         } else {
@@ -111,23 +124,3 @@ public class Card {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
