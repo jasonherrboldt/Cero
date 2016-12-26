@@ -123,7 +123,7 @@ public class Hand {
      */
     @Nullable
     public Card getNumber(int number) { // tested
-        // (Hand is already sorted descending by highest color groups.)
+        // Hand is already sorted ascending by color group.
         for(List<Card> list : hand) {
             for(Card c : list) {
                 if(c.getValue() == number) {
@@ -151,12 +151,30 @@ public class Hand {
         return handSum;
     }
 
-    public void showCards() {
+    /**
+     * Print each card in hand to console.
+     */
+    public void showCards() { // don't need to test
         int i = 1;
         for(Card c : getAllCards()) {
             Main.out(i + ": " + c.getPrintString());
             i++;
         }
+    }
+
+    /**
+     * @return the color of the highest color group.
+     */
+    @Nullable
+    public String getHighestColor() {
+        if(hand.size() > 0) {
+            // Hand is already sorted ascending by color group.
+            if(hand.get(0).size() > 0) {
+                return hand.get(0).get(0).getColor();
+            }
+        }
+        Main.out("WARN: getHighestColor did not find a card.");
+        return null;
     }
 }
 

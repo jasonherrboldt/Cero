@@ -2,16 +2,9 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-import java.util.*;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.*;
 
-/**
- * Tests for Card methods.
- *
- * Created by jasonherrboldt on 12/25/16.
- */
 public class TestCard {
 
     private CardValueMap cvm;

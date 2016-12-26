@@ -22,18 +22,28 @@ public class Player {
         return this.hand;
     }
     
-    public void setHand(List<Card> hand) {
+    public void setHand(List<Card> hand) { // tested
         this.hand = new Hand();
         for(Card c : hand) {
             this.hand.addCard(c);
         }
     }
-    
-    public void draw(Card card) {
-        // hand.add(card);
+
+    /**
+     * Instruct the player to add a card to its hand.
+     *
+     * @param card The card to add.
+     */
+    public void draw(Card card) { // tested
+        hand.addCard(card);
     }
-    
-    public void discard(Card card) {
+
+    /**
+     * Instruct the player to discard a card.
+     *
+     * @param card The card to discard.
+     */
+    public void discard(Card card) { // tested
         hand.discard(card);
     }
     
@@ -55,6 +65,10 @@ public class Player {
 
     public void showCards() {
         hand.showCards();
+    }
+
+    public String setCurrentColor() {
+        return hand.getHighestColor();
     }
     
 }

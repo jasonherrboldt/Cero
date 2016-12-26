@@ -23,9 +23,9 @@ public class TestDeck {
 
     @Test
     public void testDeck_shuffle() {
-        Card firstCardBeforeShuffle = (Card)deck.peekAtTopCard();
+        Card firstCardBeforeShuffle = deck.peekAtTopCard();
         deck.shuffle();
-        Card firstCardAfterShuffle = (Card)deck.peekAtTopCard();
+        Card firstCardAfterShuffle = deck.peekAtTopCard();
         assertNotSame(firstCardBeforeShuffle, firstCardAfterShuffle);
     }
 

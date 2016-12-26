@@ -207,6 +207,13 @@ public class TestHand {
         assertNull(noCard);
     }
 
+    @Test
+    public void testHand_getHighestColor() {
+        String highestColor = getNumberOfMostColorsHand.getHighestColor();
+        assertTrue(highestColor.equalsIgnoreCase(Card.RED));
+        assertFalse(highestColor.equalsIgnoreCase(Card.BLUE));
+    }
+
 }
 
 

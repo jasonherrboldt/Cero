@@ -4,16 +4,10 @@ import java.util.*;
 
 import static com.jason.Card.*;
 
+/**
+ * A deck of cards.
+ */
 public class Deck {
-
-    /*
-
-        From unorules.com:
-
-        All number cards are the same value as the number on the card (e.g. a 9 is 9 points).
-        “Draw Two” – 20 Points, “Reverse” – 20 Points, “Skip” – 20 Points, “Wild” – 50 Points,
-        and “Wild Draw Four” – 50 Points. The first player to attain 500 points wins the game.
-     */
 
     public static final int DECK_SIZE = 108;
 
@@ -91,7 +85,7 @@ public class Deck {
      * @return the card on the top of the deck. 
      */
     public Card getNextCard() { // tested
-        return (Card)deck.pop();
+        return deck.pop();
     }
     
     /**
@@ -100,13 +94,14 @@ public class Deck {
      * @return a copy of the top card on the deck. 
      */
     public Card peekAtTopCard() { // tested
-        return (Card)deck.peek();
+        return deck.peek();
     }
 
     public Stack<Card> getDeck() { // no test necessary
         return deck;
     }
 
+    // for debug
     public void printDeck() { // no test necessary
         Iterator<Card> iter = getDeck().iterator();
         while(iter.hasNext()) {

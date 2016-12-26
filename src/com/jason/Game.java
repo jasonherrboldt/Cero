@@ -13,7 +13,8 @@ public class Game {
      *
      *  2) Space out the console output for computer steps; make it look like the
      *     computer is thinking about what its doing, instead of just showing a dump
-     *     of steps. Might be fun to have it complain if it has to draw more than three cards.
+     *     of steps to the user. Might be fun to have it complain if it has to draw more
+     *     than three cards.
      *
      *  3) Add javadocs to every method.
      *
@@ -61,6 +62,7 @@ public class Game {
         // while(!gameWinnerExists) {
         
             deck.shuffle();
+            // deck.printDeck(); // for debug
             
             dealHands();
 
@@ -95,9 +97,6 @@ public class Game {
 
         // Wrap this block in if player1 conditional:
         Main.out(playerName + "'s hand:");
-        // Hand hand = player.getHand();
-        // List<Card> handCards = hand.getAllCards();
-        // printCards(handCards);
         player.showCards();
 
         if(currentCard.isNumberCard(cvm)) {
@@ -106,16 +105,27 @@ public class Game {
             handleNonNumericCard();
         }
 
-        // Discard the first card no matter what for debug.
-        /*
+        // Discard the first card no matter what (for debug).
         int usersChoice = 0; // fake choice for debug.
-        Card cardToDiscard = handCards.get(usersChoice); // I don't like this - should go through player object.
+        List<Card> playerCards = player.getHand().getAllCards();
+        Card cardToDiscard = playerCards.get(usersChoice);
         player.discard(cardToDiscard);
         currentCard = cardToDiscard;
-        currentColor = currentCard.getColor();
-        Main.out(playerName + " discards " + getCardPrintString(cardToDiscard) + ".");
+        if (currentCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
+            if(player.isComputer()) {
+                currentColor = player.setCurrentColor();
+                if(currentColor == null) {
+                    Main.out("WARN: Game just set current color to null");
+                }
+            } else {
+                Main.out("Ask Player1 for color choice.");
+            }
+        } else {
+            currentColor = currentCard.getColor();
+        }
+
+        Main.out(playerName + " discards " + cardToDiscard.getPrintString() + ".");
         Main.out(playerName + " now holds " + player.getHand().getSize() + " cards.");
-        */
         Main.out("");
 
     }
@@ -141,24 +151,26 @@ public class Game {
     private void displayCurrentPlayedCard() {
         Main.out("The current played card is " + currentCard.getPrintString());
     }
-    
+
+    /**
+     * Deal 7 cards each from the top of the deck to each player.
+     */
     private void dealHands() {
-        List<Player> players = new ArrayList<Player>();
-        players.add(player2);
+        List<Player> players = new ArrayList<>();
         players.add(player1);
+        players.add(player2);
         for(Player p : players) {
-            List<Card> cards = new ArrayList<Card>();
+            List<Card> cards = new ArrayList<>();
             for(int i = 0; i < 7; i++) {
                 cards.add(deck.getNextCard());
             }
             p.setHand(cards);
         }
     }
-    
-    public void setCurrentColor(String color) {
-        this.currentColor = color;
-    }
-    
+
+    /**
+     * @return random true or false
+     */
     public boolean pickRandomBoolean() {
         return Math.random() < 0.5; 
     }
