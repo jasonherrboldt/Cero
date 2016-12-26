@@ -71,4 +71,9 @@ public class Card {
         return card.getColor().equalsIgnoreCase(this.color)
                 && card.getFace().equalsIgnoreCase(this.face);
     }
+
+    public boolean isNumberCard(CardValueMap cvm) {
+        int faceVal = cvm.getValue(face);
+        return faceVal >= 0 && faceVal < 10;
+    }
 }

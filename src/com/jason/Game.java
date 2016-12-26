@@ -5,8 +5,20 @@ import java.util.List;
 
 public class Game {
 
-    // Add null checks everywhere you can. Use if/else or try/catch blocks,
-    // and have the exceptions ignore nulls and print warnings to the console.
+    /*
+     * TODO:
+     *
+     * 1) Add null checks everywhere you can. Use if/else or try/catch blocks,
+     *    and have the exceptions ignore nulls and print warnings to the console.
+     *
+     *  2) Space out the console output for computer steps; make it look like the
+     *     computer is thinking about what its doing, instead of just showing a dump
+     *     of steps. Might be fun to have it complain if it has to draw more than three cards.
+     *
+     *  3) Add javadocs to every method.
+     *
+     *  4) Make sure every method is public and tested.
+     */
     
     private Deck deck;
     private Player player0; // the computer
@@ -18,11 +30,13 @@ public class Game {
     private String currentColor;
     private int score;
     private static final int FAKE_GAME_RUNS = 8;
+    private CardValueMap cvm;
     
     public Game(String userName) {
 
+        cvm = new CardValueMap();
         deck = new Deck();
-        // deck.printDeck();
+        // deck.printDeck(); // debug
         Main.out("");
         player0 = new Player("Computer", true);
         if(pickRandomBoolean()) {
@@ -61,7 +75,6 @@ public class Game {
                     // gameWinnerExists = true;
                 }
                 isPlayerOnesTurn = !isPlayerOnesTurn;
-                boolean x = isPlayerOnesTurn;
             }
         
             // }
@@ -82,7 +95,8 @@ public class Game {
         List<Card> handCards = hand.getAllCards();
         printCards(handCards);
         
-        if(isNumberCard(currentCard)) {
+        // if(isNumberCard(currentCard)) {
+        if(currentCard.isNumberCard(cvm)) {
             handleNumericCard();
         } else {
             handleNonNumericCard();
@@ -107,29 +121,16 @@ public class Game {
         }
     }
     
-    public boolean isNumberCard(Card card) {
-        String face = card.getFace();
-        return !(face.equalsIgnoreCase(Card.SKIP)
-                || face.equalsIgnoreCase(Card.REVERSE)
-                || face.equalsIgnoreCase(Card.DRAW_TWO)
-                || face.equalsIgnoreCase(Card.WILD)
-                || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR));
-    }
+//    public boolean isNumberCard(Card card) {
+//        String face = card.getFace();
+//        return !(face.equalsIgnoreCase(Card.SKIP)
+//                || face.equalsIgnoreCase(Card.REVERSE)
+//                || face.equalsIgnoreCase(Card.DRAW_TWO)
+//                || face.equalsIgnoreCase(Card.WILD)
+//                || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR));
+//    }
     
     public void handleNonNumericCard() {
-
-        /*
-            // use this to switch on player0's strategy
-            switch (player.Strategy) {
-                case BOLD:
-                    // todo
-                    break;
-
-                case CAUTIOUS:
-                    // todo
-                    break;
-         */
-
         if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
             Main.out("Handling move for " + Card.SKIP + ".");
         } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
@@ -145,19 +146,6 @@ public class Game {
     
     public void handleNumericCard() {
         Main.out("Handling move for numeric card.");
-
-        /*
-            // use this to switch on player0's strategy
-            switch (player.Strategy) {
-                case BOLD:
-                    // todo
-                    break;
-
-                case CAUTIOUS:
-                    // todo
-                    break;
-         */
-
     }
     
     private void displayCurrentPlayedCard() {

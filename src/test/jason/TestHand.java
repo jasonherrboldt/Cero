@@ -24,9 +24,9 @@ public class TestHand {
     @Before
     public void setup() {
         cvm = new CardValueMap();
+
         // Create a mock hand and mimic the implementation of Hand.addCard.
         mockHand = new ArrayList<>();
-        
         List<Card> blueCards = new ArrayList<>();
         blueCards.add(new Card(Card.BLUE, Card.ONE, cvm));
         blueCards.add(new Card(Card.BLUE, Card.NINE, cvm));
@@ -101,7 +101,6 @@ public class TestHand {
 
     @Test
     public void testHand_discard() {
-        // List<List<Card>> tempMockHand = mockHand;
         Hand tempRealHand = realHand;
         int tempRealHandSizeBefore = tempRealHand.getSize();
         Card inTempRealHand = new Card(Card.BLUE, Card.NINE, cvm);
