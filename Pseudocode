@@ -1,0 +1,23 @@
+PLAYER.MOVE PSEUDOCODE
+
+    if I am the computer
+        if the current played card (cpc) is a numeric card
+            // TODO: Decide a numeric move
+        Else
+            If cpc is a skip
+                // TODO: Handle move for skip card
+            If cpc is a reverse
+                // TODO: Handle move for reverse card
+            If cpc is a draw two
+                // TODO: Handle move for draw two card
+            If cpc is a wild card
+                // TODO: Handle move for a wild card
+            If cpc is a wild draw four card
+                // TODO: Handle move for a wild draw four card
+    Else
+        Ask the user to decide the move
+
+
+
+
+GAME PSEUDOCODE

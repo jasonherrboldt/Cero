@@ -15,21 +15,29 @@ public class Game {
     /*
      * TODO:
      *
-     * 1) Add null checks everywhere you can. Use if/else or try/catch blocks,
+     *    Add null checks everywhere you can. Use if/else or try/catch blocks,
      *    and have the exceptions ignore nulls and getPrintString warnings to the console.
      *
-     *  2) Space out the console output for computer steps; make it look like the
-     *     computer is thinking about what its doing, instead of just showing a dump
-     *     of steps to the user. Might be fun to have it complain if it has to draw more
-     *     than three cards.
+     *    Space out the console output for computer steps; make it look like the
+     *    computer is thinking about what its doing, instead of just showing a dump
+     *    of steps to the user. Might be fun to have it complain if it has to draw more
+     *    than three cards.
      *
-     *  3) Add javadocs to every method.
+     *    Add javadocs to every method.
      *
-     *  4) Make sure every method is public and tested.
+     *    Make sure every method is public and tested.
      *
-     *  5) Wouldn't it be cool if player2 could keep track of what strategy it used for each deck,
-     *     and whether or not it won that deck? It could then pick future strategies by whichever
-     *     strategy produced the most wins.
+     *    Wouldn't it be cool if player 2 could keep track of what strategy it used for each deck,
+     *    and whether or not it won that deck? It could then pick future strategies by whichever
+     *    strategy produced the most wins.
+     *
+     *    "A defensive strategy would advise playing a high card in order to reduce the point value of the hand.
+     *    However, an offensive strategy would suggest playing a 0 when the player wants to continue on the current
+     *    color, because it is less likely to be matched by another 0 of a different color (there is only one 0 of
+     *    each color, but two of each 1–9)." - uno wiki page
+     *
+     *    The computer might want to adopt a cautious strategy if it detects that player 1 is down to just a few
+     *    cards.
      *
      */
     
@@ -73,9 +81,20 @@ public class Game {
             
             dealHands();
 
+            /*
+             * Note: If the first card turned up from the Draw Pile (to form the Discard Pile) is an Action card,
+             * the Action from that card applies and must be carried out. The exceptions are if the Wild or Wild
+             * Draw Four cards are turned up, in which case – Return them to the Draw Pile, shuffle them, and turn
+             * over a new card. - unorules.com
+             */
+
             currentCard = deck.getNextCard();
             currentColor = currentCard.getColor();
-        
+
+            /*
+             * At any time, if the Draw Pile becomes depleted and no one has yet won the round, take the Discard Pile,
+             * shuffle it, and turn it over to regenerate a new Draw Pile. - unorules.com
+             */
             // while(!deckWinnerExists) {
             for(int i = 0; i < FAKE_GAME_RUNS; i++) {
                 if(isPlayerOnesTurn) {
@@ -116,7 +135,7 @@ public class Game {
         currentCard = cardToDiscard;
         if (currentCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
             if(player.isComputer()) {
-                currentColor = player.setCurrentColor();
+                // currentColor = player.setCurrentColor();
                 if(currentColor == null) {
                     Main.out("WARN: Game just set current color to null");
                 }

@@ -24,6 +24,11 @@ public class Player {
         strategy = "";
     }
 
+    /**
+     * Decide a move given the current played card.
+     *
+     * @param currentCard The current played card.
+     */
     public void move(Card currentCard) {
         if(isComputer()) {
             if(currentCard.isNumberCard()) {
@@ -45,11 +50,19 @@ public class Player {
             Main.out("Ask the user what to do.");
         }
     }
-    
-    public Hand getHand() {
+
+    /**
+     * @return the player's current hand.
+     */
+    public Hand getHand() { // no test necessary.
         return this.hand;
     }
-    
+
+    /**
+     * Set the current player's hand with a given list of cards.
+     *
+     * @param hand The hand to set.
+     */
     public void setHand(List<Card> hand) { // tested
         this.hand = new Hand();
         for(Card c : hand) {
@@ -74,29 +87,42 @@ public class Player {
     public void discard(Card card) { // tested
         hand.discard(card);
     }
-    
-    public String getName() {
+
+    /**
+     * @return the player's name
+     */
+    public String getName() { // no test needed
         return this.name;
     }
-    
-    public boolean isComputer() {
+
+    /**
+     * @return whether the current player is the computer.
+     */
+    public boolean isComputer() { // no test needed
         return this.isComputer;
     }
 
-    public void setStrategy(String strategy) {
+    /**
+     * Set the player's strategy. Can be cautious or bold.
+     *
+     * @param strategy The strategy to set.
+     */
+    public void setStrategy(String strategy) { // no test needed
         this.strategy = strategy;
     }
 
-    public String getStrategy() {
+    /**
+     * @return the player's strategy.
+     */
+    public String getStrategy() { // no test needed
         return this.strategy;
     }
 
-    public void showCards() {
+    /**
+     * Display the current hand, allowing user to remote-control player 1.
+     */
+    public void showCards() { // no test needed
         hand.showCards();
-    }
-
-    public String setCurrentColor() {
-        return hand.getHighestColor();
     }
     
 }

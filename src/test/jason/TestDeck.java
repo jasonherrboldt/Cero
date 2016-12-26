@@ -22,14 +22,6 @@ public class TestDeck {
     }
 
     @Test
-    public void testDeck_shuffle() {
-        Card firstCardBeforeShuffle = deck.peekAtTopCard();
-        deck.shuffle();
-        Card firstCardAfterShuffle = deck.peekAtTopCard();
-        assertNotSame(firstCardBeforeShuffle, firstCardAfterShuffle);
-    }
-
-    @Test
     public void testDeck_getNextCard() {
         int sizeBeforePop = deck.getDeckSize();
         deck.getNextCard();
@@ -64,19 +56,3 @@ public class TestDeck {
         assertEquals(greenCount, 25);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

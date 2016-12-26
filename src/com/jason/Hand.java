@@ -1,7 +1,6 @@
 package com.jason;
 
 import com.sun.istack.internal.Nullable;
-
 import java.util.*;
 
 /**
@@ -33,6 +32,12 @@ public class Hand {
         Collections.sort(hand, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
     }
 
+    /**
+     * Get a list of cards of a specified color.
+     *
+     * @param color The specified color.
+     * @return      The list of cards of the specified color.
+     */
     @Nullable
     public List<Card> getColorList(String color) { // tested
         for(List<Card> list : hand) {
@@ -45,6 +50,12 @@ public class Hand {
         return null;
     }
 
+    /**
+     * Discard a card.
+     *
+     * @param card                          The card to discard.
+     * @throws IllegalArgumentException     If card not found in hand.
+     */
     public void discard(Card card) throws IllegalArgumentException { // tested
         if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
@@ -65,6 +76,12 @@ public class Hand {
         }
     }
 
+    /**
+     * Check to see if a specified card is in the hand.
+     *
+     * @param card  The card to check.
+     * @return      True if the card is present in the deck, false otherwise.
+     */
     public boolean hasCard(Card card) { // tested
         boolean cardFound = false;
         List<Card> colorList = getColorList(card.getColor());
@@ -75,7 +92,10 @@ public class Hand {
         }
         return cardFound;
     }
-    
+
+    /**
+     * @return the number of cards in the deck.
+     */
     public int getSize() { // tested in testHand_discard()
         int count = 0;
         for(List<Card> list : hand) {
@@ -83,7 +103,10 @@ public class Hand {
         }
         return count;
     }
-    
+
+    /**
+     * @return a flat list of all the cards in the deck.
+     */
     public List<Card> getAllCards() { // tested
         List<Card> cards = new ArrayList<>();
         for(List<Card> list : hand) {
@@ -140,13 +163,9 @@ public class Hand {
         return null;
     }
 
-    @Nullable
-    public Card getWildOrWildDrawFour() {
-        // Should get the wild draw four first if both present.
-        // if(hasCard(new Card(Deck.COLORLESS,)))
-        return null;
-    }
-
+    /**
+     * @return the sum of all numeric card values in a hand.
+     */
     public int sumCards() { // tested
         int handSum = 0;
         for(List<Card> list : hand) {
@@ -183,22 +202,3 @@ public class Hand {
         return null;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

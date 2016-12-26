@@ -126,33 +126,6 @@ public class TestHand {
         }
     }
 
-    // Private helper methods:
-
-    private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws IllegalArgumentException {
-        boolean mismatchFound = false;
-        if(cList1.size() == cList2.size()) {
-            for (int i = 0; i < cList1.size(); i++) {
-                if (!(cList1.get(i).getColor().equalsIgnoreCase(cList2.get(i).getColor())
-                        && cList1.get(i).getFace().equalsIgnoreCase(cList2.get(i).getFace()))) {
-                    mismatchFound = true;
-                }
-            }
-        } else {
-            throw new IllegalArgumentException("cList1 must be the same size as cList2.");
-        }
-        return mismatchFound;
-    }
-
-    private List<Card> getAllCardsFromMockHand(List<List<Card>> hand) {
-        List<Card> cards = new ArrayList<>();
-        for(List<Card> list : hand) {
-            for(Card c : list) {
-                cards.add(c);
-            }
-        }
-        return cards;
-    }
-
     @Test
     public void testHand_hasCard() {
         assertTrue(realHand.hasCard(new Card(Card.BLUE, Card.NINE, cvm)));
@@ -192,10 +165,6 @@ public class TestHand {
         assertNull(noCard);
     }
 
-    /*
-     * Gets number of largest available color group. Checks all color groups descending by color group size
-     * and returns best choice.
-     */
     @Test
     public void testHand_getNumber() {
         Card correctCard = new Card(Card.RED, Card.NINE, cvm);
@@ -214,32 +183,33 @@ public class TestHand {
         assertFalse(highestColor.equalsIgnoreCase(Card.BLUE));
     }
 
+
+
+    // Private helper methods:
+
+    private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws IllegalArgumentException {
+        boolean mismatchFound = false;
+        if(cList1.size() == cList2.size()) {
+            for (int i = 0; i < cList1.size(); i++) {
+                if (!(cList1.get(i).getColor().equalsIgnoreCase(cList2.get(i).getColor())
+                        && cList1.get(i).getFace().equalsIgnoreCase(cList2.get(i).getFace()))) {
+                    mismatchFound = true;
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("cList1 must be the same size as cList2.");
+        }
+        return mismatchFound;
+    }
+
+    private List<Card> getAllCardsFromMockHand(List<List<Card>> hand) {
+        List<Card> cards = new ArrayList<>();
+        for(List<Card> list : hand) {
+            for(Card c : list) {
+                cards.add(c);
+            }
+        }
+        return cards;
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

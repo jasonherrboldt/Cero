@@ -68,7 +68,7 @@ public class Deck {
     /**
      * Shuffle the deck.
      */
-    public void shuffle() { // tested
+    public void shuffle() { // no test needed
         Collections.shuffle(deck);
     }
     

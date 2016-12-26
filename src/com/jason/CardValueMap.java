@@ -35,6 +35,13 @@ public class CardValueMap {
         valueMap.put(Card.WILD_DRAW_FOUR, 50);
     }
 
+    /**
+     * Get the numeric value associated with a face card. "Nine" = 9, "Reverse" = 20, etc.
+     *
+     * @param face                          The face to analyze.
+     * @return                              The numeric value of the face.
+     * @throws IllegalArgumentException     Throw up if submitted face does not exist in map.
+     */
     public int getValue(String face) throws IllegalArgumentException {
         if(!valueMap.containsKey(face)) {
             throw new IllegalArgumentException ("Invalid face value: " + face);
@@ -42,17 +49,3 @@ public class CardValueMap {
         return valueMap.get(face);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
