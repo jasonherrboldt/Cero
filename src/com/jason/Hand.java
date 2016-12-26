@@ -23,8 +23,7 @@ public class Hand {
             newList.add(card);
             hand.add(newList);
         }
-
-        // Sort the hand descending by color group size.
+        // Sort the hand descending by color group size (NOT by face value sum size).
         Collections.sort(hand, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
     }
 
@@ -101,6 +100,10 @@ public class Hand {
         int highestValue = numeric ? 9 : 50;
         if(color != null) {
             List<Card> colorList = getColorList(color);
+            if(colorList == null) {
+                return null;
+            }
+            // Sort the color group descending by face value.
             Collections.sort(colorList, (Card c1, Card c2) -> c2.getValue() - (c1.getValue()));
             for(Card c : colorList) {
                 if(c.getValue() <= highestValue) {
@@ -111,20 +114,24 @@ public class Hand {
         return null;
     }
 
+    /**
+     * Get number of largest available color group. Checks all color groups descending by color group size
+     * and returns best choice.
+     *
+     * @param number    The number to search for.
+     * @return          The card of the highest color group, or null if no card found.
+     */
     @Nullable
-    public Card getNumberOfBestColor(int number) {
-        // List<Card> cards = getAllCards();
-        List<List<Card>> cards = new ArrayList<>();
-        // Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
-        // do something like this:
-        Collections.sort(cards, (List<Card> l1, List<Card> l2) -> l1.size() - l2.size());
+    public Card getNumber(int number) { // tested
+        // (Hand is already sorted descending by highest color groups.)
+        for(List<Card> list : hand) {
+            for(Card c : list) {
+                if(c.getValue() == number) {
+                    return c;
+                }
+            }
+        }
         return null;
-
-
-    }
-
-    public void sortColorsAscending() {
-
     }
 
     @Nullable

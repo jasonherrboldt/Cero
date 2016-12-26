@@ -12,7 +12,8 @@ public class Card {
      * @param color The color of the card.
      * @param face  The face of the card.
      */
-    public Card(String color, String face, int value) {
+    public Card(String color, String face, int value) { // Gosh it sure would be nice if we didn't have to give
+                                                        // the fucking int value every time.
         this.color = color;
         this.face = face;
         this.value = value;

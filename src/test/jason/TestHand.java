@@ -1,6 +1,7 @@
 package test.jason;
 
 import com.jason.*;
+import com.sun.source.tree.AssertTree;
 import org.junit.*;
 import java.util.*;
 
@@ -15,8 +16,10 @@ import static org.junit.Assert.*;
 public class TestHand {
 
     private List<List<Card>> mockHand;
-    Hand realHand;
-    Hand getHighestTestHand;
+    private Hand realHand;
+    private Hand getHighestFaceHand;
+    private Hand getNumberOfMostColorsHand;
+
 
     @Before
     public void setup() {
@@ -52,13 +55,21 @@ public class TestHand {
         realHand.addCard(new Card(Deck.YELLOW, Deck.REVERSE, 20));
         realHand.addCard(new Card(Deck.BLUE, Deck.WILD, 50));
 
-        getHighestTestHand = new Hand();
-        getHighestTestHand.addCard(new Card(Deck.RED, Deck.THREE, 3));
-        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.TWO, 2));
-        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.FOUR, 4));
-        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
-        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.REVERSE, 20));
-        getHighestTestHand.addCard(new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50));
+        getHighestFaceHand = new Hand();
+        getHighestFaceHand.addCard(new Card(Deck.RED, Deck.THREE, 3));
+        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.TWO, 2));
+        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.FOUR, 4));
+        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
+        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.REVERSE, 20));
+        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50));
+
+        getNumberOfMostColorsHand = new Hand();
+        getNumberOfMostColorsHand.addCard(new Card(Deck.RED, Deck.THREE, 3));
+        getNumberOfMostColorsHand.addCard(new Card(Deck.RED, Deck.NINE, 9));
+        getNumberOfMostColorsHand.addCard(new Card(Deck.RED, Deck.ZERO, 0));
+        getNumberOfMostColorsHand.addCard(new Card(Deck.BLUE, Deck.TWO, 2));
+        getNumberOfMostColorsHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
+        getNumberOfMostColorsHand.addCard(new Card(Deck.GREEN, Deck.NINE, 9));
     }
     
     @Test
@@ -163,7 +174,7 @@ public class TestHand {
     public void testHand_getHighestFace_numeric() {
         String color = Deck.BLUE;
         Card inputCard = new Card(Deck.BLUE, Deck.NINE, 9);
-        Card outputCard = this.getHighestTestHand.getHighestFace(color, true);
+        Card outputCard = getHighestFaceHand.getHighestFace(color, true);
         assertTrue(inputCard.equals(outputCard));
     }
 
@@ -171,8 +182,29 @@ public class TestHand {
     public void testHand_getHighestFace_nonNumeric() {
         String color = Deck.BLUE;
         Card inputCard = new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50);
-        Card outputCard = this.getHighestTestHand.getHighestFace(color, false);
+        Card outputCard = this.getHighestFaceHand.getHighestFace(color, false);
         assertTrue(inputCard.equals(outputCard));
+    }
+
+    @Test
+    public void testHand_getHighestFace_noColor() {
+        Card noCard = getHighestFaceHand.getHighestFace(Deck.GREEN, true);
+        assertNull(noCard);
+    }
+
+    /*
+     * Gets number of largest available color group. Checks all color groups descending by color group size
+     * and returns best choice.
+     */
+    @Test
+    public void testHand_getNumber() {
+        Card correctCard = new Card(Deck.RED, Deck.NINE, 9);
+        Card testCard = getNumberOfMostColorsHand.getNumber(9);
+        assertTrue(correctCard.equals(testCard));
+
+        // Make sure it returns null if card not found.
+        Card noCard = getNumberOfMostColorsHand.getNumber(4);
+        assertNull(noCard);
     }
 
 }
