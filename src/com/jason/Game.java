@@ -53,7 +53,7 @@ public class Game {
         deck = new Deck();
         Main.out("");
         player2 = new Player("Computer", true);
-        if(pickRandomBoolean()) {
+        if(getRandomBoolean()) {
             player2.setStrategy(Player.STRATEGY_BOLD);
         } else {
             player2.setStrategy(Player.STRATEGY_CAUTIOUS);
@@ -62,7 +62,7 @@ public class Game {
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
         gameWinnerExists = false;
         deckWinnerExists = false;
-        isPlayerOnesTurn = pickRandomBoolean();
+        isPlayerOnesTurn = getRandomBoolean();
     }
     
     public void play() {
@@ -171,7 +171,7 @@ public class Game {
     /**
      * @return random true or false
      */
-    public boolean pickRandomBoolean() { // no test needed
+    public boolean getRandomBoolean() { // no test needed
         return Math.random() < 0.5; 
     }
         

@@ -18,12 +18,14 @@ public class Player {
     public static final String STRATEGY_NEUTRAL = "Neutral";
     private String strategy;
     private int score;
-    
+    int otherPlayersHandCount;
+
     public Player(String name, boolean isComputer) {
-        this.name = name;      
+        this.name = name;
         this.isComputer = isComputer;
         strategy = "";
         score = 0;
+        otherPlayersHandCount = 0;
     }
 
     /**
@@ -32,14 +34,14 @@ public class Player {
      * @param currentCard The current played card.
      */
     public void move(Card currentCard) {
-        if(currentCard == null) {
+        if (currentCard == null) {
             Main.out("ERROR: null card passed to move. Cannot make any move.");
         } else {
-            if(isComputer()) {
-                if(currentCard.isNumberCard()) {
+            if (isComputer()) {
+                if (currentCard.isNumberCard()) {
                     Main.out("Handing move for numeric card.");
                 } else {
-                    if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
+                    if (currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
                         Main.out("Handling move for " + Card.SKIP + ".");
                     } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
                         Main.out("Handling move for " + Card.REVERSE + ".");
@@ -71,7 +73,7 @@ public class Player {
      */
     public void setHand(List<Card> hand) { // tested
         this.hand = new Hand();
-        for(Card c : hand) {
+        for (Card c : hand) {
             this.hand.addCard(c);
         }
     }
@@ -146,5 +148,31 @@ public class Player {
     public int getScore() {
         return this.score;
     }
+
+    public void updateOtherPlayersHandCount(int count) {
+        otherPlayersHandCount = count;
+    }
+
+    public int showHandCount() {
+        return hand.getSize();
+    }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
