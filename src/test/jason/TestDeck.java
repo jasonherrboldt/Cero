@@ -53,10 +53,10 @@ public class TestDeck {
         int greenCount = 0;
         while(iter.hasNext()) {
             Card card = iter.next();
-            if(card.getFace().equalsIgnoreCase(Deck.SIX)) {
+            if(card.getFace().equalsIgnoreCase(Card.SIX)) {
                 sixCount++;
             }
-            if(card.getColor().equalsIgnoreCase(Deck.GREEN)) {
+            if(card.getColor().equalsIgnoreCase(Card.GREEN)) {
                 greenCount++;
             }
         }

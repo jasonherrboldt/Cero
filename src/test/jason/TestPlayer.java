@@ -9,15 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestPlayer {
-
-    Player player;
-    List<Card> hand;
-
-    @Before
-    public void setup() {
-        player = new Player("Michael Jackson", false);
-        hand = new ArrayList<>();
-    }
     
     @Test
     public void testPlayer_draw() {

@@ -109,11 +109,11 @@ public class Game {
     
     public boolean isNumberCard(Card card) {
         String face = card.getFace();
-        return !(face.equalsIgnoreCase(Deck.SKIP)
-                || face.equalsIgnoreCase(Deck.REVERSE)
-                || face.equalsIgnoreCase(Deck.DRAW_TWO)
-                || face.equalsIgnoreCase(Deck.WILD)
-                || face.equalsIgnoreCase(Deck.WILD_DRAW_FOUR));
+        return !(face.equalsIgnoreCase(Card.SKIP)
+                || face.equalsIgnoreCase(Card.REVERSE)
+                || face.equalsIgnoreCase(Card.DRAW_TWO)
+                || face.equalsIgnoreCase(Card.WILD)
+                || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR));
     }
     
     public void handleNonNumericCard() {
@@ -130,16 +130,16 @@ public class Game {
                     break;
          */
 
-        if(currentCard.getFace().equalsIgnoreCase(Deck.SKIP)) {
-            Main.out("Handling move for " + Deck.SKIP + ".");
-        } else if (currentCard.getFace().equalsIgnoreCase(Deck.REVERSE)) {
-            Main.out("Handling move for " + Deck.REVERSE + ".");
-        } else if (currentCard.getFace().equalsIgnoreCase(Deck.DRAW_TWO)) {
-            Main.out("Handling move for " + Deck.DRAW_TWO + ".");
-        } else if (currentCard.getFace().equalsIgnoreCase(Deck.WILD)) {
-            Main.out("Handling move for " + Deck.WILD + ".");
+        if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
+            Main.out("Handling move for " + Card.SKIP + ".");
+        } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
+            Main.out("Handling move for " + Card.REVERSE + ".");
+        } else if (currentCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+            Main.out("Handling move for " + Card.DRAW_TWO + ".");
+        } else if (currentCard.getFace().equalsIgnoreCase(Card.WILD)) {
+            Main.out("Handling move for " + Card.WILD + ".");
         } else { // WILD_DRAW_FOUR
-            Main.out("Handling move for " + Deck.WILD_DRAW_FOUR + ".");
+            Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
         }
     }
     

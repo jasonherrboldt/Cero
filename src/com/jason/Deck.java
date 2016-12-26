@@ -2,6 +2,8 @@ package com.jason;
 
 import java.util.*;
 
+import static com.jason.Card.*;
+
 public class Deck {
 
     /*
@@ -16,45 +18,24 @@ public class Deck {
     public static final int DECK_SIZE = 108;
 
     private Stack<Card> deck;
-
-    public static final String RED = "Red";
-    public static final String YELLOW = "Yellow";
-    public static final String GREEN = "Green";
-    public static final String BLUE = "Blue";
-    public static final String COLORLESS = "Colorless";
-    
-    public static final String ZERO = "0";
-    public static final String ONE = "1";
-    public static final String TWO = "2";
-    public static final String THREE = "3";
-    public static final String FOUR = "4";
-    public static final String FIVE = "5";
-    public static final String SIX = "6";
-    public static final String SEVEN = "7";
-    public static final String EIGHT = "8";
-    public static final String NINE = "9";
-
-    public static final String SKIP = "Skip";
-    public static final String REVERSE = "Reverse";
-    public static final String DRAW_TWO = "Draw Two";
-    public static final String WILD = "Wild";
-    public static final String WILD_DRAW_FOUR = "Wild Draw Four";
+    private CardValueMap cvm;
 
     /**
      * Public constructor.
      */
     public Deck() {
+        cvm = new CardValueMap();
         List<String> colors = new ArrayList<>();
         deck = new Stack<>();
-        colors.add(RED);
-        colors.add(YELLOW);
-        colors.add(GREEN);
-        colors.add(BLUE);
+        colors.add(Card.RED);
+        colors.add(Card.YELLOW);
+        colors.add(Card.GREEN);
+        colors.add(Card.BLUE);
         
         // Make 0 - 9 of all four colors.
         for(String c : colors) {
             for(int i = 0; i < 10; i++) {
-                Card card = new Card(c, Integer.toString(i), i);
+                Card card = new Card(c, Integer.toString(i), cvm);
                 deck.push(card);
             }   
         }
@@ -62,7 +43,7 @@ public class Deck {
         // Make 1 - 9 of all four colors.
         for(String c : colors) {
             for(int i = 1; i < 10; i++) {
-                Card card = new Card(c, Integer.toString(i), i);
+                Card card = new Card(c, Integer.toString(i), cvm);
                 deck.push(card);
             }   
         }
@@ -70,20 +51,20 @@ public class Deck {
         // Make skip, reverse and draw two cards.
         for(int i = 0; i < 2; i++) {
             for(String c : colors) {
-                Card card = new Card(c, SKIP, 20);
+                Card card = new Card(c, Card.SKIP, cvm);
                 deck.push(card);
-                card = new Card(c, REVERSE, 20);
+                card = new Card(c, Card.REVERSE, cvm);
                 deck.push(card);
-                card = new Card(c, DRAW_TWO, 20);
+                card = new Card(c, Card.DRAW_TWO, cvm);
                 deck.push(card);
             }
         }
         
         // Make wild and draw four cards.
         for(String c : colors) {
-            Card card = new Card (COLORLESS, WILD, 50);
+            Card card = new Card (Card.COLORLESS, WILD, cvm);
             deck.push(card);
-            card = new Card (COLORLESS, WILD_DRAW_FOUR, 50);
+            card = new Card (Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
             deck.push(card);
         }
     }

@@ -1,7 +1,6 @@
 package test.jason;
 
 import com.jason.*;
-import com.sun.source.tree.AssertTree;
 import org.junit.*;
 import java.util.*;
 
@@ -19,57 +18,59 @@ public class TestHand {
     private Hand realHand;
     private Hand getHighestFaceHand;
     private Hand getNumberOfMostColorsHand;
+    private CardValueMap cvm;
 
 
     @Before
     public void setup() {
+        cvm = new CardValueMap();
         // Create a mock hand and mimic the implementation of Hand.addCard.
         mockHand = new ArrayList<>();
         
         List<Card> blueCards = new ArrayList<>();
-        blueCards.add(new Card(Deck.BLUE, Deck.ONE, 1));
-        blueCards.add(new Card(Deck.BLUE, Deck.NINE, 9));
-        blueCards.add(new Card(Deck.BLUE, Deck.WILD, 50));
+        blueCards.add(new Card(Card.BLUE, Card.ONE, cvm));
+        blueCards.add(new Card(Card.BLUE, Card.NINE, cvm));
+        blueCards.add(new Card(Card.BLUE, Card.WILD, cvm));
         mockHand.add(blueCards);
 
         List<Card> yellowCards = new ArrayList<>();
-        yellowCards.add(new Card(Deck.YELLOW, Deck.SIX, 6));
-        yellowCards.add(new Card(Deck.YELLOW, Deck.REVERSE, 20));
+        yellowCards.add(new Card(Card.YELLOW, Card.SIX, cvm));
+        yellowCards.add(new Card(Card.YELLOW, Card.REVERSE, cvm));
         mockHand.add(yellowCards);
 
         List<Card> redCards = new ArrayList<>();
-        redCards.add(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 50));
+        redCards.add(new Card(Card.RED, Card.WILD_DRAW_FOUR, cvm));
         mockHand.add(redCards);
 
         List<Card> greenCards = new ArrayList<>();
-        greenCards.add(new Card(Deck.GREEN, Deck.TWO, 2));
+        greenCards.add(new Card(Card.GREEN, Card.TWO, cvm));
         mockHand.add(greenCards);
 
         // Adding same cards as mockHand, but in a random order.
         realHand = new Hand();
-        realHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
-        realHand.addCard(new Card(Deck.RED, Deck.WILD_DRAW_FOUR, 50));
-        realHand.addCard(new Card(Deck.YELLOW, Deck.SIX, 6));
-        realHand.addCard(new Card(Deck.GREEN, Deck.TWO, 2));
-        realHand.addCard(new Card(Deck.BLUE, Deck.ONE, 1));
-        realHand.addCard(new Card(Deck.YELLOW, Deck.REVERSE, 20));
-        realHand.addCard(new Card(Deck.BLUE, Deck.WILD, 50));
+        realHand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
+        realHand.addCard(new Card(Card.RED, Card.WILD_DRAW_FOUR, cvm));
+        realHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
+        realHand.addCard(new Card(Card.GREEN, Card.TWO, cvm));
+        realHand.addCard(new Card(Card.BLUE, Card.ONE, cvm));
+        realHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
+        realHand.addCard(new Card(Card.BLUE, Card.WILD, cvm));
 
         getHighestFaceHand = new Hand();
-        getHighestFaceHand.addCard(new Card(Deck.RED, Deck.THREE, 3));
-        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.TWO, 2));
-        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.FOUR, 4));
-        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
-        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.REVERSE, 20));
-        getHighestFaceHand.addCard(new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50));
+        getHighestFaceHand.addCard(new Card(Card.RED, Card.THREE, cvm));
+        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.TWO, cvm));
+        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
+        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.REVERSE, cvm));
+        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.WILD_DRAW_FOUR, cvm));
 
         getNumberOfMostColorsHand = new Hand();
-        getNumberOfMostColorsHand.addCard(new Card(Deck.RED, Deck.THREE, 3));
-        getNumberOfMostColorsHand.addCard(new Card(Deck.RED, Deck.NINE, 9));
-        getNumberOfMostColorsHand.addCard(new Card(Deck.RED, Deck.ZERO, 0));
-        getNumberOfMostColorsHand.addCard(new Card(Deck.BLUE, Deck.TWO, 2));
-        getNumberOfMostColorsHand.addCard(new Card(Deck.BLUE, Deck.NINE, 9));
-        getNumberOfMostColorsHand.addCard(new Card(Deck.GREEN, Deck.NINE, 9));
+        getNumberOfMostColorsHand.addCard(new Card(Card.RED, Card.THREE, cvm));
+        getNumberOfMostColorsHand.addCard(new Card(Card.RED, Card.NINE, cvm));
+        getNumberOfMostColorsHand.addCard(new Card(Card.RED, Card.ZERO, cvm));
+        getNumberOfMostColorsHand.addCard(new Card(Card.BLUE, Card.TWO, cvm));
+        getNumberOfMostColorsHand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
+        getNumberOfMostColorsHand.addCard(new Card(Card.GREEN, Card.NINE, cvm));
     }
     
     @Test
@@ -86,11 +87,11 @@ public class TestHand {
 
     @Test
     public void testHand_getColorList() {
-        List<Card> realBlueCards = realHand.getColorList(Deck.BLUE);
+        List<Card> realBlueCards = realHand.getColorList(Card.BLUE);
         List<Card> mockBlueCards = new ArrayList<>();
-        mockBlueCards.add(new Card(Deck.BLUE, Deck.ONE, 1));
-        mockBlueCards.add(new Card(Deck.BLUE, Deck.NINE, 9));
-        mockBlueCards.add(new Card(Deck.BLUE, Deck.WILD, 50));
+        mockBlueCards.add(new Card(Card.BLUE, Card.ONE, cvm));
+        mockBlueCards.add(new Card(Card.BLUE, Card.NINE, cvm));
+        mockBlueCards.add(new Card(Card.BLUE, Card.WILD, cvm));
         try {
             assertFalse(mismatchFound(realBlueCards, mockBlueCards));
         } catch (IllegalArgumentException e) {
@@ -103,8 +104,8 @@ public class TestHand {
         // List<List<Card>> tempMockHand = mockHand;
         Hand tempRealHand = realHand;
         int tempRealHandSizeBefore = tempRealHand.getSize();
-        Card inTempRealHand = new Card(Deck.BLUE, Deck.NINE, 9);
-        // Card inTempRealHand = new Card(Deck.BLUE, Deck.EIGHT); // test the test - should fail
+        Card inTempRealHand = new Card(Card.BLUE, Card.NINE, cvm);
+        // Card inTempRealHand = new Card(Card.BLUE, Card.EIGHT); // test the test - should fail
         try {
             realHand.discard(inTempRealHand);
         } catch (IllegalArgumentException e) {
@@ -117,7 +118,7 @@ public class TestHand {
     @Test
     public void testHand_discard_exception() {
         Hand tempRealHand = realHand;
-        Card notInTempRealHand = new Card(Deck.GREEN, Deck.WILD, 50);
+        Card notInTempRealHand = new Card(Card.GREEN, Card.WILD, cvm);
         try {
             tempRealHand.discard(notInTempRealHand);
             fail();
@@ -155,8 +156,8 @@ public class TestHand {
 
     @Test
     public void testHand_hasCard() {
-        assertTrue(realHand.hasCard(new Card(Deck.BLUE, Deck.NINE, 9)));
-        assertFalse(realHand.hasCard(new Card(Deck.BLUE, Deck.EIGHT, 8)));
+        assertTrue(realHand.hasCard(new Card(Card.BLUE, Card.NINE, cvm)));
+        assertFalse(realHand.hasCard(new Card(Card.BLUE, Card.EIGHT, cvm)));
     }
 
     @Test
@@ -172,23 +173,23 @@ public class TestHand {
 
     @Test
     public void testHand_getHighestFace_numeric() {
-        String color = Deck.BLUE;
-        Card inputCard = new Card(Deck.BLUE, Deck.NINE, 9);
+        String color = Card.BLUE;
+        Card inputCard = new Card(Card.BLUE, Card.NINE, cvm);
         Card outputCard = getHighestFaceHand.getHighestFace(color, true);
         assertTrue(inputCard.equals(outputCard));
     }
 
     @Test
     public void testHand_getHighestFace_nonNumeric() {
-        String color = Deck.BLUE;
-        Card inputCard = new Card(Deck.BLUE, Deck.WILD_DRAW_FOUR, 50);
+        String color = Card.BLUE;
+        Card inputCard = new Card(Card.BLUE, Card.WILD_DRAW_FOUR, cvm);
         Card outputCard = this.getHighestFaceHand.getHighestFace(color, false);
         assertTrue(inputCard.equals(outputCard));
     }
 
     @Test
     public void testHand_getHighestFace_noColor() {
-        Card noCard = getHighestFaceHand.getHighestFace(Deck.GREEN, true);
+        Card noCard = getHighestFaceHand.getHighestFace(Card.GREEN, true);
         assertNull(noCard);
     }
 
@@ -198,7 +199,7 @@ public class TestHand {
      */
     @Test
     public void testHand_getNumber() {
-        Card correctCard = new Card(Deck.RED, Deck.NINE, 9);
+        Card correctCard = new Card(Card.RED, Card.NINE, cvm);
         Card testCard = getNumberOfMostColorsHand.getNumber(9);
         assertTrue(correctCard.equals(testCard));
 
