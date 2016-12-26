@@ -20,10 +20,6 @@ public class Game {
      *    of steps to the user. Might be fun to have it complain if it has to draw more
      *    than three cards.
      *
-     *    Add javadocs to every method.
-     *
-     *    Make sure every method is public and tested.
-     *
      *    Wouldn't it be cool if player 2 could keep track of what strategy it used for each deck,
      *    and whether or not it won that deck? It could then pick future strategies by whichever
      *    strategy produced the most wins.
@@ -35,6 +31,8 @@ public class Game {
      *
      *    The computer might want to adopt a cautious strategy if it detects that player 1 is down to just a few
      *    cards.
+     *
+     *    Arbitrarily decide if the computer should declare "Cero!" when it reaches one card.
      *
      */
     
@@ -111,7 +109,7 @@ public class Game {
         // }
         
     }
-    
+
     public void playHand(Player player) {
 
         String playerName = player.getName();

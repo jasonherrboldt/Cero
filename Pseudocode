@@ -1,7 +1,46 @@
+
+GAME.PLAY PSEUDOCODE
+
+    While the current game has not been won
+        Shuffle deck
+        Deal cards
+        Let the discard pile be an empty stack of cards.
+        Let the current played card (cpc) be the first card popped off the top of the deck
+        While the cpc is wild or wild draw four
+            Shuffle the deck
+            Let the cpc be the first card popped off the top of the deck
+        Push the cpc onto the discard stack.
+        While the current deck has not been won
+            If the deck is empty
+                Let the cpc be the first card popped off the top of the deck
+                Let the deck be the discard pile
+                Shuffle the deck
+                Let the discard pile be an empty stack
+                Push the cpc to the discard stack
+            Show player one's hand count to player two and vice versa.
+            If it is player 1's turn
+                Call player 1's move method (pass cpc)
+            Else
+                Call player 2's move method (pass cpc)
+            (The cpc is updated.)
+            Force player one to draw a card if player two decides player one forgot to declare "Cero!".
+            Force player two to draw a card if player one decides player two forgot to declare "Cero!".
+
+
+
+
+
+
+
+
+***
+
+
+
 PLAYER.MOVE PSEUDOCODE
 
     if I am the computer
-        if the current played card (cpc) is a numeric card
+        if the cpc (cpc) is a numeric card
             // TODO: Decide a numeric move
         Else
             If cpc is a skip
@@ -16,8 +55,27 @@ PLAYER.MOVE PSEUDOCODE
                 // TODO: Handle move for a wild draw four card
     Else
         Ask the user to decide the move
+    // Allow the user to make player 1 declare "Cero!" if player 1 has one card.
+    // Arbitrarily decide to declare "Cero!" if computer has one card.
+    // Arbitrarily decide to call out player 1 if computer detects one card.
 
 
 
 
-GAME PSEUDOCODE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
