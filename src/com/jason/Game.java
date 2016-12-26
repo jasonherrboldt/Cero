@@ -2,6 +2,7 @@ package com.jason;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Game class. Create players, alternate turns, keep track of the score,
@@ -43,9 +44,9 @@ public class Game {
     private boolean deckWinnerExists;
     private boolean isPlayerOnesTurn;
     private Card currentPlayedCard;
-    private String currentColor;
     private static final int FAKE_GAME_RUNS = 8;
     private CardValueMap cvm;
+    private Stack<Card> discardPile;
     
     public Game(String userName) {
 
@@ -63,13 +64,13 @@ public class Game {
         gameWinnerExists = false;
         deckWinnerExists = false;
         isPlayerOnesTurn = getRandomBoolean();
+        discardPile = new Stack<>();
     }
     
     public void play() {
     
         // while(!gameWinnerExists) {
-        
-            deck.shuffle();
+
             // deck.printDeck(); // for debug
             
             dealHands();
@@ -81,13 +82,13 @@ public class Game {
              * over a new card. - unorules.com
              */
 
-            currentPlayedCard = deck.getNextCard();
-            currentColor = currentPlayedCard.getColor();
+            deck.shuffle();
 
-            /*
-             * At any time, if the Draw Pile becomes depleted and no one has yet won the round, take the Discard Pile,
-             * shuffle it, and turn it over to regenerate a new Draw Pile. - unorules.com
-             */
+            // Make sure the first played card is not Wild or Wild Draw Four.
+            currentPlayedCard = verifyFirstCard(deck.getNextCard());
+
+            discardPile.push(currentPlayedCard);
+
             // while(!deckWinnerExists) {
             for(int i = 0; i < FAKE_GAME_RUNS; i++) {
                 if(isPlayerOnesTurn) {
@@ -128,15 +129,10 @@ public class Game {
         currentPlayedCard = cardToDiscard;
         if (currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
             if(player.isComputer()) {
-                // currentColor = player.setCurrentColor();
-                if(currentColor == null) {
-                    Main.out("WARN: Game just set current color to null");
-                }
             } else {
                 Main.out("Ask Player1 for color choice.");
             }
         } else {
-            currentColor = currentPlayedCard.getColor();
         }
 
         Main.out(playerName + " discards " + cardToDiscard.getPrintString() + ".");
@@ -174,5 +170,56 @@ public class Game {
     public boolean getRandomBoolean() { // no test needed
         return Math.random() < 0.5; 
     }
-        
+
+    /**
+     * Reshuffle deck and pop the first card until a non-wild and non-wild draw four card appears.
+     *
+     * @param card  The card to analyze
+     * @return      A verified card
+     */
+    public Card verifyFirstCard(Card card) { // tested
+        while(card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
+                || card.equals(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm))) {
+            deck = new Deck();
+            deck.shuffle();
+            card = deck.getNextCard();
+        }
+        return card;
+    }
+
+    /**
+     * @return The game's deck.
+     */
+    public Deck getDeck() {
+        return this.deck;
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
