@@ -42,9 +42,8 @@ public class Game {
     private boolean gameWinnerExists;
     private boolean deckWinnerExists;
     private boolean isPlayerOnesTurn;
-    private Card currentCard;
+    private Card currentPlayedCard;
     private String currentColor;
-    private int score;
     private static final int FAKE_GAME_RUNS = 8;
     private CardValueMap cvm;
     
@@ -64,7 +63,6 @@ public class Game {
         gameWinnerExists = false;
         deckWinnerExists = false;
         isPlayerOnesTurn = pickRandomBoolean();
-        score = 0;
     }
     
     public void play() {
@@ -83,8 +81,8 @@ public class Game {
              * over a new card. - unorules.com
              */
 
-            currentCard = deck.getNextCard();
-            currentColor = currentCard.getColor();
+            currentPlayedCard = deck.getNextCard();
+            currentColor = currentPlayedCard.getColor();
 
             /*
              * At any time, if the Draw Pile becomes depleted and no one has yet won the round, take the Discard Pile,
@@ -120,15 +118,15 @@ public class Game {
         Main.out(playerName + "'s hand:");
         player.showCards();
 
-        player.move(currentCard);
+        player.move(currentPlayedCard);
 
         // Discard the first card no matter what (for debug).
         int usersChoice = 0; // fake choice for debug.
         List<Card> playerCards = player.getHand().getAllCards();
         Card cardToDiscard = playerCards.get(usersChoice);
         player.discard(cardToDiscard);
-        currentCard = cardToDiscard;
-        if (currentCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
+        currentPlayedCard = cardToDiscard;
+        if (currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
             if(player.isComputer()) {
                 // currentColor = player.setCurrentColor();
                 if(currentColor == null) {
@@ -138,7 +136,7 @@ public class Game {
                 Main.out("Ask Player1 for color choice.");
             }
         } else {
-            currentColor = currentCard.getColor();
+            currentColor = currentPlayedCard.getColor();
         }
 
         Main.out(playerName + " discards " + cardToDiscard.getPrintString() + ".");
@@ -151,7 +149,7 @@ public class Game {
      * Display the current played card.
      */
     private void displayCurrentPlayedCard() {
-        Main.out("The current played card is " + currentCard.getPrintString());
+        Main.out("The current played card is " + currentPlayedCard.getPrintString());
     }
 
     /**
@@ -173,7 +171,7 @@ public class Game {
     /**
      * @return random true or false
      */
-    public boolean pickRandomBoolean() {
+    public boolean pickRandomBoolean() { // no test needed
         return Math.random() < 0.5; 
     }
         

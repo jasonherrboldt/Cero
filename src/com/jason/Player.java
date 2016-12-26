@@ -17,11 +17,13 @@ public class Player {
     public static final String STRATEGY_CAUTIOUS = "Cautious";
     public static final String STRATEGY_NEUTRAL = "Neutral";
     private String strategy;
+    private int score;
     
     public Player(String name, boolean isComputer) {
         this.name = name;      
         this.isComputer = isComputer;
         strategy = "";
+        score = 0;
     }
 
     /**
@@ -127,6 +129,22 @@ public class Player {
      */
     public void showCards() { // no test needed
         hand.showCards();
+    }
+
+    /**
+     * Update the player's score
+     *
+     * @param score The score to update.
+     */
+    public void updateScore(int score) {
+        this.score += score;
+    }
+
+    /**
+     * @return the player's score
+     */
+    public int getScore() {
+        return this.score;
     }
     
 }
