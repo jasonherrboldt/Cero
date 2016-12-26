@@ -11,6 +11,11 @@ public class Player {
     public static final String STRATEGY_CAUTIOUS = "Cautious";
     public static final String STRATEGY_NEUTRAL = "Neutral";
     private String strategy;
+
+    /**
+     * Wouldn't it be cool if player0 could keep track of what strategy it used for each deck, and whether or not
+     * it won that deck? It could then pick future strategies by whichever strategy produced the most wins.
+     */
     
     public Player(String name, boolean isComputer) {
         this.name = name;      

@@ -136,6 +136,8 @@ public class Hand {
 
     @Nullable
     public Card getWildOrWildDrawFour() {
+        // Should get the wild draw four first if both present.
+        // if(hasCard(new Card(Deck.COLORLESS,)))
         return null;
     }
 
