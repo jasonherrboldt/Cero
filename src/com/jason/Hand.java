@@ -4,6 +4,12 @@ import com.sun.istack.internal.Nullable;
 
 import java.util.*;
 
+/**
+ * Hand class. A list of a list of cards, sorted descending by color group.
+ * Allows player many insights into cards, allowing it to decide a move.
+ *
+ * Created by jasonherrboldt on 12/24/16.
+ */
 public class Hand {
 
     private List<List<Card>> hand;

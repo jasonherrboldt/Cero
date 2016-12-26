@@ -2,6 +2,12 @@ package com.jason;
 
 import java.util.List;
 
+/**
+ * A player. Has a hand, can manipulate that hand. Has a strategy.
+ * Can play a card from its hand and react to previously played hand.
+ *
+ * Created by jasonherrboldt on 12/24/16.
+ */
 public class Player {
 
     private String name;
@@ -16,6 +22,28 @@ public class Player {
         this.name = name;      
         this.isComputer = isComputer;
         strategy = "";
+    }
+
+    public void move(Card currentCard, CardValueMap cvm) {
+        if(isComputer()) {
+            if(currentCard.isNumberCard(cvm)) {
+                Main.out("Handing move for numeric card.");
+            } else {
+                if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
+                    Main.out("Handling move for " + Card.SKIP + ".");
+                } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
+                    Main.out("Handling move for " + Card.REVERSE + ".");
+                } else if (currentCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                    Main.out("Handling move for " + Card.DRAW_TWO + ".");
+                } else if (currentCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                    Main.out("Handling move for " + Card.WILD + ".");
+                } else { // WILD_DRAW_FOUR
+                    Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
+                }
+            }
+        } else {
+            Main.out("Ask the user what to do.");
+        }
     }
     
     public Hand getHand() {

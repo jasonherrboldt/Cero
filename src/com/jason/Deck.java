@@ -5,7 +5,9 @@ import java.util.*;
 import static com.jason.Card.*;
 
 /**
- * A deck of cards.
+ * A stack of cards.
+ *
+ * Created by jasonherrboldt on 12/24/16.
  */
 public class Deck {
 

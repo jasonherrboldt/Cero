@@ -2,6 +2,11 @@ package com.jason;
 
 import java.util.regex.Pattern;
 
+/**
+ * Main class. Create a new game and run it.
+ *
+ * Created by jasonherrboldt on 12/24/16.
+ */
 public class Main {
 
     public static void main(String[] args) {

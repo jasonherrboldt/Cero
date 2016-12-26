@@ -3,6 +3,13 @@ package com.jason;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Game class. Create players, alternate turns, keep track of the score,
+ * and declare a winner. Allows user to remote-control Player 1.
+ * (Player 2 is computer.)
+ *
+ * Created by jasonherrboldt on 12/24/16.
+ */
 public class Game {
 
     /*
@@ -99,11 +106,7 @@ public class Game {
         Main.out(playerName + "'s hand:");
         player.showCards();
 
-        if(currentCard.isNumberCard(cvm)) {
-            handleNumericCard();
-        } else {
-            handleNonNumericCard();
-        }
+        player.move(currentCard, cvm);
 
         // Discard the first card no matter what (for debug).
         int usersChoice = 0; // fake choice for debug.
@@ -128,24 +131,6 @@ public class Game {
         Main.out(playerName + " now holds " + player.getHand().getSize() + " cards.");
         Main.out("");
 
-    }
-    
-    public void handleNonNumericCard() {
-        if(currentCard.getFace().equalsIgnoreCase(Card.SKIP)) {
-            Main.out("Handling move for " + Card.SKIP + ".");
-        } else if (currentCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
-            Main.out("Handling move for " + Card.REVERSE + ".");
-        } else if (currentCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-            Main.out("Handling move for " + Card.DRAW_TWO + ".");
-        } else if (currentCard.getFace().equalsIgnoreCase(Card.WILD)) {
-            Main.out("Handling move for " + Card.WILD + ".");
-        } else { // WILD_DRAW_FOUR
-            Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
-        }
-    }
-    
-    public void handleNumericCard() {
-        Main.out("Handling move for numeric card.");
     }
     
     private void displayCurrentPlayedCard() {
