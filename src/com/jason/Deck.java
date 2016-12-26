@@ -19,51 +19,56 @@ public class Deck {
     /**
      * Public constructor.
      */
-    public Deck() {
-        cvm = new CardValueMap();
-        List<String> colors = new ArrayList<>();
-        deck = new Stack<>();
-        colors.add(Card.RED);
-        colors.add(Card.YELLOW);
-        colors.add(Card.GREEN);
-        colors.add(Card.BLUE);
+    public Deck(Stack<Card> cards) {
+        if(cards == null) {
+            cvm = new CardValueMap();
+            List<String> colors = new ArrayList<>();
+            deck = new Stack<>();
+            colors.add(Card.RED);
+            colors.add(Card.YELLOW);
+            colors.add(Card.GREEN);
+            colors.add(Card.BLUE);
 
-        // Make a new deck.
-        
-        // Make 0 - 9 of all four colors.
-        for(String c : colors) {
-            for(int i = 0; i < 10; i++) {
-                Card card = new Card(c, Integer.toString(i), cvm);
-                deck.push(card);
-            }   
-        }
-        
-        // Make 1 - 9 of all four colors.
-        for(String c : colors) {
-            for(int i = 1; i < 10; i++) {
-                Card card = new Card(c, Integer.toString(i), cvm);
-                deck.push(card);
-            }   
-        }
-        
-        // Make skip, reverse and draw two cards.
-        for(int i = 0; i < 2; i++) {
+            // Make a new deck.
+
+            // Make 0 - 9 of all four colors.
             for(String c : colors) {
-                Card card = new Card(c, Card.SKIP, cvm);
+                for(int i = 0; i < 10; i++) {
+                    Card card = new Card(c, Integer.toString(i), cvm);
+                    deck.push(card);
+                }
+            }
+
+            // Make 1 - 9 of all four colors.
+            for(String c : colors) {
+                for(int i = 1; i < 10; i++) {
+                    Card card = new Card(c, Integer.toString(i), cvm);
+                    deck.push(card);
+                }
+            }
+
+            // Make skip, reverse and draw two cards.
+            for(int i = 0; i < 2; i++) {
+                for(String c : colors) {
+                    Card card = new Card(c, Card.SKIP, cvm);
+                    deck.push(card);
+                    card = new Card(c, Card.REVERSE, cvm);
+                    deck.push(card);
+                    card = new Card(c, Card.DRAW_TWO, cvm);
+                    deck.push(card);
+                }
+            }
+
+            // Make wild and draw four cards.
+            for(String c : colors) {
+                Card card = new Card (Card.COLORLESS, WILD, cvm);
                 deck.push(card);
-                card = new Card(c, Card.REVERSE, cvm);
-                deck.push(card);
-                card = new Card(c, Card.DRAW_TWO, cvm);
+                card = new Card (Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
                 deck.push(card);
             }
-        }
-        
-        // Make wild and draw four cards.
-        for(String c : colors) {
-            Card card = new Card (Card.COLORLESS, WILD, cvm);
-            deck.push(card);
-            card = new Card (Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
-            deck.push(card);
+        } else {
+            // Make a deck from the injected stack of cards.
+            deck = cards;
         }
     }
 

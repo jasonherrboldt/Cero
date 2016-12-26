@@ -51,7 +51,7 @@ public class Game {
     public Game(String userName) {
 
         cvm = new CardValueMap();
-        deck = new Deck();
+        deck = new Deck(null);
         Main.out("");
         player2 = new Player("Computer", true);
         if(getRandomBoolean()) {
@@ -69,43 +69,20 @@ public class Game {
     
     public void play() {
     
-        // while(!gameWinnerExists) {
-
-            // deck.printDeck(); // for debug
-            
+        while(!gameWinnerExists) {
             dealHands();
-
-            /*
-             * Note: If the first card turned up from the Draw Pile (to form the Discard Pile) is an Action card,
-             * the Action from that card applies and must be carried out. The exceptions are if the Wild or Wild
-             * Draw Four cards are turned up, in which case – Return them to the Draw Pile, shuffle them, and turn
-             * over a new card. - unorules.com
-             */
-
             deck.shuffle();
-
-            // Make sure the first played card is not Wild or Wild Draw Four.
             currentPlayedCard = verifyFirstCard(deck.getNextCard());
-
             discardPile.push(currentPlayedCard);
 
-            // while(!deckWinnerExists) {
-            for(int i = 0; i < FAKE_GAME_RUNS; i++) {
-                if(isPlayerOnesTurn) {
-                    playHand(player1);
-                } else {
-                    playHand(player2);
-                    
-                // update winner status
-                // if(checkForWinner) {
-                    // gameWinnerExists = true;
-                }
-                isPlayerOnesTurn = !isPlayerOnesTurn;
-            }
-        
-            // }
+            while(!deckWinnerExists) {
+                refreshDeckIfEmpty(); // need to test!
 
-        // }
+            }
+            // Call player one's UPDATEOTHERPLAYERSHANDCOUNT method (inject a call to player two's SHOWHANDCOUNT method)
+            // Call player two's UPDATEOTHERPLAYERSHANDCOUNT method (inject a call to player one's SHOWHANDCOUNT method)
+
+        }
         
     }
 
@@ -180,7 +157,7 @@ public class Game {
     public Card verifyFirstCard(Card card) { // tested
         while(card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
                 || card.equals(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm))) {
-            deck = new Deck();
+            deck = new Deck(null);
             deck.shuffle();
             card = deck.getNextCard();
         }
@@ -192,6 +169,22 @@ public class Game {
      */
     public Deck getDeck() {
         return this.deck;
+    }
+
+    /**
+     * Transfer the discard pile to the deck and shuffle.
+     */
+    public void refreshDeckIfEmpty() { // NEEDS TO BE TESTED
+        if(deck.getDeckSize() == 0) {
+            deck = new Deck(discardPile);
+            deck.shuffle();
+            discardPile = new Stack<>();
+            discardPile.push(currentPlayedCard);
+        }
+    }
+
+    public Stack<Card> getDiscardPile() {
+        return discardPile;
     }
 
 }

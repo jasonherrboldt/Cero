@@ -9,11 +9,11 @@ import java.util.Iterator;
 
 public class TestDeck {
 
-    private Deck deck = new Deck();
+    private Deck deck = new Deck(null);
 
     @Before
     public void setup() {
-        deck = new Deck();
+        deck = new Deck(null);
     }
 
     @Test
