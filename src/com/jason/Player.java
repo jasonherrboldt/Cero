@@ -55,8 +55,17 @@ public class Player {
                         Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
                     }
                 }
+                // Just discard the first card (for debug):
+                Card firstCard = hand.getFirstCard();
+                hand.discard(firstCard);
+                return firstCard;
             } else {
-                Main.out("Ask the user what to do.");
+                // Main.out("Ask the user what to do.");
+
+                // Just discard the first card (for debug):
+                Card firstCard = hand.getFirstCard();
+                hand.discard(firstCard);
+                return firstCard;
             }
         }
         return null;
@@ -213,21 +222,3 @@ public class Player {
         ceroCalled = false;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -36,8 +36,8 @@ public class Main {
         */
 
         // Shortcut to game (debug).
-        // Game game = new Game("David Lightman");
-        // game.play();
+        Game game = new Game("David Lightman");
+        game.play();
 
     }
 

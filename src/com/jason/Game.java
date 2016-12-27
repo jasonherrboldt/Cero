@@ -79,7 +79,8 @@ public class Game {
             currentPlayedCard = verifyFirstCard(deck.getNextCard());
             discardPile.push(currentPlayedCard);
 
-            while(!deckWinnerExists) {
+            int fakeGames = 0;
+            while(!deckWinnerExists && fakeGames < FAKE_GAME_RUNS) {
                 Main.out("Now playing deck number " + deckCounter + ".");
                 refreshDeckIfEmpty();
 
@@ -101,8 +102,9 @@ public class Game {
                         player1.draw(deck.getNextCard());
                     }
 
-                    boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
-                            "declare 'Cero!' when it should have?");
+                    // boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
+                            // "declare 'Cero!' when it should have?");
+                    boolean answer = false;
                     if (answer) {
                         if (player2.getHand().getSize() == 1 && !player1.isCeroCalled()) {
                             Main.out("Player 2 forgot to declare 'Cero!' with one card left - must draw two cards.");
@@ -121,6 +123,8 @@ public class Game {
                     // Switch player's turn.
                     isPlayerOnesTurn = !isPlayerOnesTurn;
                 }
+                fakeGames++;
+                deckCounter++;
             }
             if(player1.getScore() > 500 || player2.getScore() > 500) {
                 gameWinnerExists = true;
@@ -141,6 +145,13 @@ public class Game {
      */
     public void playHand(Player player) {
         currentPlayedCard = player.move(currentPlayedCard);
+        if(player.isComputer()) {
+            Main.out("Making player 2 draw four cards for debug reasons.");
+            player.draw(deck.getNextCard());
+            player.draw(deck.getNextCard());
+            player.draw(deck.getNextCard());
+            player.draw(deck.getNextCard());
+        }
         discardPile.push(currentPlayedCard);
         player.callCero();
         if(player.getHand().getSize() == 0) {

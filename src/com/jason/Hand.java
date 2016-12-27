@@ -223,6 +223,16 @@ public class Hand {
         return value;
     }
 
+    /**
+     * @return the first card of the hand (for debug).
+     */
+    public Card getFirstCard() {
+        if(getSize() > 0) {
+            return getAllCards().get(0);
+        }
+        return null;
+    }
+
 }
 
 
