@@ -1,7 +1,6 @@
 package com.jason;
 
 import java.util.*;
-
 import static com.jason.Card.*;
 
 /**

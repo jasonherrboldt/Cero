@@ -2,25 +2,19 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-
-import java.util.List;
 import java.util.Stack;
 
 import static org.junit.Assert.*;
 
 public class TestGame {
 
-    // private Deck deck;
-    CardValueMap cvm;
-    Game game;
-    Stack<Card> discardPile;
+    private CardValueMap cvm;
+    private Game game;
 
     @Before
     public void setup() {
-        // deck = new Deck(null);
         cvm = new CardValueMap();
         game = new Game("");
-        discardPile = new Stack<>();
     }
 
     @Test

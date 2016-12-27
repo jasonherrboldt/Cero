@@ -4,7 +4,6 @@ GAME
     PLAY()
 
         While the current game has not been won
-            Let deck be a new deck
             Shuffle deck
             Deal cards
             Let the discard pile be an empty stack of cards
@@ -38,10 +37,11 @@ GAME
                     Switch player's turn
             If either player has a score of 500 or more
                 The current game has been won
-        Announce the winner
+                Announce the winner
 
     PLAYHAND(Player)
         Let cpc be a call to player's MOVE method (inject cpc)
+        Push the cpc onto the discard pile
         Call player's CALLCERO method
         If player's hand is empty
             Let the current deck be won

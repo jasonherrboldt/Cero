@@ -1,5 +1,7 @@
 package com.jason;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -33,8 +35,6 @@ public class Game {
      *    The computer might want to adopt a cautious strategy if it detects that player 1 is down to just a few
      *    cards.
      *
-     *    Arbitrarily decide if the computer should declare "Cero!" when it reaches one card.
-     *
      */
     
     private Deck deck;
@@ -47,9 +47,9 @@ public class Game {
     private static final int FAKE_GAME_RUNS = 8;
     private CardValueMap cvm;
     private Stack<Card> discardPile;
+    private int deckCounter;
     
     public Game(String userName) {
-
         cvm = new CardValueMap();
         deck = new Deck(null);
         Main.out("");
@@ -65,111 +65,101 @@ public class Game {
         deckWinnerExists = false;
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
+        deckCounter = 1;
     }
-    
+
+    /**
+     * Play the game.
+     */
     public void play() {
     
         while(!gameWinnerExists) {
-            dealHands();
             deck.shuffle();
+            dealHands();
             currentPlayedCard = verifyFirstCard(deck.getNextCard());
             discardPile.push(currentPlayedCard);
 
             while(!deckWinnerExists) {
+                Main.out("Now playing deck number " + deckCounter + ".");
                 refreshDeckIfEmpty();
 
-            }
+                // Let the players see how many cards are in each other's decks.
+                player1.updateOtherPlayersHandCount(player2.showHandCount());
+                player2.updateOtherPlayersHandCount(player1.showHandCount());
 
-            // Let the players see how many cards are in each other's decks.
-            player1.updateOtherPlayersHandCount(player2.showHandCount());
-            player2.updateOtherPlayersHandCount(player1.showHandCount());
-
-            if(isPlayerOnesTurn) {
-                playHand(player1);
-            } else {
-                playHand(player2);
-            }
-
-            if(!deckWinnerExists) {
-                /*
-                If player one's hand count = 1 and player one's ISCEROCALLED method returns false and getRandomBoolean
-                    Call player one's draw method twice
-                Ask the user if he or she wishes to declare the computer did not correctly declare "Cero!"
-                If the user wishes to declare the computer did not correctly declare "Cero!"
-                    If player two's hand count = 1 and player one's ISCEROCALLED method returns false
-                        Call player two's draw method twice
-                Call player one's RESETCEROCALLED method
-                Call player two's RESETCEROCALLED method
-                Switch player's turn
-                */
-
-                // Player 2 sometimes forgets to call out player 1 on not calling 'Cero!'
-                if(player1.getHand().getSize() == 1 && !player1.isMyCeroCalled() && Main.getRandomBoolean()) {
-                    Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                    player1.draw(deck.getNextCard());
-                    player1.draw(deck.getNextCard());
+                if(isPlayerOnesTurn) {
+                    playHand(player1);
+                } else {
+                    playHand(player2);
                 }
+                if(!deckWinnerExists) {
 
-                boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
-                        "declare 'Cero!' when it should have?");
-                if(answer) {
-                    if(player2.getHand().getSize() == 1 && !player1.isMyCeroCalled()) {
-                        Main.out("Player 2 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                        player2.draw(deck.getNextCard());
-                        player2.draw(deck.getNextCard());
+                    // Player 2 sometimes forgets to call out player 1 on not calling 'Cero!'
+                    if (player1.getHand().getSize() == 1 && !player1.isCeroCalled() && Main.getRandomBoolean()) {
+                        Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
+                        player1.draw(deck.getNextCard());
+                        player1.draw(deck.getNextCard());
                     }
+
+                    boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
+                            "declare 'Cero!' when it should have?");
+                    if (answer) {
+                        if (player2.getHand().getSize() == 1 && !player1.isCeroCalled()) {
+                            Main.out("Player 2 forgot to declare 'Cero!' with one card left - must draw two cards.");
+                            player2.draw(deck.getNextCard());
+                            player2.draw(deck.getNextCard());
+                        } else {
+                            Main.out("Player 2 did not incorrectly fail to declare 'Cero!' - " +
+                                    "no punishment for Player 2.");
+                        }
+                    }
+
+                    // Reset each player's cero called value.
+                    player1.resetCeroCalled();
+                    player2.resetCeroCalled();
+
+                    // Switch player's turn.
+                    isPlayerOnesTurn = !isPlayerOnesTurn;
                 }
-                player1.resetCeroCalled();
-                player2.resetCeroCalled();
-                isPlayerOnesTurn = !isPlayerOnesTurn;
+            }
+            if(player1.getScore() > 500 || player2.getScore() > 500) {
+                gameWinnerExists = true;
+                if(player1.getScore() > 500) {
+                    Main.out("Player 1 is the winner!");
+                }
+                if(player2.getScore() > 500) {
+                    Main.out("Player 2 is the winner!");
+                }
             }
         }
     }
 
+    /**
+     * Update the current played card by asking a given player to make a move.
+     *
+     * @param player the player to move
+     */
     public void playHand(Player player) {
         currentPlayedCard = player.move(currentPlayedCard);
+        discardPile.push(currentPlayedCard);
         player.callCero();
         if(player.getHand().getSize() == 0) {
             deckWinnerExists = true;
             if(isPlayerOnesTurn) {
-                player1.updateScore(player2.getHand().getHandValue());
+                int playerOneScore = player2.getHand().getHandValue();
+                Main.out("Player 1 wins deck # " + deckCounter + "!");
+                Main.out("Current deck winnings: " + playerOneScore);
+                player1.updateScore(playerOneScore);
+                Main.out("Player 1's new score is " + player1.getScore());
             } else {
-                player2.updateScore(player1.getHand().getHandValue());
+                int playerTwoScore = player1.getHand().getHandValue();
+                Main.out("Player 2 wins deck # " + deckCounter + "!");
+                Main.out("Current deck winnings: " + playerTwoScore);
+                player2.updateScore(playerTwoScore);
+                Main.out("Player 2's new score is " + player2.getScore());
             }
         }
     }
-
-//    public void playHand(Player player) {
-//
-//        String playerName = player.getName();
-//        Main.out(playerName + "'s turn.");
-//        displayCurrentPlayedCard();
-//
-//        // Wrap this block in if player1 conditional:
-//        Main.out(playerName + "'s hand:");
-//        player.showCards();
-//
-//        player.move(currentPlayedCard);
-//
-//        // Discard the first card no matter what (for debug).
-//        int usersChoice = 0; // fake choice for debug.
-//        List<Card> playerCards = player.getHand().getAllCards();
-//        Card cardToDiscard = playerCards.get(usersChoice);
-//        player.discard(cardToDiscard);
-//        currentPlayedCard = cardToDiscard;
-//        if (currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
-//            if(player.isComputer()) {
-//            } else {
-//                Main.out("Ask Player1 for color choice.");
-//            }
-//        } else {
-//        }
-//
-//        Main.out(playerName + " discards " + cardToDiscard.getPrintString() + ".");
-//        Main.out(playerName + " now holds " + player.getHand().getSize() + " cards.");
-//        Main.out("");
-//
-//    }
 
     /**
      * Display the current played card.
@@ -200,21 +190,20 @@ public class Game {
      * @param card  The card to analyze
      * @return      A verified card
      */
+    @Nullable
     public Card verifyFirstCard(Card card) { // tested
-        while(card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
-                || card.equals(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm))) {
-            deck = new Deck(null);
-            deck.shuffle();
-            card = deck.getNextCard();
+        if(card != null) {
+            while(card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
+                    || card.equals(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm))) {
+                deck = new Deck(null);
+                deck.shuffle();
+                card = deck.getNextCard();
+            }
+            return card;
+        } else {
+            Main.out("WARN: verifyFirstCard called with a null card.");
         }
-        return card;
-    }
-
-    /**
-     * @return The game's deck.
-     */
-    public Deck getDeck() {
-        return this.deck;
+        return null;
     }
 
     /**
@@ -229,44 +218,36 @@ public class Game {
         }
     }
 
+    /**
+     * @return The game's deck (for testing).
+     */
+    public Deck getDeck() {
+        return this.deck;
+    }
+
+    /**
+     * Set the current game's deck (for testing).
+     *
+     * @param cards the deck to set
+     */
     public void setDeck(Stack<Card> cards) {
         this.deck = new Deck(cards);
     }
 
+    /**
+     * @return the game's discard pile (for testing)
+     */
     public Stack<Card> getDiscardPile() {
         return discardPile;
     }
 
+    /**
+     * Set the game's discard pile (for testing)
+     *
+     * @param cards the discard pile to set
+     */
     public void setDiscardPile(Stack<Card> cards) {
         this.discardPile = cards;
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

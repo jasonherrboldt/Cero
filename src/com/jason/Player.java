@@ -19,7 +19,7 @@ public class Player {
     private String strategy;
     private int score;
     private int otherPlayersHandCount;
-    private boolean myCeroCalled;
+    private boolean ceroCalled;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
@@ -27,7 +27,7 @@ public class Player {
         strategy = "";
         score = 0;
         otherPlayersHandCount = 0;
-        myCeroCalled = false;
+        ceroCalled = false;
     }
 
     /**
@@ -141,29 +141,41 @@ public class Player {
      *
      * @param score The score to update.
      */
-    public void updateScore(int score) {
+    public void updateScore(int score) { // no test needed
         this.score += score;
     }
 
     /**
      * @return the player's score
      */
-    public int getScore() {
+    public int getScore() { // no test needed
         return this.score;
     }
 
+    /**
+     * Update the value of the other player's hand cound.
+     *
+     * @param count the count to update.
+     */
     public void updateOtherPlayersHandCount(int count) {
         otherPlayersHandCount = count;
     }
 
+    /**
+     * @return this player's hand size.
+     */
     public int showHandCount() {
         return hand.getSize();
     }
 
-    public void callCero() {
+    /**
+     * Allow either player to call 'Cero!' on the other player if the other player has not already done so after
+     * discarding penultimate card.
+     */
+    public void callCero() { // no test needed
         if (isComputer()) {
             if (hand.getSize() == 1 && Main.getRandomBoolean()) {
-                myCeroCalled = true;
+                ceroCalled = true;
                 Main.out("Computer calls 'Cero!'");
             }
         } else {
@@ -180,19 +192,25 @@ public class Player {
                     }
                 }
                 if(answer.equalsIgnoreCase("y")) {
-                    myCeroCalled = true;
+                    ceroCalled = true;
                     Main.out("Player one has just declared 'Cero!'.");
                 }
             }
         }
     }
 
-    public boolean isMyCeroCalled() {
-        return this.myCeroCalled;
+    /**
+     * @return true if player has called 'Cero!' on the other player, false otherwise.
+     */
+    public boolean isCeroCalled() { // no test needed
+        return this.ceroCalled;
     }
 
-    public void resetCeroCalled() {
-        myCeroCalled = false;
+    /**
+     * Reset this player's cero called value to false.
+     */
+    public void resetCeroCalled() { // no test needed
+        ceroCalled = false;
     }
 }
 
