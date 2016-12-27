@@ -18,7 +18,8 @@ public class Player {
     public static final String STRATEGY_NEUTRAL = "Neutral";
     private String strategy;
     private int score;
-    int otherPlayersHandCount;
+    private int otherPlayersHandCount;
+    private boolean myCeroCalled;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
@@ -26,6 +27,7 @@ public class Player {
         strategy = "";
         score = 0;
         otherPlayersHandCount = 0;
+        myCeroCalled = false;
     }
 
     /**
@@ -33,7 +35,7 @@ public class Player {
      *
      * @param currentCard The current played card.
      */
-    public void move(Card currentCard) {
+    public Card move(Card currentCard) {
         if (currentCard == null) {
             Main.out("ERROR: null card passed to move. Cannot make any move.");
         } else {
@@ -57,6 +59,7 @@ public class Player {
                 Main.out("Ask the user what to do.");
             }
         }
+        return null;
     }
 
     /**
@@ -156,7 +159,41 @@ public class Player {
     public int showHandCount() {
         return hand.getSize();
     }
-    
+
+    public void callCero() {
+        if (isComputer()) {
+            if (hand.getSize() == 1 && Main.getRandomBoolean()) {
+                myCeroCalled = true;
+                Main.out("Computer calls 'Cero!'");
+            }
+        } else {
+            if(hand.getSize() == 1) {
+                boolean validAnswerReceived = false;
+                String answer = "";
+                while(!validAnswerReceived) {
+                    Main.outNoReturn("Would you like to declare 'Cero!' at this time? Please type 'y' or 'n': ");
+                    answer = System.console().readLine();
+                    if(answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("n")) {
+                        validAnswerReceived = true;
+                    } else {
+                        Main.out("Invalid answer received.");
+                    }
+                }
+                if(answer.equalsIgnoreCase("y")) {
+                    myCeroCalled = true;
+                    Main.out("Player one has just declared 'Cero!'.");
+                }
+            }
+        }
+    }
+
+    public boolean isMyCeroCalled() {
+        return this.myCeroCalled;
+    }
+
+    public void resetCeroCalled() {
+        myCeroCalled = false;
+    }
 }
 
 

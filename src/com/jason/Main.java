@@ -66,8 +66,50 @@ public class Main {
      *
      * @param s The string to getPrintString.
      */
-    protected static void sayNoReturn(String s) {
+    protected static void outNoReturn(String s) {
         System.out.print(s);
     }
 
+
+    /**
+     * @return random true or false
+     */
+    public static boolean getRandomBoolean() { // no test needed
+        return Math.random() < 0.5;
+    }
+
+    /**
+     * Ask the user a yes or no question.
+     *
+     * @param question  The question to ask.
+     * @return          True if the user said 'yes', false otherwise.
+     */
+    public static boolean askUserYesOrNoQuestion(String question) {
+        String answer = "";
+        while(true) {
+            Main.out(question);
+            Main.outNoReturn("Please type 'y' or 'n': ");
+            answer = System.console().readLine();
+            if (answer.equalsIgnoreCase("y")) {
+                return true;
+            } else if(answer.equalsIgnoreCase("n")) {
+                return false;
+            } else {
+                Main.out("Invalid answer received.");
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -40,7 +40,26 @@ public class TestGame {
 
     @Test
     public void testGame_refreshDeckIfEmpty() {
+        // make an empty deck.
+        Stack<Card> mockDeck = new Stack<>();
+        // call game's setDeck method, inject empty deck.
+        game.setDeck(mockDeck);
+        assertTrue(game.getDeck().getDeckSize() == 0);
 
+        // make a small discard pile stack of three cards
+        Stack<Card> mockDiscardPile = new Stack<>();
+        mockDiscardPile.push(new Card(Card.RED, Card.ZERO, cvm));
+        mockDiscardPile.push(new Card(Card.BLUE, Card.ONE, cvm));
+        mockDiscardPile.push(new Card(Card.GREEN, Card.TWO, cvm));
+        // call game's setDiscardPile, inject small stack.
+        game.setDiscardPile(mockDiscardPile);
+        assertTrue(game.getDiscardPile().size() == 3);
+
+        // call game's refreshDeckIfEmpty method.
+        game.refreshDeckIfEmpty();
+
+        assertTrue(game.getDiscardPile().size() == 1);
+        assertTrue(game.getDeck().getDeckSize() == 3);
     }
 }
 

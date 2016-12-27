@@ -211,4 +211,38 @@ public class Hand {
         Main.out("WARN: getHighestColor did not find a card.");
         return null;
     }
+
+    /**
+     * @return the value of the hand.
+     */
+    public int getHandValue() { // tested
+        int value = 0;
+        for(Card c : getAllCards()) {
+            value += c.getValue();
+        }
+        return value;
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

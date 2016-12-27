@@ -183,7 +183,10 @@ public class TestHand {
         assertFalse(highestColor.equalsIgnoreCase(Card.BLUE));
     }
 
-
+    @Test
+    public void testHand_getHandValue() {
+        assertEquals(getHighestFaceHand.getHandValue(), 88);
+    }
 
     // Private helper methods:
 
@@ -211,5 +214,24 @@ public class TestHand {
         }
         return cards;
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
