@@ -1,33 +1,54 @@
 package com.jason;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * A player. Has a hand, can manipulate that hand. Has a strategy.
+ * Created by jasonherrboldt on 12/24/16.
+ *
+ * A player. Has a hand, can manipulate that hand. Has a randomly-selected strategy.
  * Can play a card from its hand and react to previously played hand.
  *
- * Created by jasonherrboldt on 12/24/16.
+ * Strategy descriptions for player2 (computer):
+ *
+ *     BOLD: Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
+ *           Will switch to CAUTIOUS if player1 has < 4 cards. Will switch back to BOLD if player1 has > 3 cards.
+ *     CAUTIOUS: will discard non-numeric cards ASAP.
+ *     NEUTRAL: (for player1)
+ *     DUMB: will look blindly for first matching card in hand - don't try to switch the deck color to your favor.
+ *             Decide randomly to play a non-numeric card (if any are present).
+ *
+ *    "A defensive strategy would advise playing a high card in order to reduce the point value of the hand.
+ *    However, an offensive strategy would suggest playing a 0 when the player wants to continue on the current
+ *    color, because it is less likely to be matched by another 0 of a different color (there is only one 0 of
+ *    each color, but two of each 1–9)." - uno wikipedia page
  */
 public class Player {
 
     private String name;
     private Hand hand;
-    private boolean isComputer;
-    static final String STRATEGY_BOLD = "Bold";
-    static final String STRATEGY_CAUTIOUS = "Cautious";
-    static final String STRATEGY_NEUTRAL = "Neutral";
+    private boolean isPlayer2;
+    public static final String STRATEGY_BOLD = "Bold";
+    public static final String STRATEGY_CAUTIOUS = "Cautious";
+    public static final String STRATEGY_NEUTRAL = "Neutral";
+    public static final String STRATEGY_DUMB = "Dumb";
     private String strategy;
     private int score;
     private int otherPlayersHandCount;
     private boolean ceroCalled;
+    private Map<String, Integer> strategyHistory;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
-        this.isComputer = isComputer;
+        this.isPlayer2 = isComputer;
         strategy = "";
         score = 0;
         otherPlayersHandCount = 0;
         ceroCalled = false;
+        strategyHistory = new TreeMap<>();
+        strategyHistory.put(STRATEGY_BOLD, 0);
+        strategyHistory.put(STRATEGY_CAUTIOUS, 0);
+        strategyHistory.put(STRATEGY_DUMB, 0);
     }
 
     /**
@@ -68,8 +89,8 @@ public class Player {
     /**
      * @return whether the current player is the computer.
      */
-    boolean isComputer() { // no test needed
-        return this.isComputer;
+    boolean isPlayer2() { // no test needed
+        return this.isPlayer2;
     }
 
     /**
@@ -77,7 +98,7 @@ public class Player {
      *
      * @param strategy The strategy to set.
      */
-    void setStrategy(String strategy) { // no test needed
+    public void setStrategy(String strategy) { // no test needed
         this.strategy = strategy;
     }
 
@@ -133,12 +154,12 @@ public class Player {
      */
     void callCero() { // no test needed
         Main.out("\n(This is where the player will be given the chance to call 'Cero!'.)\n");
-//        if (isComputer()) {
-//            if (hand.getSize() == 1 && Main.getRandomBoolean()) {
-//                ceroCalled = true;
-//                Main.out("Computer calls 'Cero!'");
-//            }
-//        } else {
+        if (isPlayer2()) {
+            if (hand.getSize() == 1 && Main.getRandomBoolean()) {
+                ceroCalled = true;
+                Main.out("Computer calls 'Cero!'");
+            }
+//        } else { // un-comment out this block to make the game interactive.
 //            if(hand.getSize() == 1) {
 //                boolean validAnswerReceived = false;
 //                boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare 'Cero!' at this time?");
@@ -147,7 +168,7 @@ public class Player {
 //                    Main.out("Player one has just declared 'Cero!'.");
 //                }
 //            }
-//        }
+        }
     }
 
     /**
@@ -163,4 +184,59 @@ public class Player {
     void resetCeroCalled() { // no test needed
         ceroCalled = false;
     }
+
+    public boolean setRandomStrategy() { // tested
+        int randomNum = ThreadLocalRandom.current().nextInt(1, 3 + 1);
+        switch(randomNum) {
+            case 1:
+                strategy = STRATEGY_BOLD;
+                return true;
+            case 2:
+                strategy = STRATEGY_CAUTIOUS;
+                return true;
+            case 3:
+                strategy = STRATEGY_DUMB;
+                return true;
+        }
+        return false;
+    }
+
+    public String getPreferredColor() { // *** NEEDS TO BE TESTED ***
+        if(isPlayer2()) {
+            if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
+                // return a random number
+                List<String> colors = new ArrayList<>();
+                colors.add(Card.BLUE);
+                colors.add(Card.RED);
+                colors.add(Card.YELLOW);
+                colors.add(Card.GREEN);
+                Collections.shuffle(colors);
+                return colors.get(0);
+            } else {
+                return(hand.getHighestColor());
+            }
+        } else {
+            // ask the user to provide preferred color
+            // for now just return blue
+            return Card.BLUE;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

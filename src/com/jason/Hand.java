@@ -23,9 +23,7 @@ public class Hand {
      * @param card the card to add
      */
     public void addCard(Card card) { // tested
-        if(card == null) {
-            Main.out("WARN: Hand.addCard handed a null card. No action taken.");
-        } else {
+        if(card != null) {
             List<Card> colorList = getColorList(card.getColor());
             if(colorList != null) {
                 colorList.add(card);
@@ -40,6 +38,20 @@ public class Hand {
             // Sort the hand descending by color group size (NOT by face value sum size).
             // For example, if there are more blues than any other type of card, put the blues first. And so on.
             Collections.sort(listOfListOfCards, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
+            moveColorlessListToEnd();
+        }
+    }
+
+    /**
+     * Move the list of colorless (wild and wild draw four) cards to the end of the hand.
+     */
+    public void moveColorlessListToEnd() { // tested
+        List<Card> colorlessCards = getColorList(Card.COLORLESS);
+        if(colorlessCards != null) {
+            if(colorlessCards.size() > 0) {
+                listOfListOfCards.remove(colorlessCards);
+                listOfListOfCards.add(colorlessCards);
+            }
         }
     }
 
@@ -244,33 +256,23 @@ public class Hand {
         }
     }
 
-    public List<String> getHandPrintStringList() {
+    /**
+     * @return a string list of all hands in the card
+     */
+    List<String> getHandPrintStringList() {
         List<String> allCards = new ArrayList<>();
         for(Card c : getAllCards()){
             allCards.add(c.getPrintString());
         }
         return allCards;
     }
+
+    /**
+     * Set the current hand (for testing).
+     *
+     * @param hand the hand to set
+     */
+    public void setHand(List<List<Card>> hand) { // no test needed
+        listOfListOfCards = hand;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

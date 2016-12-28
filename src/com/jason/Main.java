@@ -9,6 +9,13 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
+    public static final String YES_NO = "Yes No";
+    public static final String INTEGER = "Integer";
+    public static final String STRING = "String";
+    private static final String userCorrectionMessage = "That is not a valid response. Please try again.";
+    private static final String invalidQuestionWarning =
+            "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
+
     public static void main(String[] args) {
 
         /*
@@ -19,10 +26,12 @@ public class Main {
          *     java -cp ./src com.jason.Main
          */
 
+        out("\nGreetings player one!");
+        out("You are about to play the computer in a game of Cero. " +
+                "The rules are essentially the same as Uno.");
         // Uncomment out this block to run interactive game.
         /*
-        sayNoReturn("Greetings player one!");
-        out("Please enter your name (no special characters): ");
+        outNoReturn("Please enter your name (no special characters): ");
         String name = System.console().readLine();
         while(!isValid(name)) {
             sayNoReturn("Please try again.");
@@ -39,19 +48,24 @@ public class Main {
         Game game = new Game("David Lightman");
         game.play();
 
-        // out("Under construction...");
+        // run this block to test user Q&A functionality from the command line.
+//        String answer1 = getUserResponse_yesNo("");
+//        String answer2 = getUserResponse_integer("", 1, 5);
+//        String answer3 = getUserResponse_string("");
+//
+//        out("Your validated answers are " + answer1 + ", " + answer2 + ", and " + answer3 + ".");
 
     }
 
     /**
      * Checks for invalid characters in submitted name.
      *
-     * @param name  The user's name.
+     * @param str  The user's name.
      * @return      True if name contains only alphanumeric characters, false otherwise.
      */
-    private static boolean isValid(String name) {
+    private static boolean isValid(String str) {
         Pattern p = Pattern.compile("[^A-Za-z\\s]");
-        return !p.matcher(name).find();
+        return !p.matcher(str).find();
     }
 
     /**
@@ -83,23 +97,110 @@ public class Main {
     /**
      * Ask the user a yes or no question.
      *
-     * @param question  The question to ask.
-     * @return          True if the user said 'yes', false otherwise.
+     * @param question the question to ask
+     * @return         the user's answer
      */
-    static boolean askUserYesOrNoQuestion(String question) {
-        String answer = "";
-        while(true) {
-            Main.out(question);
-            Main.outNoReturn("Please type 'y' or 'n': ");
-            answer = System.console().readLine();
-            if (answer.equalsIgnoreCase("y")) {
-                return true;
-            } else if(answer.equalsIgnoreCase("n")) {
-                return false;
-            } else {
-                Main.out("Invalid answer received.");
-                Main.out("Please answer 'y' or 'n'.");
+    public static String getUserResponse_yesNo(String question) { // tested
+        if(!validateQuestion(question, invalidQuestionWarning)) {
+            return null;
+        } else {
+            boolean validAnswerReceived = false;
+            String response = "";
+            while(!validAnswerReceived) {
+                outNoReturn(question);
+                response = System.console().readLine();
+                if(response.equalsIgnoreCase("y") || response.equalsIgnoreCase("n")) {
+                    validAnswerReceived = true;
+                } else {
+                    out(userCorrectionMessage);
+                }
             }
+            return response;
         }
     }
+
+    /**
+     * Ask the user to provide an integer within a specified range.
+     *
+     * @param question        the question to ask
+     * @param minIntInclusive the minimum inclusive integer the user must input
+     * @param maxIntInclusive the maximum inclusive integer the user must input
+     * @return                the user's answer - guaranteed to be integer parsable
+     */
+    public static String getUserResponse_integer(String question, int minIntInclusive, int maxIntInclusive) { // tested
+        if(!validateQuestion(question, invalidQuestionWarning)) {
+            return null;
+        } else {
+            boolean validAnswerReceived = false;
+            String response = "";
+            if(minIntInclusive < 0 || maxIntInclusive < 0) {
+                out("Main.getUserResponse received invalid minInt and maxInt values: minInt = " + minIntInclusive
+                        + ", maxInt = " + maxIntInclusive + ". Both must be >= 0. No action taken, returned null.");
+                return null;
+            }
+            if(minIntInclusive >= maxIntInclusive - 1) { // minimum range of two ints to pick from
+                out("Main.getUserResponse received invalid minInt and maxInt values: minInt = " + minIntInclusive
+                        + ", maxInt = " + maxIntInclusive + ". minInt must be < maxInt. " +
+                        "No action taken, returned null.");
+                return null;
+            } else {
+                while(!validAnswerReceived) {
+                    outNoReturn(question);
+                    response = System.console().readLine();
+                    int responseInt = -1;
+                    try {
+                        responseInt = Integer.parseInt(response);
+                    } catch (NumberFormatException e) {
+                        out("Your response " + response + " could not be converted to an integer.");
+                    }
+                    if(responseInt >= minIntInclusive && responseInt <= maxIntInclusive) {
+                        validAnswerReceived = true;
+                    } else {
+                        out(userCorrectionMessage);
+                    }
+                }
+            }
+            return response;
+        }
+    }
+
+    /**
+     * Ask the user to provide the answer to a general question.
+     *
+     * @param question the question to ask
+     * @return         the user's response
+     */
+    public static String getUserResponse_string(String question) { // testing
+        if(!validateQuestion(question, invalidQuestionWarning)) {
+            return null;
+        } else {
+            boolean validAnswerReceived = false;
+            String response = "";
+            while(!validAnswerReceived) {
+                outNoReturn(question);
+                response = System.console().readLine();
+                if(isValid(response)) {
+                    validAnswerReceived = true;
+                } else {
+                    out(userCorrectionMessage + " (Acceptable characters are A-Z, a-z, and space.)");
+                }
+            }
+            return response;
+        }
+    }
+
+    /**
+     * Validates a string is not null and not empty. Prints specified error message if string is null.
+     *
+     * @param  str the string to validate
+     * @return true if the string is not null, false otherwise.
+     */
+    public static boolean validateQuestion(String str, String message) { // tested
+        if (str == null || str.equals("")) {
+            out(message);
+            return false;
+        }
+        return true;
+    }
+
 }

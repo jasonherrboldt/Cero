@@ -214,4 +214,32 @@ public class TestHand {
         }
         return cards;
     }
+
+    @Test
+    public void testHand_moveColorlessListToEnd() {
+        Hand hand = new Hand();
+
+        List<List<Card>> mockHand = new ArrayList<>();
+
+        List<Card> colorList1 = new ArrayList<>();
+        colorList1.add(new Card(Card.BLUE, Card.SEVEN, cvm));
+        colorList1.add(new Card(Card.BLUE, Card.ONE, cvm));
+        colorList1.add(new Card(Card.BLUE, Card.SIX, cvm));
+        mockHand.add(colorList1);
+
+        List<Card> colorList2 = new ArrayList<>();
+        colorList2.add(new Card(Card.COLORLESS, Card.WILD, cvm));
+        colorList2.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+        mockHand.add(colorList2);
+
+        List<Card> colorList3 = new ArrayList<>();
+        colorList3.add(new Card(Card.GREEN, Card.NINE, cvm));
+        mockHand.add(colorList3);
+
+        hand.setHand(mockHand);
+        assertEquals(hand.getAllCards().get(hand.getSize() - 1).getColor(), Card.GREEN);
+
+        hand.moveColorlessListToEnd();
+        assertEquals(hand.getAllCards().get(hand.getSize() - 1).getColor(), Card.COLORLESS);
+    }
 }

@@ -14,6 +14,7 @@ public class TestPlayer {
 
     private CardValueMap cvm;
     private Hand classHand;
+    private Player player;
 
     // Not instantiated in setup:
     private List<Card> cardList;
@@ -27,17 +28,19 @@ public class TestPlayer {
         classHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
         classHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
         classHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
+        classHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
     }
 
     @Test
     public void testPlayer_setHand() {
-        Player player = new Player("Set Hand Test", true);
+        player = new Player("Set Hand Test", true);
         cardList = new ArrayList<>();
         cardList.add(new Card(Card.GREEN, Card.THREE, cvm));
         cardList.add(new Card(Card.RED, Card.DRAW_TWO, cvm));
         cardList.add(new Card(Card.RED, Card.EIGHT, cvm));
         cardList.add(new Card(Card.YELLOW, Card.ONE, cvm));
         cardList.add(new Card(Card.YELLOW, Card.ZERO, cvm));
+        cardList.add(new Card(Card.YELLOW, Card.SIX, cvm));
         player.setHand(cardList);
         Hand mockHand = player.getHand();
         List<Card> mockList = mockHand.getAllCards();
@@ -58,15 +61,36 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_discard() {
-        Player discardPlayer = new Player("", false);
+        player = new Player("", false);
         cardList = new ArrayList<>();
         cardList.add(new Card(Card.RED, Card.EIGHT, cvm));
         Card greenFour = new Card(Card.GREEN, Card.FOUR, cvm);
         cardList.add(greenFour);
-        discardPlayer.setHand(cardList);
-        assertEquals(discardPlayer.getHand().getSize(), 2);
+        player.setHand(cardList);
+        assertEquals(player.getHand().getSize(), 2);
 
-        discardPlayer.discard(greenFour);
-        assertEquals(discardPlayer.getHand().getSize(), 1);
+        player.discard(greenFour);
+        assertEquals(player.getHand().getSize(), 1);
+    }
+
+    @Test
+    public void testPlayer_setRandomStrategy() {
+        player = new Player("", true);
+        assertTrue(player.getStrategy().equals(""));
+        assertTrue(player.setRandomStrategy());
+    }
+
+    @Test
+    public void testPlayer_getPreferredColor() {
+        // Can't test for a dumb player -- returns a random color.
+        // Bold and cautious players always return color of highest count.
+        player = new Player("", true);
+        player.setHand(classHand.getAllCards());
+
+        player.setStrategy(Player.STRATEGY_BOLD);
+        assertEquals(player.getPreferredColor(), Card.YELLOW);
+
+        player.setStrategy(Player.STRATEGY_CAUTIOUS);
+        assertEquals(player.getPreferredColor(), Card.YELLOW);
     }
 }

@@ -52,7 +52,7 @@ public class Deck {
         if(!deckStack.empty()) {
             return deckStack.pop();
         }
-        Main.out("WARN: Deck.getNextCard called on an empty deck. No action taken. Returned null.");
+        // Main.out("WARN: Deck.popCard called on an empty deck. No action taken. Returned null.");
         return null;
     }
     
