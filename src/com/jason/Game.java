@@ -3,6 +3,7 @@ package com.jason;
 import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -44,14 +45,14 @@ public class Game {
     private boolean deckWinnerExists;
     private boolean isPlayerOnesTurn;
     private Card currentPlayedCard;
-    private static final int FAKE_GAME_RUNS = 8;
+    private static final int FAKE_GAME_RUNS = 1;
     private CardValueMap cvm;
-    private Stack<Card> discardPile;
+    private DiscardPile discardPile;
     private int deckCounter;
     
     public Game(String userName) {
         cvm = new CardValueMap();
-        deck = new Deck(null);
+        deck = new Deck();
         Main.out("");
         player2 = new Player("Computer", true);
         if(Main.getRandomBoolean()) {
@@ -64,7 +65,7 @@ public class Game {
         gameWinnerExists = false;
         deckWinnerExists = false;
         isPlayerOnesTurn = Main.getRandomBoolean();
-        discardPile = new Stack<>();
+        discardPile = new DiscardPile();
         deckCounter = 1;
     }
 
@@ -77,12 +78,11 @@ public class Game {
             deck.shuffle();
             dealHands();
             currentPlayedCard = verifyFirstCard(deck.getNextCard());
-            discardPile.push(currentPlayedCard);
+            discardPile.add(currentPlayedCard);
 
             int fakeGames = 0;
             while(!deckWinnerExists && fakeGames < FAKE_GAME_RUNS) {
                 Main.out("Now playing deck number " + deckCounter + ".");
-                refreshDeckIfEmpty();
 
                 // Let the players see how many cards are in each other's decks.
                 player1.updateOtherPlayersHandCount(player2.showHandCount());
@@ -98,18 +98,20 @@ public class Game {
                     // Player 2 sometimes forgets to call out player 1 on not calling 'Cero!'
                     if (player1.getHand().getSize() == 1 && !player1.isCeroCalled() && Main.getRandomBoolean()) {
                         Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                        player1.draw(deck.getNextCard());
-                        player1.draw(deck.getNextCard());
+                        for(int i = 0; i < 2; i++) {
+                            player1.draw(deck, discardPile);
+                        }
                     }
 
                     // boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
                             // "declare 'Cero!' when it should have?");
-                    boolean answer = false;
+                    boolean answer = false; // debug
                     if (answer) {
                         if (player2.getHand().getSize() == 1 && !player1.isCeroCalled()) {
                             Main.out("Player 2 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                            player2.draw(deck.getNextCard());
-                            player2.draw(deck.getNextCard());
+                            for(int i = 0; i < 2; i++) {
+                                player2.draw(deck, discardPile);
+                            }
                         } else {
                             Main.out("Player 2 did not incorrectly fail to declare 'Cero!' - " +
                                     "no punishment for Player 2.");
@@ -144,15 +146,8 @@ public class Game {
      * @param player the player to move
      */
     public void playHand(Player player) {
-        currentPlayedCard = player.move(currentPlayedCard);
-        if(player.isComputer()) {
-            Main.out("Making player 2 draw four cards for debug reasons.");
-            player.draw(deck.getNextCard());
-            player.draw(deck.getNextCard());
-            player.draw(deck.getNextCard());
-            player.draw(deck.getNextCard());
-        }
-        discardPile.push(currentPlayedCard);
+        currentPlayedCard = player.move(currentPlayedCard, deck, discardPile);
+        discardPile.add(currentPlayedCard);
         player.callCero();
         if(player.getHand().getSize() == 0) {
             deckWinnerExists = true;
@@ -203,10 +198,11 @@ public class Game {
      */
     @Nullable
     public Card verifyFirstCard(Card card) { // tested
-        if(card != null) {
-            while(card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
+        if (card != null) {
+            while (card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
                     || card.equals(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm))) {
-                deck = new Deck(null);
+                deck.clearDeck();
+                deck.populate();
                 deck.shuffle();
                 card = deck.getNextCard();
             }
@@ -215,18 +211,6 @@ public class Game {
             Main.out("WARN: verifyFirstCard called with a null card.");
         }
         return null;
-    }
-
-    /**
-     * Transfer the discard pile to the deck and shuffle.
-     */
-    public void refreshDeckIfEmpty() { // tested
-        if(deck.getDeckSize() == 0) {
-            deck = new Deck(discardPile);
-            deck.shuffle();
-            discardPile = new Stack<>();
-            discardPile.push(currentPlayedCard);
-        }
     }
 
     /**
@@ -239,26 +223,38 @@ public class Game {
     /**
      * Set the current game's deck (for testing).
      *
-     * @param cards the deck to set
+     * @param deck the deck to set
      */
-    public void setDeck(Stack<Card> cards) {
-        this.deck = new Deck(cards);
+    public void setDeck(Deck deck) {
+        deck.replaceDeckWithAnotherDeck(deck);
     }
 
     /**
      * @return the game's discard pile (for testing)
      */
-    public Stack<Card> getDiscardPile() {
+    public DiscardPile getDiscardPile() {
         return discardPile;
     }
 
-    /**
-     * Set the game's discard pile (for testing)
-     *
-     * @param cards the discard pile to set
-     */
-    public void setDiscardPile(Stack<Card> cards) {
-        this.discardPile = cards;
+    public void setDiscardPile(DiscardPile injectedDiscardPile) { // *** NEEDS TO BE TESTED ***
+        if(injectedDiscardPile.isEmpty()) {
+            Main.out("WARN: Game.setDiscardPile called with empty discardPile. No action taken.");
+        } else {
+            this.discardPile.clear();
+            Stack<Card> injectedDiscardStack = injectedDiscardPile.getStack();
+            Iterator<Card> injectedDiscardCards = injectedDiscardStack.iterator();
+            while(injectedDiscardCards.hasNext()) {
+                this.discardPile.add(injectedDiscardCards.next());
+            }
+        }
     }
+
+    /**
+     * Clear the current deck (for testing)
+     */
+    public void clearDeck() {
+        deck.clearDeck();
+    }
+
 
 }

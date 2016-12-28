@@ -19,20 +19,23 @@ public class Hand {
 
     public void addCard(Card card) { // tested
         if(card == null) {
-            Main.out("WARN: addCard handed a null card.");
-        }
-        List<Card> colorList = getColorList(card.getColor());
-        if(colorList != null) {
-            colorList.add(card);
-            // Sort the color group descending by face value.
-            Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
+            Main.out("WARN: Hand.addCard handed a null card. No action taken.");
         } else {
-            List<Card> newList = new ArrayList<>();
-            newList.add(card);
-            hand.add(newList);
+            List<Card> colorList = getColorList(card.getColor());
+            if(colorList != null) {
+                colorList.add(card);
+                // Sort the color group descending by face value.
+                Collections.sort(colorList, (Card c1, Card c2) -> c1.getFace().compareTo(c2.getFace()));
+            } else {
+                // Create a new color list and add it to the hand.
+                List<Card> newList = new ArrayList<>();
+                newList.add(card);
+                hand.add(newList);
+            }
+            // Sort the hand descending by color group size (NOT by face value sum size).
+            // For example, if there are more blues than any other type of card, list the blues first. And so on.
+            Collections.sort(hand, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
         }
-        // Sort the hand descending by color group size (NOT by face value sum size).
-        Collections.sort(hand, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
     }
 
     /**
@@ -226,11 +229,14 @@ public class Hand {
     /**
      * @return the first card of the hand (for debug).
      */
+    @Nullable
     public Card getFirstCard() {
         if(getSize() > 0) {
             return getAllCards().get(0);
+        } else {
+            Main.out("WARN: Hand.getFirstCard called on an empty hand. No action taken, null returned.");
+            return null;
         }
-        return null;
     }
 
 }

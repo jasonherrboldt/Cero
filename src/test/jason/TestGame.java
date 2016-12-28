@@ -34,26 +34,28 @@ public class TestGame {
 
     @Test
     public void testGame_refreshDeckIfEmpty() {
-        // make an empty deck.
-        Stack<Card> mockDeck = new Stack<>();
-        // call game's setDeck method, inject empty deck.
-        game.setDeck(mockDeck);
-        assertTrue(game.getDeck().getDeckSize() == 0);
 
-        // make a small discard pile stack of three cards
-        Stack<Card> mockDiscardPile = new Stack<>();
-        mockDiscardPile.push(new Card(Card.RED, Card.ZERO, cvm));
-        mockDiscardPile.push(new Card(Card.BLUE, Card.ONE, cvm));
-        mockDiscardPile.push(new Card(Card.GREEN, Card.TWO, cvm));
-        // call game's setDiscardPile, inject small stack.
+        // Empty the game's deck.
+        game.clearDeck();
+
+        // Make a small discard pile stack of three cards.
+        DiscardPile mockDiscardPile = new DiscardPile();
+        mockDiscardPile.add(new Card(Card.RED, Card.ZERO, cvm));
+        mockDiscardPile.add(new Card(Card.BLUE, Card.ONE, cvm));
+        mockDiscardPile.add(new Card(Card.GREEN, Card.TWO, cvm));
+
+        // Call game's setDiscardPile, inject small stack.
         game.setDiscardPile(mockDiscardPile);
         assertTrue(game.getDiscardPile().size() == 3);
 
-        // call game's refreshDeckIfEmpty method.
-        game.refreshDeckIfEmpty();
+        // Call game's refreshDeckIfEmpty method.
+        game.getDeck().refreshDeckIfEmpty(game.getDiscardPile());
 
         assertTrue(game.getDiscardPile().size() == 1);
         assertTrue(game.getDeck().getDeckSize() == 3);
+
+        // Refresh deck for other tests.
+        game.getDeck().populate();
     }
 }
 
