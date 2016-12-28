@@ -1,12 +1,13 @@
 
-GAME
+Game
 
-    PLAY()
+    play()
 
+        Let deck be a deck of cards
+        Let discardPile be an empty stack
         While the current game has not been won
             Shuffle deck
             Deal cards
-            Let the discard pile be an empty stack of cards
             Let the current played card (cpc) be the first card popped off the top of the deck
             While the cpc is wild or wild draw four
                 Shuffle the deck

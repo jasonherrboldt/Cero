@@ -33,60 +33,6 @@ public class Player {
     }
 
     /**
-     * Play a card.
-     *
-     * @param currentPlayedCard the current played card
-     * @param deck        the game's deck
-     * @param discardPile the game's discard pile
-     * @return            the player's discarded card
-     */
-    @Nullable
-    public Card move(Card currentPlayedCard, Deck deck, DiscardPile discardPile) {
-        if(deck.getDeck().empty() && discardPile.isEmpty()) {
-            Main.out("ERROR: both deck and discard pile sent to Player.move are empty. No action taken, returned null.");
-            return null;
-        }
-        if (currentPlayedCard == null) {
-            Main.out("ERROR: null card passed to Player.move. Cannot make any move.");
-            return null;
-        } else {
-            if (isComputer()) {
-                if (currentPlayedCard.isNumberCard()) {
-                    Main.out("Handing move for numeric card.");
-                } else {
-                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.SKIP)) {
-                        Main.out("Handling move for " + Card.SKIP + ".");
-                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
-                        Main.out("Handling move for " + Card.REVERSE + ".");
-                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                        Main.out("Handling move for " + Card.DRAW_TWO + ".");
-                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
-                        Main.out("Handling move for " + Card.WILD + ".");
-                    } else { // WILD_DRAW_FOUR
-                        Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
-                    }
-                }
-
-                // Draw four cards (for debug).
-                for(int i = 0; i < 3; i++) {
-                    draw(deck, discardPile);
-                }
-
-                // Just discard the first card (for debug).
-                Card firstCard = hand.getFirstCard();
-                hand.discard(firstCard);
-                return firstCard;
-            } else {
-                // Main.out("Ask the user what to do.");
-                Main.out("Just discarding player one's first card (for debug).");
-                Card firstCard = hand.getFirstCard();
-                hand.discard(firstCard);
-                return firstCard;
-            }
-        }
-    }
-
-    /**
      * @return the player's current hand.
      */
     public Hand getHand() { // no test necessary.
@@ -102,31 +48,6 @@ public class Player {
         this.hand = new Hand();
         for (Card c : hand) {
             this.hand.addCard(c);
-        }
-    }
-
-    /**
-     * Instruct the player to add a card to its hand from the deck.
-     * Replace the deck with the shuffled discard pile as needed.
-     *
-     * @param deck        the game's deck
-     * @param discardPile the game's discard pile
-     */
-    public void draw(Deck deck, DiscardPile discardPile) { // *** NEEDS TO BE TESTED ***
-        if(deck == null || discardPile == null) {
-            Main.out("WARN: Player.draw called with a null deck or a null discard pile, or both. " +
-                    "No action taken.");
-        } else {
-            if(deck.getDeckSize() == 0 && discardPile.size() == 0) {
-                Main.out("WARN: Player.draw called with empty deck and empty discard pile. " +
-                        "At least one must be non-empty. No action taken.");
-            } else {
-                if(deck.getDeckSize() == 0) {
-                    deck.replaceDeckWithShuffledDiscardPile(discardPile);
-                }
-                Card card = deck.getNextCard();
-                hand.addCard(card);
-            }
         }
     }
 

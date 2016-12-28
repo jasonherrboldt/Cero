@@ -137,13 +137,13 @@ public class Deck {
     /**
      * Transfer the discard pile to the deck and shuffle.
      */
-    public void refreshDeckIfEmpty(DiscardPile discardPile) { // *** NEEDS TO BE TESTED ***
+    public void refreshIfEmpty(DiscardPile discardPile) { // *** NEEDS TO BE TESTED ***
         if(getDeckSize() == 0) {
-            Main.out("Replenishing deck with shuffled discard pile.");
-            replaceDeckWithShuffledDiscardPile(discardPile);
+            Main.out("Deck is empty! Replenishing with discard pile...");
+            replaceWithDiscardPile(discardPile);
+            Main.out("Shuffling deck...");
             shuffle();
-            // return discardPile.pop?
-            discardPile.clear();
+            discardPile.clear(); // useless - disappears after stack popped
         }
     }
 
@@ -152,7 +152,7 @@ public class Deck {
      *
      * @param discardPile the replacement cards
      */
-    public void replaceDeckWithShuffledDiscardPile(DiscardPile discardPile) { // *** NEEDS TO BE TESTED ***
+    public void replaceWithDiscardPile(DiscardPile discardPile) { // is covered by refreshIfEmpty test
         if(discardPile == null || discardPile.isEmpty()) {
             Main.out("WARN: someone tried to replace the deck with a null or empty discard pile. Deck not replaced.");
         } else {

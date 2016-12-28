@@ -60,40 +60,6 @@ public class TestPlayer {
     }
 
     @Test
-    public void testPlayer_draw_nonEmptyDeck() {
-        player = new Player("Draw Non-Empty Deck Test", false);
-        cardList = new ArrayList<>();
-        cardList.add(new Card(Card.GREEN, Card.ZERO, cvm));
-        player.setHand(cardList);
-        assertEquals(player.getHand().getSize(), 1);
-
-        DiscardPile discardPile = new DiscardPile();
-        player.draw(deck, discardPile);
-
-        assertEquals(player.getHand().getSize(), 2);
-    }
-
-    @Test
-    public void testPlayer_draw_emptyDeck() {
-        player = new Player("Draw Empty Deck Test", false);
-        cardList = new ArrayList<>();
-        cardList.add(new Card(Card.GREEN, Card.ZERO, cvm));
-        player.setHand(cardList);
-        DiscardPile discardPile = new DiscardPile();
-        discardPile.add(new Card(Card.BLUE, Card.SEVEN, cvm));
-        discardPile.add(new Card(Card.RED, Card.EIGHT, cvm));
-        discardPile.add(new Card(Card.GREEN, Card.NINE, cvm));
-        deck.clearDeck();
-
-        // Try to draw from an empty deck.
-        player.draw(deck, discardPile);
-        assertEquals(player.getHand().getSize(), 2);
-
-        // Replace deck for other methods.
-        deck.populate();
-    }
-
-    @Test
     public void testPlayer_discard() {
         Player discardPlayer = new Player("", false);
         cardList = new ArrayList<>();

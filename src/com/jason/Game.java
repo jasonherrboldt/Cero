@@ -99,7 +99,7 @@ public class Game {
                     if (player1.getHand().getSize() == 1 && !player1.isCeroCalled() && Main.getRandomBoolean()) {
                         Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
                         for(int i = 0; i < 2; i++) {
-                            player1.draw(deck, discardPile);
+                            draw(player1);
                         }
                     }
 
@@ -110,7 +110,7 @@ public class Game {
                         if (player2.getHand().getSize() == 1 && !player1.isCeroCalled()) {
                             Main.out("Player 2 forgot to declare 'Cero!' with one card left - must draw two cards.");
                             for(int i = 0; i < 2; i++) {
-                                player2.draw(deck, discardPile);
+                                draw(player2);
                             }
                         } else {
                             Main.out("Player 2 did not incorrectly fail to declare 'Cero!' - " +
@@ -146,7 +146,7 @@ public class Game {
      * @param player the player to move
      */
     public void playHand(Player player) {
-        currentPlayedCard = player.move(currentPlayedCard, deck, discardPile);
+        currentPlayedCard = move(player);
         discardPile.add(currentPlayedCard);
         player.callCero();
         if(player.getHand().getSize() == 0) {
@@ -163,6 +163,70 @@ public class Game {
                 Main.out("Current deck winnings: " + playerTwoScore);
                 player2.updateScore(playerTwoScore);
                 Main.out("Player 2's new score is " + player2.getScore());
+            }
+        }
+    }
+
+    @Nullable
+    public Card move(Player player) {
+        if(deck.getDeck().empty() && discardPile.isEmpty()) {
+            Main.out("ERROR: both deck and discard pile sent to Player.move are empty. No action taken, returned null.");
+            return null;
+        }
+        if (currentPlayedCard == null) {
+            Main.out("ERROR: null card passed to Player.move. Cannot make any move.");
+            return null;
+        } else {
+            if (player.isComputer()) {
+                if (currentPlayedCard.isNumberCard()) {
+                    Main.out("Handing move for numeric card.");
+                } else {
+                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.SKIP)) {
+                        Main.out("Handling move for " + Card.SKIP + ".");
+                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
+                        Main.out("Handling move for " + Card.REVERSE + ".");
+                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                        Main.out("Handling move for " + Card.DRAW_TWO + ".");
+                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                        Main.out("Handling move for " + Card.WILD + ".");
+                    } else { // WILD_DRAW_FOUR
+                        Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
+                    }
+                }
+
+                // Draw four cards (for debug).
+                for(int i = 0; i < 3; i++) {
+                    draw(player);
+                }
+
+                // Just discard the first card (for debug).
+                Card firstCard = player.getHand().getFirstCard();
+                player.getHand().discard(firstCard);
+                return firstCard;
+            } else {
+                // Main.out("Ask the user what to do.");
+                Main.out("Just discarding player one's first card (for debug).");
+                Card firstCard = player.getHand().getFirstCard();
+                player.getHand().discard(firstCard);
+                return firstCard;
+            }
+        }
+    }
+
+    public void draw(Player player) { // *** NEEDS TO BE TESTED ***
+        if(deck == null || discardPile == null) {
+            Main.out("WARN: Player.draw called with a null deck or a null discard pile, or both. " +
+                    "No action taken.");
+        } else {
+            if(deck.getDeckSize() == 0 && discardPile.size() == 0) {
+                Main.out("WARN: Player.draw called with empty deck and empty discard pile. " +
+                        "At least one must be non-empty. No action taken.");
+            } else {
+                if(deck.getDeckSize() == 0) {
+                    // deck.replaceDeckWithShuffledDiscardPile(discardPile);
+                }
+                Card card = deck.getNextCard();
+                player.getHand().addCard(card);
             }
         }
     }
@@ -208,9 +272,9 @@ public class Game {
             }
             return card;
         } else {
-            Main.out("WARN: verifyFirstCard called with a null card.");
+            Main.out("WARN: Game.verifyFirstCard called with a null card. No action taken, null returned.");
+            return null;
         }
-        return null;
     }
 
     /**
@@ -255,6 +319,5 @@ public class Game {
     public void clearDeck() {
         deck.clearDeck();
     }
-
 
 }
