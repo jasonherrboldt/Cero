@@ -49,16 +49,3 @@ public class TestCard {
         assertTrue(colorCard.getPrintString().equals("(Red) 2"));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

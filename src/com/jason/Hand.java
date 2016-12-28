@@ -17,6 +17,11 @@ public class Hand {
         listOfListOfCards = new ArrayList<>();
     }
 
+    /**
+     * Add a card.
+     *
+     * @param card the card to add
+     */
     public void addCard(Card card) { // tested
         if(card == null) {
             Main.out("WARN: Hand.addCard handed a null card. No action taken.");
@@ -33,7 +38,7 @@ public class Hand {
                 listOfListOfCards.add(newList);
             }
             // Sort the hand descending by color group size (NOT by face value sum size).
-            // For example, if there are more blues than any other type of card, list the blues first. And so on.
+            // For example, if there are more blues than any other type of card, put the blues first. And so on.
             Collections.sort(listOfListOfCards, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
         }
     }
@@ -192,7 +197,7 @@ public class Hand {
     /**
      * Print each card in hand to console.
      */
-    public void showCards() { // don't need to test
+    void showCards() { // no test needed
         int i = 1;
         for(Card c : getAllCards()) {
             Main.out(i + ": " + c.getPrintString());
@@ -204,14 +209,14 @@ public class Hand {
      * @return the color of the highest color group.
      */
     @Nullable
-    public String getHighestColor() {
+    public String getHighestColor() { // tested
         if(listOfListOfCards.size() > 0) {
             // Hand is already sorted ascending by color group.
             if(listOfListOfCards.get(0).size() > 0) {
                 return listOfListOfCards.get(0).get(0).getColor();
             }
         }
-        Main.out("WARN: getHighestColor did not find a card.");
+        Main.out("WARN: getHighestColor did not find a card. Returning null.");
         return null;
     }
 
@@ -230,7 +235,7 @@ public class Hand {
      * @return the first card of the hand (for debug).
      */
     @Nullable
-    public Card getFirstCard() {
+    Card getFirstCard() { // no test needed
         if(getSize() > 0) {
             return getAllCards().get(0);
         } else {
@@ -238,27 +243,4 @@ public class Hand {
             return null;
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -14,16 +14,13 @@ public class TestPlayer {
 
     private CardValueMap cvm;
     private Hand classHand;
-    private Deck deck;
 
     // Not instantiated in setup:
     private List<Card> cardList;
-    private Player player;
 
     @Before
     public void setup() {
         cvm = new CardValueMap();
-        deck = new Deck();
         classHand = new Hand();
         classHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
         classHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
@@ -34,7 +31,7 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_setHand() {
-        player = new Player("Set Hand Test", true);
+        Player player = new Player("Set Hand Test", true);
         cardList = new ArrayList<>();
         cardList.add(new Card(Card.GREEN, Card.THREE, cvm));
         cardList.add(new Card(Card.RED, Card.DRAW_TWO, cvm));
@@ -73,23 +70,3 @@ public class TestPlayer {
         assertEquals(discardPlayer.getHand().getSize(), 1);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

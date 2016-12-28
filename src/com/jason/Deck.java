@@ -29,7 +29,7 @@ public class Deck {
     /**
      * Shuffle the deck.
      */
-    public void shuffle() { // no test needed
+    void shuffle() { // no test needed
         Collections.shuffle(deckStack);
     }
     
@@ -48,11 +48,11 @@ public class Deck {
      * @return the card on the top of the deck. 
      */
     @Nullable
-    public Card getNextCard() { // tested
+    public Card popCard() { // tested
         if(!deckStack.empty()) {
             return deckStack.pop();
         }
-        Main.out("WARN: getNextCard called on an empty deck. No card returned.");
+        Main.out("WARN: Deck.getNextCard called on an empty deck. No action taken. Returned null.");
         return null;
     }
     
@@ -65,13 +65,13 @@ public class Deck {
         return deckStack.peek();
     }
 
-    public Stack<Card> getDeck() { // no test necessary
+    public Stack<Card> getDeckStack() { // no test necessary
         return deckStack;
     }
 
     // for debug
     public void printDeck() { // no test necessary
-        Iterator<Card> iter = getDeck().iterator();
+        Iterator<Card> iter = getDeckStack().iterator();
         while(iter.hasNext()) {
             Card card = iter.next();
             Main.out(card.getColor() + " " + card.getFace());
@@ -81,7 +81,7 @@ public class Deck {
     /**
      * Make a fresh deck with all new cards.
      */
-    public void populate() {
+    void populate() { // partially tested by testDeck_spotCheck
         if(deckStack.empty()) {
             List<String> colors = new ArrayList<>();
             colors.add(Card.RED);
@@ -130,6 +130,9 @@ public class Deck {
         }
     }
 
+    /**
+     * Clear this deck.
+     */
     public void clearDeck() { // no test needed
         deckStack.clear();
     }
@@ -139,30 +142,14 @@ public class Deck {
      *
      * @param injectedCards the replacement deck
      */
-    public void replaceDeckWithAnotherDeck(Stack<Card> injectedCards) {
+    public void replaceWithAnotherDeck(Stack<Card> injectedCards) { // tested
         deckStack.clear();
         if(injectedCards == null) {
-            Main.out("WARN: Deck.replaceDeckWithAnotherDeck called with a null deck. No action taken.");
+            Main.out("WARN: Deck.replaceWithAnotherDeck called with a null deck. No action taken.");
         } else {
             for(Card c : injectedCards) {
                 deckStack.push(c);
             }
         }
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

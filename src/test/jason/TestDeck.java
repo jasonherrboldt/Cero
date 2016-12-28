@@ -24,7 +24,7 @@ public class TestDeck {
     @Test
     public void testDeck_getNextCard() {
         int sizeBeforePop = deck.getDeckSize();
-        deck.getNextCard();
+        deck.popCard();
         int sizeAfterPop = deck.getDeckSize();
         assertEquals(sizeBeforePop - 1, sizeAfterPop);
     }
@@ -39,7 +39,7 @@ public class TestDeck {
 
     @Test
     public void testDeck_spotCheck() {
-        Iterator<Card> iter = deck.getDeck().iterator();
+        Iterator<Card> iter = deck.getDeckStack().iterator();
         // A correct deck should have eight sixes and thirteen greens.
         int sixCount = 0;
         int greenCount = 0;
@@ -56,41 +56,19 @@ public class TestDeck {
         assertEquals(greenCount, 25);
     }
 
-//    @Test
-//    public void testGame_refreshDeckIfEmpty() {
-//
-//        // Empty the game's deck.
-//        game.clearDeck();
-//
-//        // Make a small discard pile stack of three cards.
-//        DiscardPile mockDiscardPile = new DiscardPile();
-//        mockDiscardPile.add(new Card(Card.RED, Card.ZERO, cvm));
-//        mockDiscardPile.add(new Card(Card.BLUE, Card.ONE, cvm));
-//        mockDiscardPile.add(new Card(Card.GREEN, Card.TWO, cvm));
-//
-//        // Call game's setDiscardPile, inject small stack.
-//        game.setDiscardPile(mockDiscardPile);
-//        assertTrue(game.getDiscardPile().size() == 3);
-//
-//        // Call game's refreshDeckIfEmpty method.
-//        game.getDeck().refreshDeckIfEmpty(game.getDiscardPile());
-//
-//        assertTrue(game.getDiscardPile().size() == 1);
-//        assertTrue(game.getDeck().getDeckSize() == 3);
-//
-//        // Refresh deck for other tests.
-//        game.getDeck().populate();
-//    }
+    @Test
+    public void testDeck_replaceWithAnotherDeck() {
+        Deck cleanDeck = new Deck();
+        assertEquals(cleanDeck.getDeckSize(), Deck.DECK_SIZE);
+
+        Deck replacementDeck = new Deck();
+        replacementDeck.popCard();
+        replacementDeck.popCard();
+        replacementDeck.popCard();
+        replacementDeck.popCard();
+        assertEquals(replacementDeck.getDeckSize(), (Deck.DECK_SIZE - 4));
+
+        cleanDeck.replaceWithAnotherDeck(replacementDeck.getDeckStack());
+        assertEquals(cleanDeck.getDeckSize(), replacementDeck.getDeckSize());
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-

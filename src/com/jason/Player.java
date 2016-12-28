@@ -1,7 +1,5 @@
 package com.jason;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.List;
 
 /**
@@ -15,9 +13,9 @@ public class Player {
     private String name;
     private Hand hand;
     private boolean isComputer;
-    public static final String STRATEGY_BOLD = "Bold";
-    public static final String STRATEGY_CAUTIOUS = "Cautious";
-    public static final String STRATEGY_NEUTRAL = "Neutral";
+    static final String STRATEGY_BOLD = "Bold";
+    static final String STRATEGY_CAUTIOUS = "Cautious";
+    static final String STRATEGY_NEUTRAL = "Neutral";
     private String strategy;
     private int score;
     private int otherPlayersHandCount;
@@ -70,7 +68,7 @@ public class Player {
     /**
      * @return whether the current player is the computer.
      */
-    public boolean isComputer() { // no test needed
+    boolean isComputer() { // no test needed
         return this.isComputer;
     }
 
@@ -79,7 +77,7 @@ public class Player {
      *
      * @param strategy The strategy to set.
      */
-    public void setStrategy(String strategy) { // no test needed
+    void setStrategy(String strategy) { // no test needed
         this.strategy = strategy;
     }
 
@@ -102,14 +100,14 @@ public class Player {
      *
      * @param score The score to update.
      */
-    public void updateScore(int score) { // no test needed
+    void updateScore(int score) { // no test needed
         this.score += score;
     }
 
     /**
      * @return the player's score
      */
-    public int getScore() { // no test needed
+    int getScore() { // no test needed
         return this.score;
     }
 
@@ -118,14 +116,14 @@ public class Player {
      *
      * @param count the count to update.
      */
-    public void updateOtherPlayersHandCount(int count) {
+    void updateOtherPlayersHandCount(int count) {
         otherPlayersHandCount = count;
     }
 
     /**
      * @return this player's hand size.
      */
-    public int showHandCount() {
+    int showHandCount() {
         return hand.getSize();
     }
 
@@ -133,7 +131,7 @@ public class Player {
      * Allow either player to call 'Cero!' on the other player if the other player has not already done so after
      * discarding penultimate card.
      */
-    public void callCero() { // no test needed
+    void callCero() { // no test needed
         if (isComputer()) {
             if (hand.getSize() == 1 && Main.getRandomBoolean()) {
                 ceroCalled = true;
@@ -142,17 +140,8 @@ public class Player {
         } else {
             if(hand.getSize() == 1) {
                 boolean validAnswerReceived = false;
-                String answer = "";
-                while(!validAnswerReceived) {
-                    Main.outNoReturn("Would you like to declare 'Cero!' at this time? Please type 'y' or 'n': ");
-                    answer = System.console().readLine();
-                    if(answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("n")) {
-                        validAnswerReceived = true;
-                    } else {
-                        Main.out("Invalid answer received.");
-                    }
-                }
-                if(answer.equalsIgnoreCase("y")) {
+                boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare 'Cero!' at this time?");
+                if(answer) {
                     ceroCalled = true;
                     Main.out("Player one has just declared 'Cero!'.");
                 }
@@ -163,14 +152,14 @@ public class Player {
     /**
      * @return true if player has called 'Cero!' on the other player, false otherwise.
      */
-    public boolean isCeroCalled() { // no test needed
+    boolean isCeroCalled() { // no test needed
         return this.ceroCalled;
     }
 
     /**
      * Reset this player's cero called value to false.
      */
-    public void resetCeroCalled() { // no test needed
+    void resetCeroCalled() { // no test needed
         ceroCalled = false;
     }
 }

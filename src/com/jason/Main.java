@@ -59,7 +59,7 @@ public class Main {
      *
      * @param s The string to getPrintString.
      */
-    protected static void out(String s) {
+    static void out(String s) {
         System.out.println(s);
     }
 
@@ -68,7 +68,7 @@ public class Main {
      *
      * @param s The string to getPrintString.
      */
-    protected static void outNoReturn(String s) {
+    static void outNoReturn(String s) {
         System.out.print(s);
     }
 
@@ -76,7 +76,7 @@ public class Main {
     /**
      * @return random true or false
      */
-    public static boolean getRandomBoolean() { // no test needed
+    static boolean getRandomBoolean() { // no test needed
         return Math.random() < 0.5;
     }
 
@@ -86,7 +86,7 @@ public class Main {
      * @param question  The question to ask.
      * @return          True if the user said 'yes', false otherwise.
      */
-    public static boolean askUserYesOrNoQuestion(String question) {
+    static boolean askUserYesOrNoQuestion(String question) {
         String answer = "";
         while(true) {
             Main.out(question);
@@ -98,20 +98,8 @@ public class Main {
                 return false;
             } else {
                 Main.out("Invalid answer received.");
+                Main.out("Please answer 'y' or 'n'.");
             }
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

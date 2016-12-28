@@ -43,8 +43,8 @@ public class CardValueMap {
      * @throws IllegalArgumentException     Throw up if submitted face does not exist in map.
      */
     public int getValue(String face) throws IllegalArgumentException {
-        if(face == null) {
-            Main.out("WARN: getValue called with a null face.");
+        if(face == null || face.equals("")) {
+            Main.out("WARN: CardValueMap.getValue called with a null or empty string.");
         }
         if(!valueMap.containsKey(face)) {
             throw new IllegalArgumentException ("Invalid face value: " + face);

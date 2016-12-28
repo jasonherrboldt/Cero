@@ -62,9 +62,13 @@ public class Card {
         this.color = color;
         this.face = face;
         try {
-            this.value = cvm.getValue(face);
+            if(cvm == null) {
+                throw new IllegalArgumentException("ERROR: Card constructor called with a null cvm object.");
+            } else {
+                this.value = cvm.getValue(face);
+            }
         } catch (IllegalArgumentException e) {
-            Main.out("WARN: CardValueMap.getValue() called with illegal argument: " + face);
+            Main.out("ERROR: CardValueMap.getValue() called with illegal argument: " + face);
         }
     }
     
@@ -82,7 +86,7 @@ public class Card {
         return this.face;
     }
 
-    public int getValue() {
+    int getValue() {
         return this.value;
     }
 
@@ -94,10 +98,12 @@ public class Card {
      */
     public boolean equals(Card card) { // tested
         if(card == null) {
-            Main.out("WARN: trying to compare a null card to this card.");
+            Main.out("ERROR: Card.equals was given a null card. Returning false without comparison.");
+            return false;
+        } else {
+            return card.getColor().equalsIgnoreCase(this.color)
+                    && card.getFace().equalsIgnoreCase(this.face);
         }
-        return card.getColor().equalsIgnoreCase(this.color)
-                && card.getFace().equalsIgnoreCase(this.face);
     }
 
     /**

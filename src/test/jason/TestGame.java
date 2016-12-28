@@ -39,7 +39,7 @@ public class TestGame {
     }
 
     @Test
-    public void testPlayer_draw_nonEmptyDeck() {
+    public void testGame_draw_nonEmptyDeck() {
         player = new Player("Draw Non-Empty Deck Test", false);
         hand = new ArrayList<>();
         hand.add(new Card(Card.GREEN, Card.ZERO, cvm));
@@ -55,7 +55,7 @@ public class TestGame {
     }
 
     @Test
-    public void testPlayer_draw_emptyDeck() {
+    public void testGame_draw_emptyDeck() {
 
         // Give the game a player with a hand of one card.
         player = new Player("Draw Empty Deck Test", false);
@@ -90,20 +90,16 @@ public class TestGame {
         // Replace original deck for other methods.
         game.setDeck(new Deck());
     }
+
+    @Test
+    public void testGame_dealHands() {
+        List<Player> players = game.getPlayers();
+        for(Player p : players) {
+            assertEquals(p.getHand(), null);
+        }
+        game.dealHands();
+        for(Player p : players) {
+            assertEquals(p.getHand().getSize(), 7);
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
