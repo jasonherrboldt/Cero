@@ -11,10 +11,10 @@ import java.util.*;
  */
 public class Hand {
 
-    private List<List<Card>> hand;
+    private List<List<Card>> listOfListOfCards;
     
     public Hand() {
-        hand = new ArrayList<>();
+        listOfListOfCards = new ArrayList<>();
     }
 
     public void addCard(Card card) { // tested
@@ -30,11 +30,11 @@ public class Hand {
                 // Create a new color list and add it to the hand.
                 List<Card> newList = new ArrayList<>();
                 newList.add(card);
-                hand.add(newList);
+                listOfListOfCards.add(newList);
             }
             // Sort the hand descending by color group size (NOT by face value sum size).
             // For example, if there are more blues than any other type of card, list the blues first. And so on.
-            Collections.sort(hand, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
+            Collections.sort(listOfListOfCards, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
         }
     }
 
@@ -46,7 +46,7 @@ public class Hand {
      */
     @Nullable
     public List<Card> getColorList(String color) { // tested
-        for(List<Card> list : hand) {
+        for(List<Card> list : listOfListOfCards) {
             if(list.size() > 0) {
                 if(list.get(0).getColor().equalsIgnoreCase(color)) {
                     return list;
@@ -63,11 +63,11 @@ public class Hand {
      * @throws IllegalArgumentException     If card not found in hand.
      */
     public void discard(Card card) throws IllegalArgumentException { // tested
-        if(card == null) {
-            Main.out("WARN: discard received a null card.");
-        }
         if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
+        }
+        if(card == null) {
+            Main.out("WARN: Hand.discard received a null card. No action taken.");
         } else {
             List<Card> colorList = getColorList(card.getColor());
             int index = -1;
@@ -111,7 +111,7 @@ public class Hand {
      */
     public int getSize() { // tested in testHand_discard()
         int count = 0;
-        for(List<Card> list : hand) {
+        for(List<Card> list : listOfListOfCards) {
             count += list.size();
         }
         return count;
@@ -122,7 +122,7 @@ public class Hand {
      */
     public List<Card> getAllCards() { // tested
         List<Card> cards = new ArrayList<>();
-        for(List<Card> list : hand) {
+        for(List<Card> list : listOfListOfCards) {
             for(Card c : list) {
                 cards.add(c);
             }
@@ -164,9 +164,9 @@ public class Hand {
      * @return          The card of the highest color group, or null if no card found.
      */
     @Nullable
-    public Card getNumber(int number) { // tested
+    public Card getNumberFromLargestColorGroup(int number) { // tested
         // Hand is already sorted ascending by color group.
-        for(List<Card> list : hand) {
+        for(List<Card> list : listOfListOfCards) {
             for(Card c : list) {
                 if(c.getValue() == number) {
                     return c;
@@ -181,7 +181,7 @@ public class Hand {
      */
     public int sumCards() { // tested
         int handSum = 0;
-        for(List<Card> list : hand) {
+        for(List<Card> list : listOfListOfCards) {
             for(Card c : list) {
                 handSum += c.getValue();
             }
@@ -205,10 +205,10 @@ public class Hand {
      */
     @Nullable
     public String getHighestColor() {
-        if(hand.size() > 0) {
+        if(listOfListOfCards.size() > 0) {
             // Hand is already sorted ascending by color group.
-            if(hand.get(0).size() > 0) {
-                return hand.get(0).get(0).getColor();
+            if(listOfListOfCards.get(0).size() > 0) {
+                return listOfListOfCards.get(0).get(0).getColor();
             }
         }
         Main.out("WARN: getHighestColor did not find a card.");

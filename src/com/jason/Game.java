@@ -47,7 +47,7 @@ public class Game {
     private Card currentPlayedCard;
     private static final int FAKE_GAME_RUNS = 1;
     private CardValueMap cvm;
-    private DiscardPile discardPile;
+    private Stack<Card> discardPile;
     private int deckCounter;
     
     public Game(String userName) {
@@ -65,7 +65,7 @@ public class Game {
         gameWinnerExists = false;
         deckWinnerExists = false;
         isPlayerOnesTurn = Main.getRandomBoolean();
-        discardPile = new DiscardPile();
+        discardPile = new Stack<>();
         deckCounter = 1;
     }
 
@@ -170,11 +170,11 @@ public class Game {
     @Nullable
     public Card move(Player player) {
         if(deck.getDeck().empty() && discardPile.isEmpty()) {
-            Main.out("ERROR: both deck and discard pile sent to Player.move are empty. No action taken, returned null.");
+            Main.out("ERROR: both deck and discard pile sent to Game.move are empty. No action taken, returned null.");
             return null;
         }
         if (currentPlayedCard == null) {
-            Main.out("ERROR: null card passed to Player.move. Cannot make any move.");
+            Main.out("ERROR: null card passed to Game.move. Cannot make any move.");
             return null;
         } else {
             if (player.isComputer()) {
@@ -223,11 +223,38 @@ public class Game {
                         "At least one must be non-empty. No action taken.");
             } else {
                 if(deck.getDeckSize() == 0) {
-                    // deck.replaceDeckWithShuffledDiscardPile(discardPile);
+                    refreshDeck();
                 }
                 Card card = deck.getNextCard();
                 player.getHand().addCard(card);
             }
+        }
+    }
+
+    /**
+     * Transfer the discard pile to the deck and shuffle.
+     */
+    public void refreshDeck() { // *** NEEDS TO BE TESTED ***
+        if(deck.getDeckSize() == 0) {
+            Main.out("Deck is empty! Replenishing with discard pile...");
+            replaceDeckWithDiscardPile();
+            Main.out("Shuffling deck...");
+            deck.shuffle();
+            discardPile.clear(); // useless - disappears after stack popped
+        }
+    }
+
+    /**
+     * Replace the current deck of cards with an injected discard pile.
+     */
+    public void replaceDeckWithDiscardPile() { // is covered by refreshDeckIfEmpty test
+        if(discardPile == null || discardPile.isEmpty()) {
+            Main.out("WARN: Game.replaceDeckWithDiscardPile received a null or empty discard pile. " +
+                    "Deck not replaced.");
+        } else {
+            deck.clearDeck();
+            Stack<Card> discardStack = discardPile;
+            deck.replaceDeckWithAnotherDeck(discardStack);
         }
     }
 
@@ -287,25 +314,25 @@ public class Game {
     /**
      * Set the current game's deck (for testing).
      *
-     * @param deck the deck to set
+     * @param _deck the deck to set
      */
-    public void setDeck(Deck deck) {
-        deck.replaceDeckWithAnotherDeck(deck);
+    public void setDeck(Deck _deck) {
+        deck.replaceDeckWithAnotherDeck(_deck.getDeck());
     }
 
     /**
      * @return the game's discard pile (for testing)
      */
-    public DiscardPile getDiscardPile() {
+    public Stack<Card> getDiscardPile() {
         return discardPile;
     }
 
-    public void setDiscardPile(DiscardPile injectedDiscardPile) { // *** NEEDS TO BE TESTED ***
+    public void setDiscardPile(Stack<Card> injectedDiscardPile) { // *** NEEDS TO BE TESTED ***
         if(injectedDiscardPile.isEmpty()) {
             Main.out("WARN: Game.setDiscardPile called with empty discardPile. No action taken.");
         } else {
             this.discardPile.clear();
-            Stack<Card> injectedDiscardStack = injectedDiscardPile.getStack();
+            Stack<Card> injectedDiscardStack = injectedDiscardPile;
             Iterator<Card> injectedDiscardCards = injectedDiscardStack.iterator();
             while(injectedDiscardCards.hasNext()) {
                 this.discardPile.add(injectedDiscardCards.next());

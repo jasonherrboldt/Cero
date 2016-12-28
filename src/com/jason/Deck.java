@@ -135,46 +135,16 @@ public class Deck {
     }
 
     /**
-     * Transfer the discard pile to the deck and shuffle.
-     */
-    public void refreshIfEmpty(DiscardPile discardPile) { // *** NEEDS TO BE TESTED ***
-        if(getDeckSize() == 0) {
-            Main.out("Deck is empty! Replenishing with discard pile...");
-            replaceWithDiscardPile(discardPile);
-            Main.out("Shuffling deck...");
-            shuffle();
-            discardPile.clear(); // useless - disappears after stack popped
-        }
-    }
-
-    /**
-     * Replace the current deck of cards with an injected discard pile.
-     *
-     * @param discardPile the replacement cards
-     */
-    public void replaceWithDiscardPile(DiscardPile discardPile) { // is covered by refreshIfEmpty test
-        if(discardPile == null || discardPile.isEmpty()) {
-            Main.out("WARN: someone tried to replace the deck with a null or empty discard pile. Deck not replaced.");
-        } else {
-            deckStack.clear();
-            Stack<Card> discardStack = discardPile.getStack();
-            Iterator<Card> discardCards = discardStack.iterator();
-            while(discardCards.hasNext()) {
-                deckStack.add(discardCards.next());
-            }
-        }
-    }
-
-    /**
      * Replace this deck with another deck (for testing).
      *
-     * @param injectedDeck the replacement deck
+     * @param injectedCards the replacement deck
      */
-    public void replaceDeckWithAnotherDeck(Deck injectedDeck) {
-        if(injectedDeck == null || injectedDeck.getDeck().isEmpty()) {
-            Main.out("WARN: Deck.replaceDeckWithAnotherDeck called with an empty or null deck. No action taken.");
+    public void replaceDeckWithAnotherDeck(Stack<Card> injectedCards) {
+        deckStack.clear();
+        if(injectedCards == null) {
+            Main.out("WARN: Deck.replaceDeckWithAnotherDeck called with a null deck. No action taken.");
         } else {
-            for(Card c : injectedDeck.getDeck()) {
+            for(Card c : injectedCards) {
                 deckStack.push(c);
             }
         }

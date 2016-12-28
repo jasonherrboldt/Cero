@@ -104,7 +104,7 @@ public class TestHand {
         Hand tempRealHand = realHand;
         int tempRealHandSizeBefore = tempRealHand.getSize();
         Card inTempRealHand = new Card(Card.BLUE, Card.NINE, cvm);
-        // Card inTempRealHand = new Card(Card.BLUE, Card.EIGHT); // test the test - should fail
+        // Card inTempRealHand = new Card(Card.BLUE, Card.EIGHT, cvm); // test the test - should fail
         try {
             realHand.discard(inTempRealHand);
         } catch (IllegalArgumentException e) {
@@ -168,11 +168,11 @@ public class TestHand {
     @Test
     public void testHand_getNumber() {
         Card correctCard = new Card(Card.RED, Card.NINE, cvm);
-        Card testCard = getNumberOfMostColorsHand.getNumber(9);
+        Card testCard = getNumberOfMostColorsHand.getNumberFromLargestColorGroup(9);
         assertTrue(correctCard.equals(testCard));
 
         // Make sure it returns null if card not found.
-        Card noCard = getNumberOfMostColorsHand.getNumber(4);
+        Card noCard = getNumberOfMostColorsHand.getNumberFromLargestColorGroup(4);
         assertNull(noCard);
     }
 
