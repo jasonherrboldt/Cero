@@ -46,9 +46,10 @@ public class Game {
     private boolean isPlayerOnesTurn;
     private Card currentPlayedCard;
     private static final int FAKE_GAME_RUNS = 1;
+    private static final int FAKE_MOVES = 20;
     private CardValueMap cvm;
     private Stack<Card> discardPile;
-    private int deckCounter;
+    private int moveCounter;
     
     public Game(String userName) {
         cvm = new CardValueMap();
@@ -66,23 +67,30 @@ public class Game {
         deckWinnerExists = false;
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
-        deckCounter = 1;
+        moveCounter = 1;
     }
 
     /**
      * Play the game.
      */
-    public void play() {
-    
-        while(!gameWinnerExists) {
+    void play() {
+
+        int fakeGames = 0;
+        while(!gameWinnerExists && fakeGames < FAKE_GAME_RUNS) {
+            Main.out("The game has begun!");
             deck.shuffle();
             dealHands();
+            Main.out("A new deck has been shuffled and the first hand has been dealt.");
             currentPlayedCard = verifyFirstCard(deck.popCard());
+            Main.out("The current played card is " + currentPlayedCard.getPrintString());
             discardPile.add(currentPlayedCard);
 
-            int fakeGames = 0;
-            while(!deckWinnerExists && fakeGames < FAKE_GAME_RUNS) {
-                Main.out("Now playing deck number " + deckCounter + ".");
+            int fakeMoves = 0;
+            while(!deckWinnerExists && fakeMoves < FAKE_MOVES) {
+                Main.out("Move number " + moveCounter + ".\n");
+                printHand(player1);
+                Main.out("");
+                printHand(player2);
 
                 // Let the players see how many cards are in each other's decks.
                 player1.updateOtherPlayersHandCount(player2.showHandCount());
@@ -93,15 +101,17 @@ public class Game {
                 } else {
                     playHand(player2);
                 }
-                if(!deckWinnerExists) {
+                if(deckWinnerExists) {
+                    Main.out("*** THE DECK HAS BEEN WON! ***");
+                } else {
 
                     // Player 2 sometimes forgets to call out player 1 on not calling 'Cero!'
-                    if (player1.getHand().getSize() == 1 && !player1.isCeroCalled() && Main.getRandomBoolean()) {
-                        Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                        for(int i = 0; i < 2; i++) {
-                            draw(player1);
-                        }
-                    }
+//                    if (player1.getHand().getSize() == 1 && !player1.isCeroCalled() && Main.getRandomBoolean()) {
+//                        Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
+//                        for(int i = 0; i < 2; i++) {
+//                            draw(player1);
+//                        }
+//                    }
 
                     // boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
                             // "declare 'Cero!' when it should have?");
@@ -125,8 +135,8 @@ public class Game {
                     // Switch player's turn.
                     isPlayerOnesTurn = !isPlayerOnesTurn;
                 }
-                fakeGames++;
-                deckCounter++;
+                fakeMoves++;
+                moveCounter++;
             }
             if(player1.getScore() > 500 || player2.getScore() > 500) {
                 gameWinnerExists = true;
@@ -137,6 +147,7 @@ public class Game {
                     Main.out("Player 2 is the winner!");
                 }
             }
+            fakeGames++;
         }
     }
 
@@ -146,20 +157,23 @@ public class Game {
      * @param player the player to move
      */
     private void playHand(Player player) {
+        Main.out("\n" + player.getName() +  "'s turn.");
         currentPlayedCard = move(player);
         discardPile.add(currentPlayedCard);
+        Main.out(player.getName() + " just discarded " + currentPlayedCard.getPrintString() + "\n");
+        printHand(player);
         player.callCero();
         if(player.getHand().getSize() == 0) {
             deckWinnerExists = true;
             if(isPlayerOnesTurn) {
                 int playerOneScore = player2.getHand().getHandValue();
-                Main.out("Player 1 wins deck # " + deckCounter + "!");
+                Main.out("Player 1 wins deck # " + moveCounter + "!");
                 Main.out("Current deck winnings: " + playerOneScore);
                 player1.updateScore(playerOneScore);
                 Main.out("Player 1's new score is " + player1.getScore());
             } else {
                 int playerTwoScore = player1.getHand().getHandValue();
-                Main.out("Player 2 wins deck # " + deckCounter + "!");
+                Main.out("Player 2 wins deck # " + moveCounter + "!");
                 Main.out("Current deck winnings: " + playerTwoScore);
                 player2.updateScore(playerTwoScore);
                 Main.out("Player 2's new score is " + player2.getScore());
@@ -183,6 +197,7 @@ public class Game {
             Main.out("ERROR: null card passed to Game.move. Cannot make any move.");
             return null;
         } else {
+            Main.out("The current played card is " + currentPlayedCard.getPrintString());
             if (player.isComputer()) {
                 if (currentPlayedCard.isNumberCard()) {
                     Main.out("Handing move for numeric card.");
@@ -200,15 +215,15 @@ public class Game {
                     }
                 }
 
-                // Draw four cards (for debug).
-                Main.out("Drawing five cards and discarding one (for debug).");
-                for(int i = 0; i < 4; i++) {
-                    draw(player);
-                }
-
                 // Just discard the first card (for debug).
                 Card firstCard = player.getHand().getFirstCard();
                 player.getHand().discard(firstCard);
+
+                Main.out("Drawing thirty cards and discarding one (for debug).");
+                for(int i = 0; i < 31; i++) {
+                    draw(player);
+                }
+
                 return firstCard;
             } else {
                 // Main.out("Ask the user what to do.");
@@ -231,8 +246,8 @@ public class Game {
                     "No action taken.");
         } else {
             if(deck.getDeckSize() == 0 && discardPile.size() == 0) {
-                Main.out("WARN: Game.draw called with empty deck and empty discard pile. " +
-                        "At least one must be non-empty. No action taken.");
+//                Main.out("WARN: Game.draw called with empty deck and empty discard pile. " +
+//                        "At least one must be non-empty. No action taken.");
             } else {
                 if(deck.getDeckSize() == 0) {
                     refreshDeck();
@@ -253,6 +268,7 @@ public class Game {
             Main.out("Shuffling deck...");
             deck.shuffle();
             discardPile.clear();
+            Main.out("Deck size is now " + deck.getDeckSize());
         }
     }
 
@@ -268,13 +284,6 @@ public class Game {
             Stack<Card> discardStack = discardPile;
             deck.replaceWithAnotherDeck(discardStack);
         }
-    }
-
-    /**
-     * Display the current played card.
-     */
-    private void displayCurrentPlayedCard() {
-        Main.out("The current played card is " + currentPlayedCard.getPrintString());
     }
 
     /**
@@ -373,4 +382,22 @@ public class Game {
         return players;
     }
 
+    private void printHand(Player player) {
+        if(player.getHand() == null) {
+            Main.out("WARN: Game.printHand called with a null hand. No action taken.");
+        } else {
+            int count = 1;
+            Main.out(player.getName() + "'s hand:");
+            List<String> allCards = player.getHand().getHandPrintStringList();
+            for(String s : allCards) {
+                if(count < 10) {
+                    Main.out("0" + count + ": " + s);
+                    count++;
+                } else {
+                    Main.out(count + ": " + s);
+                    count++;
+                }
+            }
+        }
+    }
 }

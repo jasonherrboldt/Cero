@@ -132,21 +132,22 @@ public class Player {
      * discarding penultimate card.
      */
     void callCero() { // no test needed
-        if (isComputer()) {
-            if (hand.getSize() == 1 && Main.getRandomBoolean()) {
-                ceroCalled = true;
-                Main.out("Computer calls 'Cero!'");
-            }
-        } else {
-            if(hand.getSize() == 1) {
-                boolean validAnswerReceived = false;
-                boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare 'Cero!' at this time?");
-                if(answer) {
-                    ceroCalled = true;
-                    Main.out("Player one has just declared 'Cero!'.");
-                }
-            }
-        }
+        Main.out("\n(This is where the player will be given the chance to call 'Cero!'.)\n");
+//        if (isComputer()) {
+//            if (hand.getSize() == 1 && Main.getRandomBoolean()) {
+//                ceroCalled = true;
+//                Main.out("Computer calls 'Cero!'");
+//            }
+//        } else {
+//            if(hand.getSize() == 1) {
+//                boolean validAnswerReceived = false;
+//                boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare 'Cero!' at this time?");
+//                if(answer) {
+//                    ceroCalled = true;
+//                    Main.out("Player one has just declared 'Cero!'.");
+//                }
+//            }
+//        }
     }
 
     /**

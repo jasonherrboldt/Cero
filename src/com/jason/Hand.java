@@ -243,4 +243,34 @@ public class Hand {
             return null;
         }
     }
+
+    public List<String> getHandPrintStringList() {
+        List<String> allCards = new ArrayList<>();
+        for(Card c : getAllCards()){
+            allCards.add(c.getPrintString());
+        }
+        return allCards;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
