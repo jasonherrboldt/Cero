@@ -1,6 +1,6 @@
 # Cero
 
-A Java coding exercise modeled after the card game Uno. _(Under construction.)_**
+A Java coding exercise modeled after the card game Uno. **_(Under construction.)_**
 
 There are two players. The user remote-controls player one, and player two is the program. 
 
