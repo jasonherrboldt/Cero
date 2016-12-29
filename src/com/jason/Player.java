@@ -201,7 +201,7 @@ public class Player {
         return false;
     }
 
-    public String getPreferredColor() { // *** NEEDS TO BE TESTED ***
+    public String getPreferredColor() { // tested
         if(isPlayer2()) {
             if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
                 // return a random number

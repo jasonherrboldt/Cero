@@ -1,7 +1,5 @@
 package com.jason;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.*;
 import static com.jason.Card.*;
 
@@ -47,7 +45,6 @@ public class Deck {
      * 
      * @return the card on the top of the deck. 
      */
-    @Nullable
     public Card popCard() { // tested
         if(!deckStack.empty()) {
             return deckStack.pop();

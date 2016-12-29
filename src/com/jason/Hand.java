@@ -1,6 +1,5 @@
 package com.jason;
 
-import com.sun.istack.internal.Nullable;
 import java.util.*;
 
 /**
@@ -61,7 +60,6 @@ public class Hand {
      * @param color The specified color.
      * @return      The list of cards of the specified color.
      */
-    @Nullable
     public List<Card> getColorList(String color) { // tested
         for(List<Card> list : listOfListOfCards) {
             if(list.size() > 0) {
@@ -154,7 +152,6 @@ public class Hand {
      * @param numeric   Whether or not the search should include non-numeric cards.
      * @return          The highest value card of the given color, or null if no card found.
      */
-    @Nullable
     public Card getHighestFace(String color, boolean numeric) { // tested
         int highestValue = numeric ? 9 : 50;
         if(color != null) {
@@ -180,7 +177,6 @@ public class Hand {
      * @param number    The number to search for.
      * @return          The card of the highest color group, or null if no card found.
      */
-    @Nullable
     public Card getNumberFromLargestColorGroup(int number) { // tested
         // Hand is already sorted ascending by color group.
         for(List<Card> list : listOfListOfCards) {
@@ -220,7 +216,6 @@ public class Hand {
     /**
      * @return the color of the highest color group.
      */
-    @Nullable
     public String getHighestColor() { // tested
         if(listOfListOfCards.size() > 0) {
             // Hand is already sorted ascending by color group.
@@ -246,7 +241,6 @@ public class Hand {
     /**
      * @return the first card of the hand (for debug).
      */
-    @Nullable
     Card getFirstCard() { // no test needed
         if(getSize() > 0) {
             return getAllCards().get(0);

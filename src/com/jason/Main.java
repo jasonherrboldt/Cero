@@ -26,15 +26,15 @@ public class Main {
          *     java -cp ./src com.jason.Main
          */
 
+        /*
         out("\nGreetings player one!");
         out("You are about to play the computer in a game of Cero. " +
                 "The rules are essentially the same as Uno.");
         // Uncomment out this block to run interactive game.
-        /*
         outNoReturn("Please enter your name (no special characters): ");
         String name = System.console().readLine();
         while(!isValid(name)) {
-            sayNoReturn("Please try again.");
+            outNoReturn("Please try again.");
             out("Allowed characters are a-z, A-Z, and space: ");
             name = System.console().readLine();
         }

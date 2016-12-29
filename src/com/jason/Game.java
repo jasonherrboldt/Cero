@@ -1,7 +1,5 @@
 package com.jason;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -186,7 +184,6 @@ public class Game {
      * @param player the player to move
      * @return       the discarded card
      */
-    @Nullable
     private Card move(Player player) {
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
             Main.out("ERROR: both deck and discard pile sent to Game.move are empty. No action taken, returned null.");
@@ -321,7 +318,6 @@ public class Game {
      * @param card  The card to analyze
      * @return      A verified card
      */
-    @Nullable
     public Card verifyFirstCard(Card card) { // tested
         if (card != null) {
             while (card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
@@ -381,14 +377,14 @@ public class Game {
     /**
      * Clear the current deck (for testing)
      */
-    public void clearDeck() {
+    public void clearDeck() { // no test needed
         deck.clearDeck();
     }
 
     /**
      * @return a list of both game players (for testing)
      */
-    public List<Player> getPlayers() {
+    public List<Player> getPlayers() { // no test needed
         List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
@@ -400,7 +396,7 @@ public class Game {
      *
      * @param player the given player
      */
-    private void printHand(Player player) {
+    private void printHand(Player player) { // no test needed
         // todo: will neventually need code here to only print the hand if !player.isPlayer1.
         if(player.getHand() == null) {
             Main.out("WARN: Game.printHand called with a null hand. No action taken.");
