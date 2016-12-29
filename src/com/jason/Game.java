@@ -31,149 +31,154 @@ public class Game {
      *    class calls game.play will take that information, collate it, and display it to the
      *    user after the 10k games have finished.
      *
+     *    Servlet actions:
+     *
+     *        game.startGame: Shuffles deck, deals first hand, pops first card off of deck.
+     *        Picks a random first player. Allows player2 to discard if its turn first. Returns
+     *        object to servlet that contains player1's hand, the current played card, and a
+     *        message ("Your turn first," or "Player2 went first," etc). Would also handle
+     *        automatic draws for draw two and turn reversal for skip or reverse cards dealt
+     *        to player1. (Does NOT call the Game constructor; game object must keep track of
+     *        overall score as each new inner game is created.)
+     *
+     *        game.discard: user picks a card from the UI and clicks either Discard or Discard
+     *        and Declare 'Cero Plus One!' button. Game handles discard, allows the computer to
+     *        have its turn, takes care of any non-numeric cards discarded by computer, and
+     *        returns gameState object to servlet. (Must handle incorrectly discarded cards.)
+     *
+     *        game.draw: ads new card to hand, returns gameState object to servlet.
      */
-    
+
     private Deck deck;
     private Player player1; // the user
     private Player player2; // the computer
-    private boolean outerGameWon;
-    private boolean innerGameWon;
     private boolean isPlayerOnesTurn;
     private Card currentPlayedCard;
-    private static final int FAKE_GAME_RUNS = 1;
-    private static final int FAKE_MOVES = 20;
     private CardValueMap cvm;
     private Stack<Card> discardPile;
-    private int moveCount;
     private String currentColor;
+    private GameState gameState;
+    private boolean isFirstMove;
     
-    public Game(String userName) {
+    public Game(String playerOneName) {
         cvm = new CardValueMap();
         deck = new Deck();
         Main.out("");
+        player1 = new Player(playerOneName, false);
+        player1.setStrategy(Player.STRATEGY_NEUTRAL);
         player2 = new Player("Computer", true);
         player2.setRandomStrategy();
-        player1 = new Player(userName, false);
-        player1.setStrategy(Player.STRATEGY_NEUTRAL);
-        outerGameWon = false;
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
-        moveCount = 1;
         currentColor = "";
+        gameState = new GameState();
+        isFirstMove = true;
     }
 
     /**
-     * Play the game.
+     * Start the game. (Can only be called once.)
+     *
+     * @return the current state of the game for browser population
      */
-    void play() {
-
-        int fakeGames = 0;
-        while(!outerGameWon && fakeGames < FAKE_GAME_RUNS) {
-            Main.out("Starting a new game...");
+    public GameState startGame() { // tested
+        if(isFirstMove) {
             deck.shuffle();
             dealHands();
-            Main.out("The deck has been shuffled and the first hand has been dealt.\n");
             currentPlayedCard = verifyFirstCard(deck.popCard());
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
-            // player2.setStrategy(player2.getBestStrategy());
-            int fakeMoves = 0;
-            innerGameWon = false;
-            while(!innerGameWon && fakeMoves < FAKE_MOVES) {
-                Main.out("Move number " + moveCount + ".\n");
-                printHand(player1);
-                Main.out("");
-                printHand(player2);
 
-                // Let the players see how many cards are in each other's decks.
-                player1.updateOtherPlayersHandCount(player2.showHandCount());
-                player2.updateOtherPlayersHandCount(player1.showHandCount());
+            // Let the players see how many cards are in each other's decks.
+            player1.updateOtherPlayersHandCount(player2.showHandCount());
+            player2.updateOtherPlayersHandCount(player1.showHandCount());
 
-                if(isPlayerOnesTurn) {
-                    playHand(player1);
+            String gameStateMessage = "";
+
+            if(!isPlayerOnesTurn) {
+                gameStateMessage += "Player two had the first move. ";
+                if(nonNumericCardReceived(player2)) {
+                    gameStateMessage += "Player two was forbidden from discarding. ";
                 } else {
-                    playHand(player2);
+                    gameStateMessage = playerTwosTurn(gameStateMessage);
                 }
-                if(!innerGameWon) {
-
-                    /* Uncomment out the below block for user interaction.
-                    // Player 2 sometimes forgets to call out player 1 on not calling 'Cero!'
-                    if (player1.getHand().getSize() == 1 && !player1.isCeroCalled() && Main.getRandomBoolean()) {
-                        Main.out("Player 1 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                        for(int i = 0; i < 2; i++) {
-                            draw(player1);
-                        }
-                    }
-
-                    boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare that player 2 did not " +
-                             "declare 'Cero!' when it should have?");
-                    if (answer) {
-                        if (player2.getHand().getSize() == 1 && !player1.isCeroCalled()) {
-                            Main.out("Player 2 forgot to declare 'Cero!' with one card left - must draw two cards.");
-                            for(int i = 0; i < 2; i++) {
-                                draw(player2);
-                            }
-                        } else {
-                            Main.out("Player 2 did not incorrectly fail to declare 'Cero!' - " +
-                                    "no punishment for Player 2.");
-                        }
-                    } Uncomment out the above block for user interaction.
-                    */
-
-                    // Reset each player's cero called value.
-                    player1.resetCeroCalled();
-                    player2.resetCeroCalled();
-
-                    // Switch player's turn.
-                    isPlayerOnesTurn = !isPlayerOnesTurn;
+                isPlayerOnesTurn = !isPlayerOnesTurn; // only happens here!
+            } else { // player one's turn
+                if(nonNumericCardReceived(player1)) {
+                    gameStateMessage += "Player one, you were forbidden from discarding. " +
+                            "The first move switches to player two. ";
+                    gameStateMessage = playerTwosTurn(gameStateMessage);
                 }
-                fakeMoves++;
-                moveCount++;
+                // don't flip turns here because it's still player one's turn.
             }
-            if(player1.getScore() > 500 || player2.getScore() > 500) {
-                outerGameWon = true;
-                if(player1.getScore() > 500) {
-                    Main.out("Player 1 is the winner!");
-                }
-                if(player2.getScore() > 500) {
-                    Main.out("Player 2 is the winner!");
-                }
-            }
-            fakeGames++;
+            gameStateMessage += "OK it's your turn, " + player1.getName() + "!";
+            gameState.setPlayer(player1);
+            gameState.setCurrentPlayedCard(currentPlayedCard);
+            gameState.setCurrentColor(currentColor);
+            gameState.setMessage(gameStateMessage);
+            isFirstMove = false;
+            return gameState;
         }
+        Main.out("ERROR: Game.startGame called after first move has already been played. " +
+                "No action taken, returned null.");
+        return null;
     }
 
     /**
-     * Update the current played card by asking a given player to make a move.
+     * Determines if the player has to react to a non-numeric card move.
      *
-     * @param player the player to move
+     * @param  player the player who has the current move
+     * @return true if a non-numeric card has been received, false otherwise.
      */
-    private void playHand(Player player) {
-        Main.out("\n" + player.getName() +  "'s turn.");
-        currentPlayedCard = move(player);
-        if(currentPlayedCard != null) {
-            currentColor = currentPlayedCard.getColor();
-        } else {
-            currentColor = player.getPreferredColor();
+    public boolean nonNumericCardReceived(Player player) { // tested
+        String face = currentPlayedCard.getFace();
+        if (face.equalsIgnoreCase(Card.SKIP)) {
+            return true;
         }
-        discardPile.add(currentPlayedCard);
-        Main.out(player.getName() + " just discarded " + currentPlayedCard.getPrintString() + "\n");
-        printHand(player);
-        player.callCero();
-        if(player.getHand().getSize() == 0) {
-            innerGameWon = true;
-            if(!player.isPlayer2()) {
-                int playerOneScore = player2.getHand().getHandValue();
-                Main.out("Player 1 wins this round!");
-                Main.out("Current deck winnings: " + playerOneScore);
-                player1.updateScore(playerOneScore);
-                Main.out("Player 1's new score is " + player1.getScore());
+        if (face.equalsIgnoreCase(Card.REVERSE)) {
+            return true;
+        }
+        if (face.equalsIgnoreCase(Card.DRAW_TWO)) {
+            for(int i = 0; i < 2; i++) {
+                draw(player);
+            }
+            return true;
+        }
+        if(!isFirstMove) {
+            if (face.equalsIgnoreCase(Card.WILD) || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                currentColor = getOtherPlayersChosenColor(player);
+                if(face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                    for(int i = 0; i < 4; i++) {
+                        draw(player);
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Player two's turn.
+     *
+     * @param  oldGameStateMessage the message to return to the servlet.
+     * @return the augmented message to return to the servlet (contains error messages).
+     */
+    public String playerTwosTurn(String oldGameStateMessage) { // *** NEEDS TO BE TESTED ***
+        String newGameStateMessage = oldGameStateMessage;
+        if(isPlayerOnesTurn) {
+            newGameStateMessage += "ERROR: Game.playerTwosTurn called during player one's turn. No action taken. ";
+            return newGameStateMessage;
+        } else {
+            currentPlayedCard = playerTwoMove();
+            if(currentPlayedCard == null) {
+                newGameStateMessage += "ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove. " +
+                        "No action taken. ";
+                return newGameStateMessage;
             } else {
-                int playerTwoScore = player1.getHand().getHandValue();
-                Main.out("Player 2 wins this round!");
-                Main.out("Current deck winnings: " + playerTwoScore);
-                player2.updateScore(playerTwoScore);
-                Main.out("Player 2's new score is " + player2.getScore());
+                currentColor = currentPlayedCard.getColor();
+                discardPile.add(currentPlayedCard);
+                newGameStateMessage += "Player two has discarded a card. ";
+                return newGameStateMessage;
             }
         }
     }
@@ -181,73 +186,41 @@ public class Game {
     /**
      * A player's chance to move.
      *
-     * @param player the player to move
-     * @return       the discarded card
+     * @return the discarded card
      */
-    private Card move(Player player) {
+    private Card playerTwoMove() { // *** NEEDS TO BE TESTED ***
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
             Main.out("ERROR: both deck and discard pile sent to Game.move are empty. No action taken, returned null.");
             return null;
         }
-        if (currentPlayedCard == null) {
-            Main.out("ERROR: null card passed to Game.move. Cannot make any move.");
+        if (isPlayerOnesTurn) {
+            Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
             return null;
         } else {
             Main.out("The current played card is " + currentPlayedCard.getPrintString());
-            if (player.isPlayer2()) { // computer
-                if (currentPlayedCard.isNumberCard()) {
-                    Main.out("Handing move for numeric card.");
-                    decideMove(player);
-                } else {
-                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.SKIP)) {
-                        Main.out("Handling move for " + Card.SKIP + ".");
-                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.REVERSE)) {
-                        Main.out("Handling move for " + Card.REVERSE + ".");
-                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                        Main.out("Handling move for " + Card.DRAW_TWO + ".");
-                    } else if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
-                        Main.out("Handling move for " + Card.WILD + ".");
-                    } else { // WILD_DRAW_FOUR
-                        Main.out("Handling move for " + Card.WILD_DRAW_FOUR + ".");
-                    }
-                }
-
-                // Just discard the first card (for debug).
-                Card firstCard = player.getHand().getFirstCard();
-                player.getHand().discard(firstCard);
-
-                Main.out("Drawing thirty cards and discarding one (for debug).");
-                for(int i = 0; i < 31; i++) {
-                    draw(player);
-                }
-
-                return firstCard;
-            } else {
-                // Main.out("Ask the user what to do.");
-                Main.out("Just discarding player one's first card and drawing none (for debug).");
-                Card firstCard = player.getHand().getFirstCard();
-                player.getHand().discard(firstCard);
-                return firstCard;
+            String strategy = player2.getStrategy();
+            switch(strategy) {
+                case Player.STRATEGY_BOLD:
+                    Main.out(player2.getName() + " is now using the " + strategy + " strategy.");
+                    return player2.getHand().getFirstCard(); // just discard first card for debug
+                case Player.STRATEGY_CAUTIOUS:
+                    Main.out(player2.getName() + " is now using the " + strategy + " strategy.");
+                    return player2.getHand().getFirstCard(); // just discard first card for debug
+                case Player.STRATEGY_DUMB:
+                    Main.out(player2.getName() + " is now using the " + strategy + " strategy.");
+                    return player2.getHand().getFirstCard(); // just discard first card for debug
             }
         }
+        Main.out("ERROR: Game.playerTwoMove fell through with no action taken. Returned null.");
+        return null;
     }
 
-    public Card decideMove(Player player) {
-        String strategy = player.getStrategy();
-
-        switch(strategy) {
-            case Player.STRATEGY_BOLD:
-                Main.out(player.getName() + " is using the " + strategy + " strategy.");
-                break;
-            case Player.STRATEGY_CAUTIOUS:
-                Main.out(player.getName() + " is using the " + strategy + " strategy.");
-                break;
-            case Player.STRATEGY_DUMB:
-                Main.out(player.getName() + " is using the " + strategy + " strategy.");
-                break;
+    public String getOtherPlayersChosenColor(Player player) {  // *** NEEDS TO BE TESTED ***
+        if(player.isPlayer2()) {
+            return player1.getChosenColor();
+        } else {
+            return player2.getChosenColor();
         }
-
-        return null;
     }
 
     /**
@@ -397,7 +370,6 @@ public class Game {
      * @param player the given player
      */
     private void printHand(Player player) { // no test needed
-        // todo: will neventually need code here to only print the hand if !player.isPlayer1.
         if(player.getHand() == null) {
             Main.out("WARN: Game.printHand called with a null hand. No action taken.");
         } else {
@@ -416,5 +388,21 @@ public class Game {
                 }
             }
         }
+    }
+
+    public boolean isFirstMove() {
+        return isFirstMove;
+    }
+
+    public String getCurrentColor() {
+        return currentColor;
+    }
+
+    public Card getCurrentPlayedCard() {
+        return currentPlayedCard;
+    }
+
+    public void setCurrentPlayedCard(Card card) {
+        this.currentPlayedCard = card;
     }
 }

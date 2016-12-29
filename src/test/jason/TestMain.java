@@ -49,25 +49,3 @@ public class TestMain {
         assertEquals(Main.getUserResponse_string(null), null);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

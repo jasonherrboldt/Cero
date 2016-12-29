@@ -36,7 +36,7 @@ public class Player {
     private int score;
     private int otherPlayersHandCount;
     private boolean ceroCalled;
-    private Map<String, Integer> strategyHistory;
+    private String chosenColor;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
@@ -45,10 +45,6 @@ public class Player {
         score = 0;
         otherPlayersHandCount = 0;
         ceroCalled = false;
-        strategyHistory = new TreeMap<>();
-        strategyHistory.put(STRATEGY_BOLD, 0);
-        strategyHistory.put(STRATEGY_CAUTIOUS, 0);
-        strategyHistory.put(STRATEGY_DUMB, 0);
     }
 
     /**
@@ -89,7 +85,7 @@ public class Player {
     /**
      * @return whether the current player is the computer.
      */
-    boolean isPlayer2() { // no test needed
+    public boolean isPlayer2() { // no test needed
         return this.isPlayer2;
     }
 
@@ -221,22 +217,16 @@ public class Player {
             return Card.BLUE;
         }
     }
+
+    public String getChosenColor() {
+        return chosenColor;
+    }
+
+    public void setChosenColor(String chosenColor) {
+        this.chosenColor = chosenColor;
+    }
+
+    public int getOtherPlayersHandCount() {
+        return otherPlayersHandCount;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

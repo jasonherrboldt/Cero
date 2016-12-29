@@ -12,19 +12,19 @@ import static org.junit.Assert.*;
 public class TestGame {
 
     private CardValueMap cvm;
-    private Game game;
     private Player player;
     private List<Card> hand;
 
     @Before
     public void setup() {
         cvm = new CardValueMap();
-        game = new Game("");
 
     }
 
     @Test
     public void testGame_verifyFirstCard() {
+        Game game = new Game("");
+
         Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
         Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
         assertEquals(game.getDeck().getDeckSize(), Deck.DECK_SIZE);
@@ -40,6 +40,7 @@ public class TestGame {
 
     @Test
     public void testGame_draw_nonEmptyDeck() {
+        Game game = new Game("");
         player = new Player("Draw Non-Empty Deck Test", false);
         hand = new ArrayList<>();
         hand.add(new Card(Card.GREEN, Card.ZERO, cvm));
@@ -56,6 +57,7 @@ public class TestGame {
 
     @Test
     public void testGame_draw_emptyDeck() {
+        Game game = new Game("");
 
         // Give the game a player with a hand of one card.
         player = new Player("Draw Empty Deck Test", false);
@@ -93,6 +95,7 @@ public class TestGame {
 
     @Test
     public void testGame_dealHands() {
+        Game game = new Game("");
         List<Player> players = game.getPlayers();
         for(Player p : players) {
             assertEquals(p.getHand(), null);
@@ -102,4 +105,101 @@ public class TestGame {
             assertEquals(p.getHand().getSize(), 7);
         }
     }
+
+    @Test
+    public void testGame_startGame_gameObject() {
+        Game game = new Game("Test Player");
+
+        // Make sure the isFirstMove indicator is getting updated.
+        assertTrue(game.isFirstMove());
+        GameState gameState = game.startGame();
+        assertFalse(game.isFirstMove());
+
+        // Make sure the current played card is correctly reflected everywhere.
+        Card currentPlayedCard = game.getCurrentPlayedCard();
+        assertEquals(game.getCurrentColor(), currentPlayedCard.getColor());
+        assertTrue(game.getDiscardPile().get(0) != null);
+        assertTrue(game.getDiscardPile().get(0).equals(currentPlayedCard));
+
+        // Make sure both players can see 7 cards in the other's hand.
+        List<Player> players = game.getPlayers();
+        for (Player p : players) {
+            assertEquals(p.getOtherPlayersHandCount(), 7);
+        }
+    }
+
+    @Test
+    public void testGame_startGame_gameStateObject() {
+        Game game = new Game("Test Player");
+        GameState gameState = game.startGame();
+
+        // Make sure player one has a hand of 7 cards.
+        assertEquals(gameState.getPlayer().getHand().getSize(), 7);
+
+        // Make sure the player in the GameState object is player one.
+        assertFalse(gameState.getPlayer().isPlayer2());
+
+        // Make sure game's current color made it to the gameState object.
+        assertEquals(gameState.getCurrentColor(), game.getCurrentColor());
+
+        // Make sure the game's current played card made it to the gameState object.
+        assertTrue(gameState.getCurrentPlayedCard().equals(game.getCurrentPlayedCard()));
+
+        assertEquals(gameState.getCurrentColor(), game.getCurrentPlayedCard().getColor());
+
+        // There should be at least a "Your turn" message.
+        assertNotEquals(gameState.getMessage(), "");
+
+        // Make sure the current played card is non-null
+        assertNotEquals(gameState.getCurrentPlayedCard().getColor(), null);
+        assertNotEquals(gameState.getCurrentPlayedCard().getFace(), null);
+    }
+
+    @Test
+    public void testGame_nonNumericCardReceived() {
+        Game game = new Game("Test Player");
+        player = new Player("Non Numeric Card Received Test", false);
+        Card numericCard = new Card(Card.GREEN, Card.ONE, cvm);
+        List<Card> hand = new ArrayList<>();
+        hand.add(numericCard);
+        player.setHand(hand);
+
+        game.setCurrentPlayedCard(numericCard);
+        assertFalse(game.nonNumericCardReceived(player));
+
+        Card nonNumericCard = new Card(Card.RED, Card.DRAW_TWO, cvm);
+        game.setCurrentPlayedCard(nonNumericCard);
+        assertTrue(game.nonNumericCardReceived(player));
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

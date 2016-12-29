@@ -17,44 +17,10 @@ public class Main {
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
 
     public static void main(String[] args) {
-
-        /*
-         * To run via command line:
-         *
-         *     cd [root]
-         *     javac src/com/jason/*.java
-         *     java -cp ./src com.jason.Main
-         */
-
-        /*
-        out("\nGreetings player one!");
-        out("You are about to play the computer in a game of Cero. " +
-                "The rules are essentially the same as Uno.");
-        // Uncomment out this block to run interactive game.
-        outNoReturn("Please enter your name (no special characters): ");
-        String name = System.console().readLine();
-        while(!isValid(name)) {
-            outNoReturn("Please try again.");
-            out("Allowed characters are a-z, A-Z, and space: ");
-            name = System.console().readLine();
-        }
-        System.out.println("Welcome, " + name + "! Let's begin.");
-
-        Game game = new Game(name);
-        game.play();
-        */
-
-        // Shortcut to game (debug).
-        Game game = new Game("David Lightman");
-        game.play();
-
-        // run this block to test user Q&A functionality from the command line.
-//        String answer1 = getUserResponse_yesNo("");
-//        String answer2 = getUserResponse_integer("", 1, 5);
-//        String answer3 = getUserResponse_string("");
-//
-//        out("Your validated answers are " + answer1 + ", " + answer2 + ", and " + answer3 + ".");
-
+        Game game = new Game("");
+        GameState gameState = game.startGame();
+        String currentPlayedCardString = gameState.getCurrentPlayedCard().getPrintString();
+        Main.out("Current card: " + currentPlayedCardString);
     }
 
     /**

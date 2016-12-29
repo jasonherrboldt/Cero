@@ -10,8 +10,8 @@ public class Card {
         From unorules.com:
 
         All number cards are the same value as the number on the card (e.g. a 9 is 9 points).
-        “Draw Two” – 20 Points, “Reverse” – 20 Points, “Skip” – 20 Points, “Wild” – 50 Points,
-        and “Wild Draw Four” – 50 Points. The first player to attain 500 points wins the game.
+        Draw Two – 20 Points, Reverse – 20 Points, Skip – 20 Points, Wild – 50 Points,
+        and Wild Draw Four – 50 Points. The first player to attain 500 points wins the game.
 
      */
     

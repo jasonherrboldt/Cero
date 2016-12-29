@@ -22,7 +22,7 @@ public class TestDeck {
     }
 
     @Test
-    public void testDeck_getNextCard() {
+    public void testDeck_popCard() {
         int sizeBeforePop = deck.getDeckSize();
         deck.popCard();
         int sizeAfterPop = deck.getDeckSize();
