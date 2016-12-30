@@ -2,7 +2,6 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-import java.util.*;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.*;
@@ -26,9 +25,9 @@ public class TestMain {
     @Test
     // Happy path is only functionally testable.
     public void testMain_validateQuestion() {
-        assertEquals(Main.validateQuestion(null, nullQuestionWarning), false);
-        assertEquals(Main.validateQuestion("", nullQuestionWarning), false);
-        assertEquals(Main.validateQuestion(nonNullQuestion, nullQuestionWarning), true);
+        assertEquals(Main.isNullOrEmpty(null, nullQuestionWarning), true);
+        assertEquals(Main.isNullOrEmpty("", nullQuestionWarning), true);
+        assertEquals(Main.isNullOrEmpty(nonNullQuestion, nullQuestionWarning), false);
     }
 
 

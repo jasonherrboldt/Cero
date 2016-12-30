@@ -15,6 +15,7 @@ public class Main {
         set PATH=[path\to\jdk\bin];%PATH%, e.g.
         set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH%
         (must be > java 1.6)
+
         javac src/com/jason/*.java
         java -cp ./src com.jason.Main
      */
@@ -117,7 +118,7 @@ public class Main {
      * @return         the user's answer
      */
     public static String getUserResponse_yesNo(String question) { // tested
-        if(!validateQuestion(question, invalidQuestionWarning)) {
+        if(isNullOrEmpty(question, invalidQuestionWarning)) {
             return null;
         } else {
             boolean validAnswerReceived = false;
@@ -144,7 +145,7 @@ public class Main {
      * @return                the user's answer - guaranteed to be integer parsable
      */
     public static String getUserResponse_integer(String question, int minIntInclusive, int maxIntInclusive) { // tested
-        if(!validateQuestion(question, invalidQuestionWarning)) {
+        if(isNullOrEmpty(question, invalidQuestionWarning)) {
             return null;
         } else {
             boolean validAnswerReceived = false;
@@ -187,7 +188,7 @@ public class Main {
      * @return         the user's response
      */
     public static String getUserResponse_string(String question) { // tested
-        if(!validateQuestion(question, invalidQuestionWarning)) {
+        if(isNullOrEmpty(question, invalidQuestionWarning)) {
             return null;
         } else {
             boolean validAnswerReceived = false;
@@ -228,7 +229,7 @@ public class Main {
             if(validColorChoices.contains(response.toLowerCase())) {
                 validAnswerReceived = true;
             } else {
-                out(userCorrectionMessage + " Acceptable answers are " + validColorChoices + ".");
+                out(userCorrectionMessage + " Acceptable answers are " + validColorChoices + ", (case insensitive).");
             }
         }
         return response;
@@ -240,11 +241,11 @@ public class Main {
      * @param  str the string to validate
      * @return true if the string is not null, false otherwise.
      */
-    public static boolean validateQuestion(String str, String message) { // tested
+    public static boolean isNullOrEmpty(String str, String message) { // tested
         if (str == null || str.equals("")) {
             out(message);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

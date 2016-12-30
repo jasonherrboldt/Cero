@@ -1,4 +1,86 @@
-// The servlet class will instantiate the game object. It will also keep track of the outer score.
+
+
+Main
+
+    game.startGame() // (possible automatic moves: player2 might draw or discard, player1 might draw)
+    while player1.getscore < 500 && player2.getscore < 500
+        display cpc, player1's hand, "your turn, player one"
+        Let playerOneHasDiscarded be false
+        while playerOneHasDiscarded is false
+            ask player 1 what they want to do (give a numbered list of choices)
+            if the choice is draw
+                draw a card
+                break
+            if (choice is discard) or (choice is discard and declare 'Cero plus one!')
+                if (choice is discard and declare 'Cero plus one!') and player1.getHand.getSize != 2
+                   warn user
+                   break
+                if discard is not valid choice for cpc
+                   warn user
+                   break
+                if discard is colorless
+                    ask the user to pick a color
+                else
+                    let player's chosen color be the cpc color
+                if choice is discard and declare 'Cero plus one!'
+                    call player1.discard(card, cpc, true)
+                else
+                    call player1.discard(card, cpc, false)
+
+
+
+
+
+
+
+Game.playerTwoMove
+    if everything is validated and OK to proceed
+        let cardToDiscard be an uninitialized card
+        let playerTwoHasDiscarded be a false boolean
+            while playerTwoHasDiscarded is false
+                let cardToDiscard be player2's decided move on the cpc
+                    if cardToDiscard is null
+                        player two draws a card
+                    else
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRAVEYARD:
+
+
+Player.discard
+
+    remove card from p1's hand
+    discarded card becomes cpc
+    push cpc to discard pile
+    let current color be player's chosen color
+    playerOneHasDiscarded = true
+    if the choice is (discard and declare 'Cero plus one!')
+        call player's callCero method
+
+
 
 public GameState startGame()
 	let isFirstMove = true
@@ -13,7 +95,7 @@ public GameState startGame()
 		update gameStateMessage (gsm) "player two had the first move"
 		if nonNumericCardReceived(player2) is true // don't need to ask other player for color choice here -- no wild cards allowed first move
 			update gameStateMessage (gsm) "player two was forbidden from discarding"
-		else 		
+		else
 			let gameStateMessage = playerTwosTurn(gameStateMessage)
 		let isPlayerOnesTurn = !isPlayerOnesTurn // only happens here!
 	else // is player one's turn
@@ -22,8 +104,8 @@ public GameState startGame()
 			let gameStateMessage = playerTwosTurn(gameStateMessage)
 	populate gameState's fields
 	return gameState
-		
-		
+
+
 public boolean nonNumericCardReceived(player)
 	if cpc is skip
 		return true
@@ -39,9 +121,9 @@ public boolean nonNumericCardReceived(player)
 				make player draw four cards
 			return true
 	return false
-	
-	
-	
+
+
+
 public String playerTwosTurn(gameStateMessage)
 	let newGameStateMessage = gameStateMessage
 	if this is not player two's turn
@@ -51,16 +133,16 @@ public String playerTwosTurn(gameStateMessage)
 		let cpc be equal to the return of playerTwoMove() // player 2 is REQUIRED to discard something here
 		if cpc == null
 			return "warn: playerTwoMove returned null. no action taken."
-		else 
+		else
 			let currentColor be the cpc's color
 			push cpc to discard pile
 			update gsm "Player two has discarded a card."
 			return newGameStateMessage
 
-	
-	
-// guarantee only reached if player two has not been blocked by a non-numeric card		
-public Card playerTwoMove() 
+
+
+// guarantee only reached if player two has not been blocked by a non-numeric card
+public Card playerTwoMove()
 	if the deck is empty and the discard pile is empty
 		print a warning to the console and return null
 	if this is not player two's turn
@@ -71,54 +153,21 @@ public Card playerTwoMove()
 		let cardToDiscard be an empty card
 		switch strategy
 			case bold
-				// todo 
+				// todo
 				// player2 would draw here as needed
 				return cardToDiscard // just discard first card for debug
 			case cautious
-				// todo 
+				// todo
 				// player2 would draw here as needed
 				return cardToDiscard // just discard first card for debug
 			case dumb
-				// todo 
+				// todo
 				// player2 would draw here as needed
 				return cardToDiscard // just discard first card for debug
 
 
 
-				
-public GameState discard()
-	// todo
-	
-	
-	
-public GameState draw()
-	// todo
 
-
-
-Start game (player2 might draw or discard, player1 might draw)
-while player1.getscore < 500 && player2.getscore < 500
-    display cpc, player1's hand, "your turn p1"
-    Let playerOneHasDiscarded be false
-    while playerOneHasDiscarded is false
-        ask player 1 what they want to do
-        if the choice is draw
-            draw card
-        if (choice is discard) or (choice is discard and declare 'Cero plus one!')
-            if discard is not valid choice for cpc
-               warn user, fall through.
-            else
-                if discard is colorless
-                    ask the user to pick a color (requires user validation)
-                else
-                    let player's chosen color be the cpc color
-                remove card from p1's hand
-                discarded card becomes cpc
-                push cpc to discard pile
-                let current color be player's chosen color
-                playerOneHasDiscarded = true
-                if the choice is discard and declare 'Cero plus one!'
-                    call player's callCero method
 
 
 

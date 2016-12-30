@@ -14,7 +14,7 @@ public class TestPlayer {
 
     private CardValueMap cvm;
     private Hand classHand;
-    private Player player;
+    // private Player player;
 
     // Not instantiated in setup:
     private List<Card> cardList;
@@ -41,7 +41,7 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_setHand() {
-        player = new Player("Set Hand Test", true);
+        Player player = new Player("Set Hand Test", true);
         player.setHand(cardList);
         Hand mockHand = player.getHand();
         List<Card> mockList = mockHand.getAllCards();
@@ -62,71 +62,71 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_discard_number() {
-        player = new Player("", false);
-        player.setHand(classHand.getAllCards());
+        Player player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
 
-        int handSize = player.getHand().getSize();
+        int handSize = player2.getHand().getSize();
         int cardsDiscarded = 0;
 
         // legal - match number but not color
         Card greenThree = new Card(Card.GREEN, Card.THREE, cvm);
         Card cpcYellowThree = new Card(Card.YELLOW, Card.THREE, cvm);
 
-        assertTrue(player.discard(greenThree, cpcYellowThree, false));
+        assertTrue(player2.discard(greenThree, cpcYellowThree, false, null));
         cardsDiscarded++;
-        assertEquals(player.getHand().getSize(), (handSize - cardsDiscarded));
+        assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
 
         // legal - match color but not number
         Card yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
-        assertTrue(player.discard(yellowSix, cpcYellowThree, false));
+        assertTrue(player2.discard(yellowSix, cpcYellowThree, false, null));
         cardsDiscarded++;
-        assertEquals(player.getHand().getSize(), (handSize - cardsDiscarded));
+        assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
 
         // illegal - match neither color nor number
         Card redEight = new Card(Card.RED, Card.EIGHT, cvm);
-        assertFalse(player.discard(redEight, cpcYellowThree, false));
+        assertFalse(player2.discard(redEight, cpcYellowThree, false, null));
         // no card discarded, hand stays same size.
-        assertEquals(player.getHand().getSize(), (handSize - cardsDiscarded));
+        assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
     }
 
     @Test
     public void testPlayer_discard_colorNonNumeric() {
-        player = new Player("", false);
-        player.setHand(cardList);
+        Player player2 = new Player("", true);
+        player2.setHand(cardList);
 
         // only need to match color
         Card cpcRedThree = new Card(Card.RED, Card.THREE, cvm);
         Card redDrawTwo = new Card(Card.RED, Card.DRAW_TWO, cvm);
-        assertTrue(player.discard(redDrawTwo, cpcRedThree, false));
+        assertTrue(player2.discard(redDrawTwo, cpcRedThree, false, null));
 
     }
 
     @Test
     public void testPlayer_discard_colorless() {
-        player = new Player("", false);
+        Player player2 = new Player("", true);
         Card colorlessWild = new Card(Card.COLORLESS, Card.WILD, cvm);
         List<Card> hand = new ArrayList<>();
         hand.add(colorlessWild);
-        player.setHand(hand);
+        player2.setHand(hand);
 
         Card cpcBlueOne = new Card(Card.BLUE, Card.ONE, cvm);
-        assertTrue(player.discard(colorlessWild, cpcBlueOne, false));
+        assertTrue(player2.discard(colorlessWild, cpcBlueOne, false, null));
 
         Card colorlessWildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
         hand.add(colorlessWildDrawFour);
-        player.setHand(hand);
+        player2.setHand(hand);
 
-        assertTrue(player.discard(colorlessWildDrawFour, cpcBlueOne, false));
+        assertTrue(player2.discard(colorlessWildDrawFour, cpcBlueOne, false, null));
     }
 
     @Test
     public void testPlayer_discard_nullArgs() {
-        player = new Player("", false);
-        player.setHand(cardList);
+        Player player2 = new Player("", true);
+        player2.setHand(cardList);
         Card realCard = new Card(Card.YELLOW, Card.FIVE, cvm);
-        assertFalse(player.discard(null, null, false));
-        assertFalse(player.discard(realCard, null, false));
-        assertFalse(player.discard(null, realCard, false));
+        assertFalse(player2.discard(null, null, false, null));
+        assertFalse(player2.discard(realCard, null, false, null));
+        assertFalse(player2.discard(null, realCard, false, null));
     }
 
     @Test
@@ -136,23 +136,27 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_setRandomStrategy() {
-        player = new Player("", true);
-        assertTrue(player.getStrategy().equals(""));
-        assertTrue(player.setRandomStrategy());
+        Player player2 = new Player("", true);
+        assertTrue(player2.getStrategy().equals(""));
+        assertTrue(player2.setRandomStrategy());
     }
 
     @Test
-    public void testPlayer_getPreferredColor() {
+    public void testPlayer_getPlayerTwosChosenColor() {
         // Can't test for a dumb player -- returns a random color.
         // Bold and cautious players always return color of highest count.
-        player = new Player("", true);
-        player.setHand(classHand.getAllCards());
+        Player player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
 
-        player.setStrategy(Player.STRATEGY_BOLD);
-        assertEquals(player.getPreferredColor(), Card.YELLOW);
+        player2.setStrategy(Player.STRATEGY_BOLD);
+        assertEquals(player2.getPlayerTwosChosenColor(), Card.YELLOW);
 
-        player.setStrategy(Player.STRATEGY_CAUTIOUS);
-        assertEquals(player.getPreferredColor(), Card.YELLOW);
+        player2.setStrategy(Player.STRATEGY_CAUTIOUS);
+        assertEquals(player2.getPlayerTwosChosenColor(), Card.YELLOW);
+
+        // Test the unhappy path.
+        Player player1 = new Player("", false);
+        assertEquals(player1.getPlayerTwosChosenColor(), null);
     }
 
     @Test
@@ -167,7 +171,7 @@ public class TestPlayer {
 
         // Player two legally discards penultimate card, but forgets to declare 'Cero plus one!'.
         Card currentPlayedCard = new Card(Card.YELLOW, Card.NINE, cvm);
-        assertTrue(player2.discard(yellowSix, currentPlayedCard, false));
+        assertTrue(player2.discard(yellowSix, currentPlayedCard, false, null));
 
         // player one has to call out player 2's mistake
         Player player1 = new Player("", false);
@@ -186,7 +190,7 @@ public class TestPlayer {
 
         // Player one legally discards penultimate card, but forgets to declare 'Cero plus one!'.
         Card currentPlayedCard = new Card(Card.YELLOW, Card.NINE, cvm);
-        assertTrue(player1.discard(yellowSix, currentPlayedCard, false)); // ultimately happens in Game.playerTwoMove
+        assertTrue(player1.discard(yellowSix, currentPlayedCard, false, null)); // ultimately happens in Game.playerTwoMove
 
         Player player2_dumb = new Player("", true);
         player2_dumb.setStrategy(Player.STRATEGY_DUMB);

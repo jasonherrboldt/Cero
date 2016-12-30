@@ -1,7 +1,5 @@
 package com.jason;
 
-import org.junit.Test;
-
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -69,21 +67,29 @@ public class Player {
     }
 
     /**
-     * Discard a card to the current played card.
+     * Discard a card.
      *
-     * @param card              The card to discard.
-     * @param currentPlayedCard The card to discard.
-     * @param callCero          Whether or not to declare 'Cero!'
-     * @return                  True if the discarded card was deemed legal, false otherwise.
+     * @param card                  The card to discard.
+     * @param currentPlayedCard     The current played card.
+     * @param callCero              Whether or not to declare 'Cero!'
+     * @param playerOnesChosenColor Player one's chosen color (for wild and wild draw four cards)
+     * @return                      True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean discard(Card card, Card currentPlayedCard, boolean callCero) { // *** NEED TO TEST CALL CERO FUNCTIONALITY ***
+    public boolean discard(Card card, Card currentPlayedCard, boolean callCero, String playerOnesChosenColor) { // *** NEEDS TESTING ***
         if(card == null || currentPlayedCard == null) {
-            Main.out("WARN: Player.discard called with either a null card, a null currentPlayedCard, or both. " +
+            Main.out("WARN: Player.discard called with a null card, a null currentPlayedCard, or both. " +
                     "No action taken, returned false.");
             return false;
         } else {
             ceroCalled = callCero; // incumbent on the accuracy of Main.main
             if(card.getFace().equalsIgnoreCase(Card.WILD) || card.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                if(isPlayer2) {
+                    chosenColor = getPlayerTwosChosenColor();
+                } else {
+                    if(playerOnesChosenColor != null) {
+                        chosenColor = playerOnesChosenColor;
+                    }
+                }
                 hand.discard(card);
                 return true;
             } else {
@@ -230,10 +236,13 @@ public class Player {
         return false;
     }
 
-    public String getPreferredColor() { // tested
-        if (isPlayer2()) {
+    public String getPlayerTwosChosenColor() { // *** DOUBLE CHECK TESTS ***
+        if (!isPlayer2()) {
+            Main.out("WARN: Player.getPlayerTwosChosenColor called for player 1. No action taken, returned null.");
+            return null;
+        } else {
             if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
-                // return a random number
+                // return a random color
                 List<String> colors = new ArrayList<>();
                 colors.add(Card.BLUE);
                 colors.add(Card.RED);
@@ -244,10 +253,6 @@ public class Player {
             } else {
                 return (hand.getHighestColor());
             }
-        } else {
-            // ask the user to provide preferred color
-            // for now just return blue
-            return Card.BLUE;
         }
     }
 

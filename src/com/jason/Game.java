@@ -195,7 +195,7 @@ public class Game {
         // just discard first card for debug
         return player2.getHand().getFirstCard();
 
-        // Currently under construction:
+        // Currently under construction: *********************************************************************************************************************
 //        boolean playerTwoHasDiscarded = false;
 //        int i = 0;
 //        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping
@@ -213,7 +213,7 @@ public class Game {
 //                return null;
 //            }
 //        }
-//        if(player2.discard(cardToDiscard, currentPlayedCard, false)) { // *** needs to decide callCero value! ***
+//        if(player2.discard(cardToDiscard, currentPlayedCard, false, null)) { // *** needs to decide callCero value! ***
 //            return cardToDiscard;
 //        } else {
 //            Main.out("Player two attempted an illegal move. This is a showstopper. Returning null.");
