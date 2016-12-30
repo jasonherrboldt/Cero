@@ -90,14 +90,14 @@ public class Game {
 
             if(!isPlayerOnesTurn) {
                 Main.out("Player two had the first move.");
-                if(nonNumericCardReceived(player2)) {
+                if(nonNumericCardReceived(player2) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
                     Main.out("Player two was forbidden from discarding.");
                 } else {
                     playerTwosTurn();
                 }
                 isPlayerOnesTurn = !isPlayerOnesTurn; // only happens here!
             } else { // player one's turn
-                if(nonNumericCardReceived(player1)) {
+                if(nonNumericCardReceived(player1) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
                     Main.out("Player one, you were forbidden from discarding. " +
                             "The first move switches to player two.");
                     isPlayerOnesTurn = false;
@@ -152,27 +152,31 @@ public class Game {
      * Player two's turn.
      */
     public void playerTwosTurn() { // not unit tested - might only be functionally testable.
-        if(isPlayerOnesTurn) {
-            Main.out("ERROR: Game.playerTwosTurn called during player one's turn. No action taken.");
-        } else {
-            if(player2.otherPlayerForgotToCallCero(player1)) {
-                for(int i = 0; i < 2; i++) {
-                    draw(player1);
-                }
-            }
-            currentPlayedCard = playerTwoMove();
-            if(currentPlayedCard == null) {
-                Main.out("ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove." +
-                        "No action taken (showstopper).");
+        if(!nonNumericCardReceived(player2) || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+            if(isPlayerOnesTurn) {
+                Main.out("ERROR: Game.playerTwosTurn called during player one's turn. No action taken.");
             } else {
-                if(!isFirstMove) {
-                    currentColor = player2.chosenColor; // could be a wild card if not first move
-                } else {
-                    currentColor = currentPlayedCard.getColor();
+                if(player2.otherPlayerIncorrectlyForgotToCallCero(player1)) {
+                    for(int i = 0; i < 2; i++) {
+                        draw(player1);
+                    }
                 }
-                discardPile.add(currentPlayedCard);
-                Main.out("Player two has discarded a card. ");
+                currentPlayedCard = playerTwoMove();
+                if(currentPlayedCard == null) {
+                    Main.out("ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove." +
+                            "No action taken (showstopper).");
+                } else {
+                    if(!isFirstMove) {
+                        currentColor = player2.chosenColor; // could be a wild card if not first move
+                    } else {
+                        currentColor = currentPlayedCard.getColor();
+                    }
+                    discardPile.add(currentPlayedCard);
+                    Main.out("Player two has discarded a card. ");
+                }
             }
+        } else {
+            Main.out("Player Two was forbidden from discarding.");
         }
     }
 
@@ -199,7 +203,7 @@ public class Game {
 //        boolean playerTwoHasDiscarded = false;
 //        int i = 0;
 //        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping
-//            cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard);
+//            cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
 //            if (cardToDiscard == null) {
 //                draw(player2);
 //            } else {

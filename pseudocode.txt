@@ -30,23 +30,37 @@ Main
 
 
 
+Player
 
+    public Card decidePlayerTwoDiscard(Card currentPlayedCard, String currentColor)
+        switch strategy
+            bold
+                if cpc is wild
+                    return highest numeric face of currentColor
+                else
+                    // try to match the number
+                    let card1 be the number from the largest color group that matches cpc.color
 
+                    // try to match the color
+                    let card2 be the highest numeric face of cpc.color
 
-Game.playerTwoMove
-    if everything is validated and OK to proceed
-        let cardToDiscard be an uninitialized card
-        let playerTwoHasDiscarded be a false boolean
-            while playerTwoHasDiscarded is false
-                let cardToDiscard be player2's decided move on the cpc
-                    if cardToDiscard is null
-                        player two draws a card
-                    else
-
-
-
-
-
+                    // compare the two, return the one with the highest card group
+                    if card1 is not null and card2 is not null
+                        if hand.getColorGroupSize(card1.color) > hand.getColorGroupSize(card1.color)
+                            return card1
+                        else
+                            return card2
+                        if card1 is not null or card2 is not null // must be one or the other
+                            if card1 is not null
+                                return card1
+                            else
+                                return card2
+                    if hand has card wild
+                        return wild
+                    if hand has card wild draw four
+                        return wild draw four
+            cautious
+            dumb
 
 
 
@@ -68,6 +82,19 @@ Game.playerTwoMove
 
 
 GRAVEYARD:
+
+
+
+Game.playerTwoMove
+    if everything is validated and OK to proceed
+        let cardToDiscard be an uninitialized card
+        let playerTwoHasDiscarded be a false boolean
+            while playerTwoHasDiscarded is false
+                let cardToDiscard be player2's decided move on the cpc
+                    if cardToDiscard is null
+                        player two draws a card
+                    else
+
 
 
 Player.discard

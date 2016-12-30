@@ -242,4 +242,11 @@ public class TestHand {
         hand.moveColorlessListToEnd();
         assertEquals(hand.getAllCards().get(hand.getSize() - 1).getColor(), Card.COLORLESS);
     }
+
+    @Test
+    public void testHand_getColorGroupSize() {
+        assertEquals(getNumberOfMostColorsHand.getColorGroupSize(Card.RED), 3);
+        assertEquals(getNumberOfMostColorsHand.getColorGroupSize(Card.BLUE), 2);
+        assertEquals(getNumberOfMostColorsHand.getColorGroupSize(Card.GREEN), 1);
+    }
 }

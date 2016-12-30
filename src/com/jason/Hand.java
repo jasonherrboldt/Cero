@@ -122,7 +122,7 @@ public class Hand {
     }
 
     /**
-     * @return the number of cards in the deck.
+     * @return the number of cards in the hand.
      */
     public int getSize() { // tested in testHand_discard()
         int count = 0;
@@ -154,7 +154,9 @@ public class Hand {
      */
     public Card getHighestFace(String color, boolean numeric) { // tested
         int highestValue = numeric ? 9 : 50;
-        if(color != null) {
+        if(color == null) {
+            Main.out("WARN: Hand.getHighestFace called with null color. No action taken, returned null.");
+        } else {
             List<Card> colorList = getColorList(color);
             if(colorList == null) {
                 return null;
@@ -171,14 +173,14 @@ public class Hand {
     }
 
     /**
-     * Get number of largest available color group. Checks all color groups descending by color group size
+     * Get number from largest available color group. Checks all color groups descending by color group size
      * and returns best choice.
      *
      * @param number    The number to search for.
      * @return          The card of the highest color group, or null if no card found.
      */
     public Card getNumberFromLargestColorGroup(int number) { // tested
-        // Hand is already sorted ascending by color group.
+        // Hand is already sorted ascending by color group size.
         for(List<Card> list : listOfListOfCards) {
             for(Card c : list) {
                 if(c.getValue() == number) {
@@ -187,6 +189,21 @@ public class Hand {
             }
         }
         return null;
+    }
+
+    /**
+     * @return the color group size.
+     */
+    public int getColorGroupSize(String color) { // tested
+
+        for(List<Card> list : listOfListOfCards) {
+            if(list.size() > 0) {
+                if(list.get(0).getColor().equalsIgnoreCase(color)) {
+                    return list.size();
+                }
+            }
+        }
+        return 0;
     }
 
     /**

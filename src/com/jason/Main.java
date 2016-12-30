@@ -56,16 +56,6 @@ public class Main {
         out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString() + "\n");
         game.printHand(game.player1);
 
-//
-//        boolean done = false;
-//        while(!done) {
-//            String answer = getUserResponse_string("Please enter the secret message: ");
-//            gameState.setMessage(answer);
-//            if(gameState.getMessage().equalsIgnoreCase("password")) {
-//                done = true;
-//            }
-//        }
-
 //        List<Player> players = game.getPlayers();
 //        for(Player p : players) {
 //            if(p.getScore() > 500) {

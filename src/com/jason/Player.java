@@ -118,7 +118,7 @@ public class Player {
      * @param otherPlayer the player to inspect
      * @return            true if the other player incorrectly forgot to declare 'Cero plus one!', false otherwise.
      */
-    public boolean otherPlayerForgotToCallCero(Player otherPlayer) { // *** NEEDS TO BE TESTED ***
+    public boolean otherPlayerIncorrectlyForgotToCallCero(Player otherPlayer) { // *** NEEDS TO BE TESTED ***
         if(isPlayer2()) {
             // dumb players never check
             if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
@@ -257,14 +257,19 @@ public class Player {
     }
 
     /**
-     * Let the program decide the best card to discard based on its strategy
+     * Let the program decide the best card to discard based on its strategy.
+     * Guaranteed by Game.playerTwosTurn not to be called unless the current played card
+     * is numeric or wild.
      *
      * @param currentPlayedCard the current played card
+     * @param currentColor      the selected color of the last move
      * @return                  the card to discard, or null if no playable card found.
      */
-    public Card decidePlayerTwoDiscard(Card currentPlayedCard) {
+    public Card decidePlayerTwoDiscard(Card currentPlayedCard, String currentColor) { // *** NEEDS TO BE TESTED ***
+
         // Debug:
         Main.out("Player Two is playing with a " + strategy + " strategy.");
+
         Card cardToDiscard;
         switch(strategy) {
             case Player.STRATEGY_BOLD:

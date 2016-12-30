@@ -175,7 +175,7 @@ public class TestPlayer {
 
         // player one has to call out player 2's mistake
         Player player1 = new Player("", false);
-        assertTrue(player1.otherPlayerForgotToCallCero(player2));
+        assertTrue(player1.otherPlayerIncorrectlyForgotToCallCero(player2));
     }
 
     @Test
@@ -194,7 +194,7 @@ public class TestPlayer {
 
         Player player2_dumb = new Player("", true);
         player2_dumb.setStrategy(Player.STRATEGY_DUMB);
-        assertFalse(player2_dumb.otherPlayerForgotToCallCero(player1));
+        assertFalse(player2_dumb.otherPlayerIncorrectlyForgotToCallCero(player1));
 
         // (Can't test for player2 when strategy is bold or cautious -- result is always random.)
     }
