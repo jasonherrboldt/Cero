@@ -17,8 +17,6 @@ public class Game {
     /*
      * TODO:
      *
-     *    Make sure user Q&A I/O works OK on via command line prompts.
-     *
      *    Space out the console output for computer steps; make it look like the
      *    computer is thinking about what its doing, instead of just showing a dump
      *    of steps to the user. Might be fun to have it complain if it has to draw more
@@ -31,7 +29,7 @@ public class Game {
      *    class calls game.play will take that information, collate it, and display it to the
      *    user after the 10k games have finished.
      *
-     *    Servlet actions:
+     *    Servlet-like actions:
      *
      *        game.startGame: Shuffles deck, deals first hand, pops first card off of deck.
      *        Picks a random first player. Allows player2 to discard if its turn first. Returns
@@ -50,10 +48,10 @@ public class Game {
      */
 
     private Deck deck;
-    private Player player1; // the user
-    private Player player2; // the computer
+    public Player player1; // the user
+    public Player player2; // the computer
     private boolean isPlayerOnesTurn;
-    private Card currentPlayedCard;
+    public Card currentPlayedCard;
     private CardValueMap cvm;
     private Stack<Card> discardPile;
     private String currentColor;
@@ -63,7 +61,6 @@ public class Game {
     public Game(String playerOneName) {
         cvm = new CardValueMap();
         deck = new Deck();
-        Main.out("");
         player1 = new Player(playerOneName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
         player2 = new Player("Computer", true);
@@ -80,7 +77,7 @@ public class Game {
      *
      * @return the current state of the game for browser population
      */
-    public GameState startGame() { // tested
+    public String startGame() { // tested
         if(isFirstMove) {
             deck.shuffle();
             dealHands();
@@ -106,6 +103,7 @@ public class Game {
                 if(nonNumericCardReceived(player1)) {
                     gameStateMessage += "Player one, you were forbidden from discarding. " +
                             "The first move switches to player two. ";
+                    isPlayerOnesTurn = false;
                     gameStateMessage = playerTwosTurn(gameStateMessage);
                 }
                 // don't flip turns here because it's still player one's turn.
@@ -116,7 +114,7 @@ public class Game {
             gameState.setCurrentColor(currentColor);
             gameState.setMessage(gameStateMessage);
             isFirstMove = false;
-            return gameState;
+            return gameStateMessage;
         }
         Main.out("ERROR: Game.startGame called after first move has already been played. " +
                 "No action taken, returned null.");
@@ -197,17 +195,13 @@ public class Game {
             Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
             return null;
         } else {
-            Main.out("The current played card is " + currentPlayedCard.getPrintString());
             String strategy = player2.getStrategy();
             switch(strategy) {
                 case Player.STRATEGY_BOLD:
-                    Main.out(player2.getName() + " is now using the " + strategy + " strategy.");
                     return player2.getHand().getFirstCard(); // just discard first card for debug
                 case Player.STRATEGY_CAUTIOUS:
-                    Main.out(player2.getName() + " is now using the " + strategy + " strategy.");
                     return player2.getHand().getFirstCard(); // just discard first card for debug
                 case Player.STRATEGY_DUMB:
-                    Main.out(player2.getName() + " is now using the " + strategy + " strategy.");
                     return player2.getHand().getFirstCard(); // just discard first card for debug
             }
         }
@@ -246,12 +240,12 @@ public class Game {
      */
     private void refreshDeck() { // tested by testGame_draw_emptyDeck
         if(deck.getDeckSize() == 0) {
-            Main.out("Deck is empty! Replenishing with discard pile...");
+            // Main.out("Deck is empty! Replenishing with discard pile...");
             replaceDeckWithDiscardPile();
-            Main.out("Shuffling deck...");
+            // Main.out("Shuffling deck...");
             deck.shuffle();
             discardPile.clear();
-            Main.out("Deck size is now " + deck.getDeckSize());
+            // Main.out("Deck size is now " + deck.getDeckSize());
         }
     }
 
@@ -368,7 +362,7 @@ public class Game {
      *
      * @param player the given player
      */
-    private void printHand(Player player) { // no test needed
+    public void printHand(Player player) { // no test needed
         if(player.getHand() == null) {
             Main.out("WARN: Game.printHand called with a null hand. No action taken.");
         } else {
@@ -389,7 +383,13 @@ public class Game {
         }
     }
 
-    // For testing:
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
 
     public boolean isFirstMove() {
         return isFirstMove;
@@ -411,4 +411,7 @@ public class Game {
         isPlayerOnesTurn = playerOnesTurn;
     }
 
+    public boolean isPlayerOnesTurn() {
+        return isPlayerOnesTurn;
+    }
 }

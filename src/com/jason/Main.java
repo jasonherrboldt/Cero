@@ -1,5 +1,6 @@
 package com.jason;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -38,8 +39,11 @@ public class Main {
 //        out("Your answer: " + answer);
 
 
-//        Game game = new Game("David Lightman");
-//        GameState gameState = game.startGame();
+        Game game = new Game("David Lightman");
+        out(game.startGame());
+        out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString() + "\n");
+        game.printHand(game.player1);
+
 //
 //        boolean done = false;
 //        while(!done) {
@@ -50,17 +54,12 @@ public class Main {
 //            }
 //        }
 
-        /*
-        private Card currentPlayedCard;
-        private String currentColor;
-        private String message;
-        private Player player;
-         */
-
-//        out("Current played card: " + gameState.getCurrentPlayedCard().getPrintString());
-//        out("Message: " + gameState.getMessage());
-//        Player player = gameState.getPlayer();
-//        out(player.getName() + "'s hand: " + player.getHand().getHandPrintStringList());
+//        List<Player> players = game.getPlayers();
+//        for(Player p : players) {
+//            if(p.getScore() > 500) {
+//                // we have a winner
+//            }
+//        }
     }
 
     /**

@@ -112,7 +112,7 @@ public class TestGame {
 
         // Make sure the isFirstMove indicator is getting updated.
         assertTrue(game.isFirstMove());
-        GameState gameState = game.startGame();
+        game.startGame();
         assertFalse(game.isFirstMove());
 
         // Make sure the current played card is correctly reflected everywhere.
@@ -126,34 +126,6 @@ public class TestGame {
         for (Player p : players) {
             assertEquals(p.getOtherPlayersHandCount(), 7);
         }
-    }
-
-    @Test
-    public void testGame_startGame_gameStateObject() {
-        Game game = new Game("Test Player");
-        GameState gameState = game.startGame();
-
-        // Make sure player one has a hand of 7 cards.
-        assertEquals(gameState.getPlayer().getHand().getSize(), 7);
-
-        // Make sure the player in the GameState object is player one.
-        assertFalse(gameState.getPlayer().isPlayer2());
-
-        // Make sure game's current color made it to the gameState object.
-        assertEquals(gameState.getCurrentColor(), game.getCurrentColor());
-
-        // Make sure the game's current played card made it to the gameState object.
-        assertTrue(gameState.getCurrentPlayedCard().equals(game.getCurrentPlayedCard()));
-
-        // Make sure the color of the game's current played card made it to the gameState object.
-        assertEquals(gameState.getCurrentColor(), game.getCurrentPlayedCard().getColor());
-
-        // There should be at least a "Your turn" message.
-        assertNotEquals(gameState.getMessage(), "");
-
-        // Make sure the current played card is non-null
-        assertNotEquals(gameState.getCurrentPlayedCard().getColor(), null);
-        assertNotEquals(gameState.getCurrentPlayedCard().getFace(), null);
     }
 
     @Test
@@ -225,31 +197,3 @@ public class TestGame {
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
