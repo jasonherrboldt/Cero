@@ -9,18 +9,58 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
-    public static final String YES_NO = "Yes No";
-    public static final String INTEGER = "Integer";
-    public static final String STRING = "String";
     private static final String userCorrectionMessage = "That is not a valid response. Please try again.";
     private static final String invalidQuestionWarning =
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
 
     public static void main(String[] args) {
-        Game game = new Game("");
-        GameState gameState = game.startGame();
-        String currentPlayedCardString = gameState.getCurrentPlayedCard().getPrintString();
-        Main.out("Current card: " + currentPlayedCardString);
+//        Game game = new Game("");
+//        GameState gameState = game.startGame();
+//        String currentPlayedCardString = gameState.getCurrentPlayedCard().getPrintString();
+//        Main.out("Current card: " + currentPlayedCardString);
+
+//        outNoReturn("Please enter your name (no special characters): ");
+//        String name = System.console().readLine();
+//        while(!isValid(name)) {
+//            outNoReturn("Please try again.");
+//            out("Allowed characters are a-z, A-Z, and space: ");
+//            name = System.console().readLine();
+//        }
+//        System.out.println("Welcome, " + name + "! Let's begin.");
+
+//        String answer = getUserResponse_yesNo("Do you believe in love?");
+//        out("Your answer: " + answer);
+//
+//        answer = getUserResponse_integer("Please enter an integer between 0 and 5: ", 0, 5);
+//        out("Your answer: " + answer);
+//
+//        answer = getUserResponse_string("What is your favorite color? ");
+//        out("Your answer: " + answer);
+
+
+//        Game game = new Game("David Lightman");
+//        GameState gameState = game.startGame();
+//
+//        boolean done = false;
+//        while(!done) {
+//            String answer = getUserResponse_string("Please enter the secret message: ");
+//            gameState.setMessage(answer);
+//            if(gameState.getMessage().equalsIgnoreCase("password")) {
+//                done = true;
+//            }
+//        }
+
+        /*
+        private Card currentPlayedCard;
+        private String currentColor;
+        private String message;
+        private Player player;
+         */
+
+//        out("Current played card: " + gameState.getCurrentPlayedCard().getPrintString());
+//        out("Message: " + gameState.getMessage());
+//        Player player = gameState.getPlayer();
+//        out(player.getName() + "'s hand: " + player.getHand().getHandPrintStringList());
     }
 
     /**
@@ -73,7 +113,7 @@ public class Main {
             boolean validAnswerReceived = false;
             String response = "";
             while(!validAnswerReceived) {
-                outNoReturn(question);
+                outNoReturn(question + " ");
                 response = System.console().readLine();
                 if(response.equalsIgnoreCase("y") || response.equalsIgnoreCase("n")) {
                     validAnswerReceived = true;

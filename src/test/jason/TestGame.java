@@ -145,6 +145,7 @@ public class TestGame {
         // Make sure the game's current played card made it to the gameState object.
         assertTrue(gameState.getCurrentPlayedCard().equals(game.getCurrentPlayedCard()));
 
+        // Make sure the color of the game's current played card made it to the gameState object.
         assertEquals(gameState.getCurrentColor(), game.getCurrentPlayedCard().getColor());
 
         // There should be at least a "Your turn" message.
@@ -172,9 +173,58 @@ public class TestGame {
         assertTrue(game.nonNumericCardReceived(player));
 
     }
+
+    @Test
+    public void testGame_playerTwoMove() {
+        Game game = new Game("Test Player");
+
+        game.startGame();
+        game.setPlayerOnesTurn(false);
+
+        // Make sure the happy path returns a card.
+        assertTrue(game.playerTwoMove() != null);
+
+        // Make sure it returns null when it's supposed to.
+        game.clearDeck();
+        Stack<Card> emptyStack = new Stack<>();
+        game.setDiscardPile(emptyStack);
+        assertEquals(game.playerTwoMove(), null);
+        game.setPlayerOnesTurn(true);
+        assertEquals(game.playerTwoMove(), null);
+    }
+
+    @Test
+    public void testGame_playerTwosTurn() {
+        Game game = new Game("Test Player");
+        game.setPlayerOnesTurn(true);
+        String message = game.playerTwosTurn("");
+        assertTrue(message.contains("ERROR: Game.playerTwosTurn called during player one's turn. No action taken."));
+
+        game.startGame();
+        game.setPlayerOnesTurn(false);
+        message = game.playerTwosTurn("");
+        assertTrue(message.contains("Player two has discarded a card."));
+    }
+
+    @Test
+    public void testGame_getOtherPlayersChosenColor() {
+        Game game = new Game("Test Player");
+        game.startGame();
+        List<Player> players = game.getPlayers();
+        if(players.size() == 2) {
+            Player playerBlue = players.get(0);
+            Player playerRed = players.get(1);
+            playerBlue.setChosenColor(Card.BLUE);
+            playerRed.setChosenColor(Card.RED);
+            assertEquals(game.getOtherPlayersChosenColor(playerBlue), Card.RED);
+            assertEquals(game.getOtherPlayersChosenColor(playerRed), Card.BLUE);
+        } else {
+            fail("Test may have been close to throwing an out-of-bounds exception. " +
+                    "List of players from game.getPlayers must have a size of exactly two.");
+        }
+
+    }
 }
-
-
 
 
 

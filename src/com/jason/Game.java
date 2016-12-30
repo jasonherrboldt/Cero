@@ -163,7 +163,7 @@ public class Game {
      * @param  oldGameStateMessage the message to return to the servlet.
      * @return the augmented message to return to the servlet (contains error messages).
      */
-    public String playerTwosTurn(String oldGameStateMessage) { // *** NEEDS TO BE TESTED ***
+    public String playerTwosTurn(String oldGameStateMessage) { // tested
         String newGameStateMessage = oldGameStateMessage;
         if(isPlayerOnesTurn) {
             newGameStateMessage += "ERROR: Game.playerTwosTurn called during player one's turn. No action taken. ";
@@ -188,7 +188,7 @@ public class Game {
      *
      * @return the discarded card
      */
-    private Card playerTwoMove() { // *** NEEDS TO BE TESTED ***
+    public Card playerTwoMove() { // tested
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
             Main.out("ERROR: both deck and discard pile sent to Game.move are empty. No action taken, returned null.");
             return null;
@@ -215,7 +215,7 @@ public class Game {
         return null;
     }
 
-    public String getOtherPlayersChosenColor(Player player) {  // *** NEEDS TO BE TESTED ***
+    public String getOtherPlayersChosenColor(Player player) {  // tested
         if(player.isPlayer2()) {
             return player1.getChosenColor();
         } else {
@@ -338,12 +338,11 @@ public class Game {
     public void setDiscardPile(Stack<Card> injectedDiscardPile) { // tested by testGame_draw_emptyDeck
         if(injectedDiscardPile.isEmpty()) {
             Main.out("WARN: Game.setDiscardPile called with empty discardPile. No action taken.");
-        } else {
-            this.discardPile.clear();
-            Iterator<Card> injectedDiscardCards = injectedDiscardPile.iterator();
-            while(injectedDiscardCards.hasNext()) {
-                this.discardPile.add(injectedDiscardCards.next());
-            }
+        }
+        this.discardPile.clear();
+        Iterator<Card> injectedDiscardCards = injectedDiscardPile.iterator();
+        while(injectedDiscardCards.hasNext()) {
+            this.discardPile.add(injectedDiscardCards.next());
         }
     }
 
@@ -390,6 +389,8 @@ public class Game {
         }
     }
 
+    // For testing:
+
     public boolean isFirstMove() {
         return isFirstMove;
     }
@@ -405,4 +406,9 @@ public class Game {
     public void setCurrentPlayedCard(Card card) {
         this.currentPlayedCard = card;
     }
+
+    public void setPlayerOnesTurn(boolean playerOnesTurn) {
+        isPlayerOnesTurn = playerOnesTurn;
+    }
+
 }

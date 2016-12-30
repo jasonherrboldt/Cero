@@ -1,0 +1,110 @@
+// The servlet class will instantiate the game object. It will also keep track of the outer score.
+
+public GameState startGame()
+	let isFirstMove = true
+	shuffle deck
+	deal cards
+	verify currentPlayedCard (cpc) is not colorless
+	push cpc to discard pile
+	let currentColor be the cpc's color
+	update player1's and player2's other player hand counts
+	let gameStateMessage be an empty string
+	if it is player2's turn
+		update gameStateMessage (gsm) "player two had the first move"
+		if nonNumericCardReceived(player2) is true // don't need to ask other player for color choice here -- no wild cards allowed first move
+			update gameStateMessage (gsm) "player two was forbidden from discarding"
+		else 		
+			let gameStateMessage = playerTwosTurn(gameStateMessage)
+		let isPlayerOnesTurn = !isPlayerOnesTurn // only happens here!
+	else // is player one's turn
+		if nonNumericCardReceived(player1) is true // don't need to ask other player for color choice here -- no wild cards allowed first move
+			update gameStateMessage (gsm) "player one, you were forbidden from discarding"
+			let gameStateMessage = playerTwosTurn(gameStateMessage)
+	populate gameState's fields
+	return gameState
+		
+		
+public boolean nonNumericCardReceived(player)
+	if cpc is skip
+		return true
+	if cpc is reverse
+		return true
+	if cpc is draw two
+		make player draw two cards
+		return true
+	if isFirstMove = false
+		if cpc is wild or cpc is wild draw four
+			let the current color be the other player's chosen color
+			if cpc is wild draw four
+				make player draw four cards
+			return true
+	return false
+	
+	
+	
+public String playerTwosTurn(gameStateMessage)
+	let newGameStateMessage = gameStateMessage
+	if this is not player two's turn
+		append "wat are you doing. not player two's turn. no action taken." to gameStateMessage
+		return gameStateMessage
+	else
+		let cpc be equal to the return of playerTwoMove() // player 2 is REQUIRED to discard something here
+		if cpc == null
+			return "warn: playerTwoMove returned null. no action taken."
+		else 
+			let currentColor be the cpc's color
+			push cpc to discard pile
+			update gsm "Player two has discarded a card."
+			return newGameStateMessage
+
+	
+	
+// guarantee only reached if player two has not been blocked by a non-numeric card		
+public Card playerTwoMove() 
+	if the deck is empty and the discard pile is empty
+		print a warning to the console and return null
+	if this is not player two's turn
+		print warning to console - not player two's turn. no action taken, returning null.
+		return null
+	else
+		let strategy be player2's strategy
+		let cardToDiscard be an empty card
+		switch strategy
+			case bold
+				// todo 
+				// player2 would draw here as needed
+				return cardToDiscard // just discard first card for debug
+			case cautious
+				// todo 
+				// player2 would draw here as needed
+				return cardToDiscard // just discard first card for debug
+			case dumb
+				// todo 
+				// player2 would draw here as needed
+				return cardToDiscard // just discard first card for debug
+
+
+
+				
+public GameState discard()
+	// todo
+	
+	
+	
+public GameState draw()
+	// todo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
