@@ -71,8 +71,26 @@ public class Player {
      *
      * @param card The card to discard.
      */
-    public void discard(Card card) { // tested
-        hand.discard(card);
+    public boolean discard(Card card, Card currentPlayedCard) { // tested
+        if(card.getFace().equalsIgnoreCase(Card.WILD) || card.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+            hand.discard(card);
+            return true;
+        } else {
+            if(card.isNumberCard()) {
+                if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
+                        card.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
+                    hand.discard(card);
+                    return true;
+                }
+            } else { // must be skip, reverse, or draw two.
+                if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
+                    hand.discard(card);
+                    return true;
+                }
+            }
+        }
+        Main.out("WARN: Player.discard received an illegal discard choice. No action taken.");
+        return false;
     }
 
     /**

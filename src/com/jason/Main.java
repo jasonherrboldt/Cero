@@ -10,6 +10,11 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
+    /*
+        javac src/com/jason/*.java
+        java -cp ./src com.jason.Main
+     */
+
     private static final String userCorrectionMessage = "That is not a valid response. Please try again.";
     private static final String invalidQuestionWarning =
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
@@ -40,7 +45,7 @@ public class Main {
 
 
         Game game = new Game("David Lightman");
-        out(game.startGame());
+        game.startGame();
         out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString() + "\n");
         game.printHand(game.player1);
 
@@ -175,7 +180,7 @@ public class Main {
      * @param question the question to ask
      * @return         the user's response
      */
-    public static String getUserResponse_string(String question) { // testing
+    public static String getUserResponse_string(String question) { // tested
         if(!validateQuestion(question, invalidQuestionWarning)) {
             return null;
         } else {
@@ -194,6 +199,17 @@ public class Main {
         }
     }
 
+
+    /**
+     * Ask the user to pick a color for discarded wild cards.
+     * Force user to pick one of four pre-set colors.
+     *
+     * @return the chosen color.
+     */
+    public static String getUserResponse_chosenColor() { // *** NOT TESTED YET ***
+        return null;
+    }
+
     /**
      * Validates a string is not null and not empty. Prints specified error message if string is null.
      *
@@ -207,5 +223,4 @@ public class Main {
         }
         return true;
     }
-
 }

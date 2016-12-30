@@ -55,7 +55,6 @@ public class Game {
     private CardValueMap cvm;
     private Stack<Card> discardPile;
     private String currentColor;
-    private GameState gameState;
     private boolean isFirstMove;
     
     public Game(String playerOneName) {
@@ -68,7 +67,6 @@ public class Game {
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
         currentColor = "";
-        gameState = new GameState();
         isFirstMove = true;
     }
 
@@ -77,8 +75,10 @@ public class Game {
      *
      * @return the current state of the game for browser population
      */
-    public String startGame() { // tested
-        if(isFirstMove) {
+    public void startGame() { // tested
+        if(!isFirstMove) {
+            Main.out("ERROR: Game.startGame called after first move has already been played. No action taken.");
+        } else {
             deck.shuffle();
             dealHands();
             currentPlayedCard = verifyFirstCard(deck.popCard());
@@ -89,36 +89,26 @@ public class Game {
             player1.updateOtherPlayersHandCount(player2.showHandCount());
             player2.updateOtherPlayersHandCount(player1.showHandCount());
 
-            String gameStateMessage = "";
-
             if(!isPlayerOnesTurn) {
-                gameStateMessage += "Player two had the first move. ";
+                Main.out("Player two had the first move.");
                 if(nonNumericCardReceived(player2)) {
-                    gameStateMessage += "Player two was forbidden from discarding. ";
+                    Main.out("Player two was forbidden from discarding.");
                 } else {
-                    gameStateMessage = playerTwosTurn(gameStateMessage);
+                    playerTwosTurn();
                 }
                 isPlayerOnesTurn = !isPlayerOnesTurn; // only happens here!
             } else { // player one's turn
                 if(nonNumericCardReceived(player1)) {
-                    gameStateMessage += "Player one, you were forbidden from discarding. " +
-                            "The first move switches to player two. ";
+                    Main.out("Player one, you were forbidden from discarding. " +
+                            "The first move switches to player two.");
                     isPlayerOnesTurn = false;
-                    gameStateMessage = playerTwosTurn(gameStateMessage);
+                    playerTwosTurn();
                 }
                 // don't flip turns here because it's still player one's turn.
             }
-            gameStateMessage += "OK it's your turn, " + player1.getName() + "!";
-            gameState.setPlayer(player1);
-            gameState.setCurrentPlayedCard(currentPlayedCard);
-            gameState.setCurrentColor(currentColor);
-            gameState.setMessage(gameStateMessage);
+            Main.out("OK it's your turn, " + player1.getName() + "!");
             isFirstMove = false;
-            return gameStateMessage;
         }
-        Main.out("ERROR: Game.startGame called after first move has already been played. " +
-                "No action taken, returned null.");
-        return null;
     }
 
     /**
@@ -157,26 +147,19 @@ public class Game {
 
     /**
      * Player two's turn.
-     *
-     * @param  oldGameStateMessage the message to return to the servlet.
-     * @return the augmented message to return to the servlet (contains error messages).
      */
-    public String playerTwosTurn(String oldGameStateMessage) { // tested
-        String newGameStateMessage = oldGameStateMessage;
+    public void playerTwosTurn() { // not really testable - break up?
         if(isPlayerOnesTurn) {
-            newGameStateMessage += "ERROR: Game.playerTwosTurn called during player one's turn. No action taken. ";
-            return newGameStateMessage;
+            Main.out("ERROR: Game.playerTwosTurn called during player one's turn. No action taken.");
         } else {
             currentPlayedCard = playerTwoMove();
             if(currentPlayedCard == null) {
-                newGameStateMessage += "ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove. " +
-                        "No action taken. ";
-                return newGameStateMessage;
+                Main.out("ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove." +
+                        "No action taken. ");
             } else {
-                currentColor = currentPlayedCard.getColor();
+                currentColor = player2.getChosenColor(); // might be a wild card
                 discardPile.add(currentPlayedCard);
-                newGameStateMessage += "Player two has discarded a card. ";
-                return newGameStateMessage;
+                Main.out("Player two has discarded a card. ");
             }
         }
     }

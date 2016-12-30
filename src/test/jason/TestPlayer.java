@@ -60,17 +60,41 @@ public class TestPlayer {
     }
 
     @Test
-    public void testPlayer_discard() {
+    public void testPlayer_discard_number() {
         player = new Player("", false);
         cardList = new ArrayList<>();
-        cardList.add(new Card(Card.RED, Card.EIGHT, cvm));
+        Card redEight = new Card(Card.RED, Card.EIGHT, cvm);
+        cardList.add(redEight);
         Card greenFour = new Card(Card.GREEN, Card.FOUR, cvm);
         cardList.add(greenFour);
+        Card yellowTwo = new Card(Card.YELLOW, Card.TWO, cvm);
+        cardList.add(greenFour);
         player.setHand(cardList);
+        assertEquals(player.getHand().getSize(), 3);
+
+        // legal match number
+        Card cpc = new Card(Card.YELLOW, Card.FOUR, cvm);
+        assertTrue(player.discard(greenFour, cpc));
         assertEquals(player.getHand().getSize(), 2);
 
-        player.discard(greenFour);
+        // legal match color
+        cpc = new Card(Card.RED, Card.SIX, cvm);
+        assertTrue(player.discard(redEight, cpc));
         assertEquals(player.getHand().getSize(), 1);
+
+        // illegal
+        assertFalse(player.discard(yellowTwo, cpc));
+        assertEquals(player.getHand().getSize(), 1);
+    }
+
+    @Test
+    public void testPlayer_discard_colorNonNumeric() {
+
+    }
+
+    @Test
+    public void testPlayer_discard_colorless() {
+
     }
 
     @Test

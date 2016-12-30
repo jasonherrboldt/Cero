@@ -96,6 +96,53 @@ public GameState draw()
 
 
 
+Start game (player2 might draw or discard, player1 might draw)
+while player1.getscore < 500 && player2.getscore < 500
+    display cpc, player1's hand, "your turn p1"
+    Let playerOneHasDiscarded be false
+    while playerOneHasDiscarded is false
+        ask player 1 what they want to do
+        if the choice is draw
+            draw card
+        if (choice is discard) or (choice is discard and declare 'Cero plus one!')
+            if discard is not valid choice for cpc
+               warn user, fall through.
+            else
+                if discard is colorless
+                    ask the user to pick a color (requires user validation)
+                else
+                    let player's chosen color be the cpc color
+                remove card from p1's hand
+                discarded card becomes cpc
+                push cpc to discard pile
+                let current color be player's chosen color
+                playerOneHasDiscarded = true
+                if the choice is discard and declare 'Cero plus one!'
+                    call player's callCero method
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

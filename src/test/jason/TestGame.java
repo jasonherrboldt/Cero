@@ -118,8 +118,9 @@ public class TestGame {
         // Make sure the current played card is correctly reflected everywhere.
         Card currentPlayedCard = game.getCurrentPlayedCard();
         assertEquals(game.getCurrentColor(), currentPlayedCard.getColor());
-        assertTrue(game.getDiscardPile().get(0) != null);
-        assertTrue(game.getDiscardPile().get(0).equals(currentPlayedCard));
+        Stack<Card> discardPile = game.getDiscardPile();
+        assertTrue(discardPile.get(0) != null);
+        assertTrue(discardPile.get(discardPile.size() - 1).equals(currentPlayedCard));
 
         // Make sure both players can see 7 cards in the other's hand.
         List<Player> players = game.getPlayers();
@@ -163,19 +164,6 @@ public class TestGame {
         assertEquals(game.playerTwoMove(), null);
         game.setPlayerOnesTurn(true);
         assertEquals(game.playerTwoMove(), null);
-    }
-
-    @Test
-    public void testGame_playerTwosTurn() {
-        Game game = new Game("Test Player");
-        game.setPlayerOnesTurn(true);
-        String message = game.playerTwosTurn("");
-        assertTrue(message.contains("ERROR: Game.playerTwosTurn called during player one's turn. No action taken."));
-
-        game.startGame();
-        game.setPlayerOnesTurn(false);
-        message = game.playerTwosTurn("");
-        assertTrue(message.contains("Player two has discarded a card."));
     }
 
     @Test
