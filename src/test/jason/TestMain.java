@@ -24,18 +24,22 @@ public class TestMain {
     }
 
     @Test
+    // Happy path is only functionally testable.
     public void testMain_validateQuestion() {
         assertEquals(Main.validateQuestion(null, nullQuestionWarning), false);
         assertEquals(Main.validateQuestion("", nullQuestionWarning), false);
         assertEquals(Main.validateQuestion(nonNullQuestion, nullQuestionWarning), true);
     }
 
+
     @Test
+    // Happy path is only functionally testable.
     public void testMain_getUserResponse_yesNo() {
         assertEquals(Main.getUserResponse_yesNo(null), null);
     }
 
     @Test
+    // Happy path is only functionally testable.
     public void testMain_getUserResponse_integer() {
         assertEquals(Main.getUserResponse_integer(null, 1, 2), null);
         assertEquals(Main.getUserResponse_integer(nonNullQuestion, 2, 1), null);
@@ -45,6 +49,7 @@ public class TestMain {
     }
 
     @Test
+    // Happy path is only functionally testable.
     public void testMain_getUserResponse_string() {
         assertEquals(Main.getUserResponse_string(null), null);
     }

@@ -125,7 +125,7 @@ public class TestGame {
         // Make sure both players can see 7 cards in the other's hand.
         List<Player> players = game.getPlayers();
         for (Player p : players) {
-            assertEquals(p.getOtherPlayersHandCount(), 7);
+            assertEquals(p.otherPlayersHandCount, 7);
         }
     }
 
@@ -174,8 +174,8 @@ public class TestGame {
         if(players.size() == 2) {
             Player playerBlue = players.get(0);
             Player playerRed = players.get(1);
-            playerBlue.setChosenColor(Card.BLUE);
-            playerRed.setChosenColor(Card.RED);
+            playerBlue.chosenColor = Card.BLUE;
+            playerRed.chosenColor = Card.RED;
             assertEquals(game.getOtherPlayersChosenColor(playerBlue), Card.RED);
             assertEquals(game.getOtherPlayersChosenColor(playerRed), Card.BLUE);
         } else {

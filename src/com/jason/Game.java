@@ -56,6 +56,7 @@ public class Game {
     private Stack<Card> discardPile;
     private String currentColor;
     private boolean isFirstMove;
+    private static final int MAX_P2_DRAW_LOOP = 100;
     
     public Game(String playerOneName) {
         cvm = new CardValueMap();
@@ -72,8 +73,6 @@ public class Game {
 
     /**
      * Start the game. (Can only be called once.)
-     *
-     * @return the current state of the game for browser population
      */
     public void startGame() { // tested
         if(!isFirstMove) {
@@ -133,7 +132,11 @@ public class Game {
         }
         if(!isFirstMove) {
             if (face.equalsIgnoreCase(Card.WILD) || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                currentColor = getOtherPlayersChosenColor(player);
+                if(!isFirstMove) {
+                    currentColor = getOtherPlayersChosenColor(player);
+                } else {
+                    currentColor = currentPlayedCard.getColor();
+                }
                 if(face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                     for(int i = 0; i < 4; i++) {
                         draw(player);
@@ -148,16 +151,25 @@ public class Game {
     /**
      * Player two's turn.
      */
-    public void playerTwosTurn() { // not really testable - break up?
+    public void playerTwosTurn() { // not unit tested - might only be functionally testable.
         if(isPlayerOnesTurn) {
             Main.out("ERROR: Game.playerTwosTurn called during player one's turn. No action taken.");
         } else {
+            if(player2.otherPlayerForgotToCallCero(player1)) {
+                for(int i = 0; i < 2; i++) {
+                    draw(player1);
+                }
+            }
             currentPlayedCard = playerTwoMove();
             if(currentPlayedCard == null) {
                 Main.out("ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove." +
-                        "No action taken. ");
+                        "No action taken (showstopper).");
             } else {
-                currentColor = player2.getChosenColor(); // might be a wild card
+                if(!isFirstMove) {
+                    currentColor = player2.chosenColor; // could be a wild card if not first move
+                } else {
+                    currentColor = currentPlayedCard.getColor();
+                }
                 discardPile.add(currentPlayedCard);
                 Main.out("Player two has discarded a card. ");
             }
@@ -167,36 +179,53 @@ public class Game {
     /**
      * A player's chance to move.
      *
-     * @return the discarded card
+     * @return the card player two has chosen to discard
      */
-    public Card playerTwoMove() { // tested
+    public Card playerTwoMove() { // *** MORE TESTING NEEDED - possibly functional only ***
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
-            Main.out("ERROR: both deck and discard pile sent to Game.move are empty. No action taken, returned null.");
+            Main.out("ERROR: Game.playerTwoMove - both deck and discard pile are empty. " +
+                    "No action taken, returned null.");
             return null;
         }
         if (isPlayerOnesTurn) {
             Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
             return null;
-        } else {
-            String strategy = player2.getStrategy();
-            switch(strategy) {
-                case Player.STRATEGY_BOLD:
-                    return player2.getHand().getFirstCard(); // just discard first card for debug
-                case Player.STRATEGY_CAUTIOUS:
-                    return player2.getHand().getFirstCard(); // just discard first card for debug
-                case Player.STRATEGY_DUMB:
-                    return player2.getHand().getFirstCard(); // just discard first card for debug
-            }
         }
-        Main.out("ERROR: Game.playerTwoMove fell through with no action taken. Returned null.");
-        return null;
+        Card cardToDiscard = null;
+        // just discard first card for debug
+        return player2.getHand().getFirstCard();
+
+        // Currently under construction:
+//        boolean playerTwoHasDiscarded = false;
+//        int i = 0;
+//        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping
+//            cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard);
+//            if (cardToDiscard == null) {
+//                draw(player2);
+//            } else {
+//                playerTwoHasDiscarded = true;
+//            }
+//            i++;
+//            if(i == (MAX_P2_DRAW_LOOP - 1)) {
+//                Main.out("WARN: Game.playerTwoMove was stopped from falling into an infinite loop " +
+//                        "while trying to find a playable card in the deck. " +
+//                        "Loop aborted at iteration " + (MAX_P2_DRAW_LOOP - 1) + ", null returned.");
+//                return null;
+//            }
+//        }
+//        if(player2.discard(cardToDiscard, currentPlayedCard, false)) { // *** needs to decide callCero value! ***
+//            return cardToDiscard;
+//        } else {
+//            Main.out("Player two attempted an illegal move. This is a showstopper. Returning null.");
+//            return null;
+//        }
     }
 
     public String getOtherPlayersChosenColor(Player player) {  // tested
         if(player.isPlayer2()) {
-            return player1.getChosenColor();
+            return player1.chosenColor;
         } else {
-            return player2.getChosenColor();
+            return player2.chosenColor;
         }
     }
 

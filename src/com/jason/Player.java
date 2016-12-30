@@ -1,5 +1,7 @@
 package com.jason;
 
+import org.junit.Test;
+
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,9 +36,9 @@ public class Player {
     public static final String STRATEGY_DUMB = "Dumb";
     private String strategy;
     private int score;
-    private int otherPlayersHandCount;
+    public int otherPlayersHandCount;
     private boolean ceroCalled;
-    private String chosenColor;
+    public String chosenColor;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
@@ -67,29 +69,65 @@ public class Player {
     }
 
     /**
-     * Instruct the player to discard a card.
+     * Discard a card to the current played card.
      *
-     * @param card The card to discard.
+     * @param card              The card to discard.
+     * @param currentPlayedCard The card to discard.
+     * @param callCero          Whether or not to declare 'Cero!'
+     * @return                  True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean discard(Card card, Card currentPlayedCard) { // tested
-        if(card.getFace().equalsIgnoreCase(Card.WILD) || card.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-            hand.discard(card);
-            return true;
+    public boolean discard(Card card, Card currentPlayedCard, boolean callCero) { // *** NEED TO TEST CALL CERO FUNCTIONALITY ***
+        if(card == null || currentPlayedCard == null) {
+            Main.out("WARN: Player.discard called with either a null card, a null currentPlayedCard, or both. " +
+                    "No action taken, returned false.");
+            return false;
         } else {
-            if(card.isNumberCard()) {
-                if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
-                        card.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
-                    hand.discard(card);
-                    return true;
+            ceroCalled = callCero; // incumbent on the accuracy of Main.main
+            if(card.getFace().equalsIgnoreCase(Card.WILD) || card.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                hand.discard(card);
+                return true;
+            } else {
+                if(card.isNumberCard()) {
+                    if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
+                            card.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
+                        hand.discard(card);
+                        return true;
+                    }
+                } else { // guaranteed to be skip, reverse, or draw two.
+                    if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
+                        hand.discard(card);
+                        return true;
+                    }
                 }
-            } else { // must be skip, reverse, or draw two.
-                if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
-                    hand.discard(card);
+            }
+            Main.out("WARN: Player.discard received an illegal discard choice. No action taken.");
+            return false;
+        }
+    }
+
+    /**
+     * Allow either player to call 'Cero!' on the other player if the other player has not already done so after
+     * discarding penultimate card.
+     *
+     * @param otherPlayer the player to inspect
+     * @return            true if the other player incorrectly forgot to declare 'Cero plus one!', false otherwise.
+     */
+    public boolean otherPlayerForgotToCallCero(Player otherPlayer) { // *** NEEDS TO BE TESTED ***
+        if(isPlayer2()) {
+            // dumb players never check
+            if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
+                return false;
+            } else {
+                // even bold and cautious players sometimes forget (NOT TESTABLE)
+                if (otherPlayer.getHand().getSize() == 1 && !otherPlayer.ceroCalled && Main.getRandomBoolean()) {
                     return true;
                 }
             }
+        } else { // player1
+            if (otherPlayer.getHand().getSize() == 1 && !otherPlayer.ceroCalled) {
+                return true;
+            }
         }
-        Main.out("WARN: Player.discard received an illegal discard choice. No action taken.");
         return false;
     }
 
@@ -163,29 +201,6 @@ public class Player {
     }
 
     /**
-     * Allow either player to call 'Cero!' on the other player if the other player has not already done so after
-     * discarding penultimate card.
-     */
-    void callCero() { // no test needed
-        Main.out("\n(This is where the player will be given the chance to call 'Cero!'.)\n");
-        if (isPlayer2()) {
-            if (hand.getSize() == 1 && Main.getRandomBoolean()) {
-                ceroCalled = true;
-                Main.out("Computer calls 'Cero!'");
-            }
-//        } else { // un-comment out this block to make the game interactive.
-//            if(hand.getSize() == 1) {
-//                boolean validAnswerReceived = false;
-//                boolean answer = Main.askUserYesOrNoQuestion("Would you like to declare 'Cero!' at this time?");
-//                if(answer) {
-//                    ceroCalled = true;
-//                    Main.out("Player one has just declared 'Cero!'.");
-//                }
-//            }
-        }
-    }
-
-    /**
      * @return true if player has called 'Cero!' on the other player, false otherwise.
      */
     boolean isCeroCalled() { // no test needed
@@ -195,8 +210,8 @@ public class Player {
     /**
      * Reset this player's cero called value to false.
      */
-    void resetCeroCalled() { // no test needed
-        ceroCalled = false;
+    void setCeroCalled(boolean ceroCalled) { // no test needed
+        this.ceroCalled = ceroCalled;
     }
 
     public boolean setRandomStrategy() { // tested
@@ -216,8 +231,8 @@ public class Player {
     }
 
     public String getPreferredColor() { // tested
-        if(isPlayer2()) {
-            if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
+        if (isPlayer2()) {
+            if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
                 // return a random number
                 List<String> colors = new ArrayList<>();
                 colors.add(Card.BLUE);
@@ -227,7 +242,7 @@ public class Player {
                 Collections.shuffle(colors);
                 return colors.get(0);
             } else {
-                return(hand.getHighestColor());
+                return (hand.getHighestColor());
             }
         } else {
             // ask the user to provide preferred color
@@ -236,15 +251,52 @@ public class Player {
         }
     }
 
-    public String getChosenColor() {
-        return chosenColor;
-    }
-
-    public void setChosenColor(String chosenColor) {
-        this.chosenColor = chosenColor;
-    }
-
-    public int getOtherPlayersHandCount() {
-        return otherPlayersHandCount;
+    /**
+     * Let the program decide the best card to discard based on its strategy
+     *
+     * @param currentPlayedCard the current played card
+     * @return                  the card to discard, or null if no playable card found.
+     */
+    public Card decidePlayerTwoDiscard(Card currentPlayedCard) {
+        // Debug:
+        Main.out("Player Two is playing with a " + strategy + " strategy.");
+        Card cardToDiscard;
+        switch(strategy) {
+            case Player.STRATEGY_BOLD:
+                // todo
+                return null;
+            case Player.STRATEGY_CAUTIOUS:
+                // todo
+                return null;
+            case Player.STRATEGY_DUMB:
+                // todo
+                return null;
+        }
+        return null;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 package com.jason;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -11,6 +12,9 @@ import java.util.regex.Pattern;
 public class Main {
 
     /*
+        set PATH=[path\to\jdk\bin];%PATH%, e.g.
+        set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH%
+        (must be > java 1.6)
         javac src/com/jason/*.java
         java -cp ./src com.jason.Main
      */
@@ -40,9 +44,11 @@ public class Main {
 //        answer = getUserResponse_integer("Please enter an integer between 0 and 5: ", 0, 5);
 //        out("Your answer: " + answer);
 //
-//        answer = getUserResponse_string("What is your favorite color? ");
+//        answer = getUserResponse_string("Enter any string: ");
 //        out("Your answer: " + answer);
-
+//
+//        answer = getUserResponse_chosenColor();
+//        out("Your answer: " + answer);
 
         Game game = new Game("David Lightman");
         game.startGame();
@@ -206,8 +212,26 @@ public class Main {
      *
      * @return the chosen color.
      */
-    public static String getUserResponse_chosenColor() { // *** NOT TESTED YET ***
-        return null;
+    public static String getUserResponse_chosenColor() { // only functionally testable
+        boolean validAnswerReceived = false;
+        String response = "";
+
+        List<String> validColorChoices = new ArrayList<>();
+        validColorChoices.add(Card.BLUE.toLowerCase());
+        validColorChoices.add(Card.GREEN.toLowerCase());
+        validColorChoices.add(Card.RED.toLowerCase());
+        validColorChoices.add(Card.YELLOW.toLowerCase());
+
+        while(!validAnswerReceived) {
+            outNoReturn("What is your chosen color for the next move? ");
+            response = System.console().readLine();
+            if(validColorChoices.contains(response.toLowerCase())) {
+                validAnswerReceived = true;
+            } else {
+                out(userCorrectionMessage + " Acceptable answers are " + validColorChoices + ".");
+            }
+        }
+        return response;
     }
 
     /**
