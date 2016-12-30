@@ -41,9 +41,9 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_setHand() {
-        Player player = new Player("Set Hand Test", true);
-        player.setHand(cardList);
-        Hand mockHand = player.getHand();
+        Player player2 = new Player("Set Hand Test", true);
+        player2.setHand(cardList);
+        Hand mockHand = player2.getHand();
         List<Card> mockList = mockHand.getAllCards();
         List<Card> classList = classHand.getAllCards();
 
@@ -199,10 +199,58 @@ public class TestPlayer {
         // (Can't test for player2 when strategy is bold or cautious -- result is always random.)
     }
 
-    @Test
-    public void testPlayer_decidePlayerTwoDiscard() {
+    /*
+        cardList.add(new Card(Card.GREEN, Card.THREE, cvm));
+        cardList.add(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        cardList.add(new Card(Card.RED, Card.EIGHT, cvm));
+        cardList.add(new Card(Card.YELLOW, Card.ONE, cvm));
+        cardList.add(new Card(Card.YELLOW, Card.ZERO, cvm));
+        cardList.add(new Card(Card.YELLOW, Card.SIX, cvm));
+     */
 
+    @Test
+    public void testPlayer_getBoldStrategyCard_wild() {
+        Player player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        Card currentPlayedCard = new Card(Card.COLORLESS, Card.WILD, cvm);
+        String currentColor = Card.YELLOW;
+        Card yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
+        assertTrue(player2.getBoldStrategyCard(currentPlayedCard, currentColor).equals(yellowSix));
     }
+
+    @Test
+    public void testPlayer_getBoldStrategyCard_numeric_matchNumber() {
+        Player player2 = new Player("", true);
+
+        Hand hand = new Hand();
+        hand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
+        hand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        hand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
+        hand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
+        hand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        hand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
+        hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        hand.addCard(new Card(Card.YELLOW, Card.THREE, cvm));
+
+        player2.setHand(hand.getAllCards());
+        Card currentPlayedCard = new Card(Card.BLUE, Card.THREE, cvm);
+        String currentColor = Card.BLUE;
+        Card yellowThree = new Card(Card.YELLOW, Card.THREE, cvm);
+        int handSizeBefore = player2.getHand().getSize();
+        assertTrue(player2.getBoldStrategyCard(currentPlayedCard, currentColor).equals(yellowThree));
+        int handSizeAfter = player2.getHand().getSize();
+        assertEquals(handSizeBefore, handSizeAfter);
+
+        // do it again, but ditch the yellow three
+        // now it should favor the blue nine, because it's the next biggest matching color group
+        hand.discard(yellowThree);
+        player2.setHand(hand.getAllCards());
+        Card blueNIne = new Card(Card.BLUE, Card.NINE, cvm);
+        assertTrue(player2.getBoldStrategyCard(currentPlayedCard, currentColor).equals(blueNIne));
+    }
+
+    // public void testPlayer_getBoldStrategyCard_numeric_matchColor() {
 }
 
 

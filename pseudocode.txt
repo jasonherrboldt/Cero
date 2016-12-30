@@ -50,15 +50,15 @@ Player
                             return card1
                         else
                             return card2
-                        if card1 is not null or card2 is not null // must be one or the other
-                            if card1 is not null
-                                return card1
-                            else
-                                return card2
+                    if card1 is not null or card2 is not null
+                        if card1 is not null
+                            return card1
+                        else
+                            return card2
                     if hand has card wild
-                        return wild
+                        return a new wild card
                     if hand has card wild draw four
-                        return wild draw four
+                        return a new wild draw four
             cautious
             dumb
 

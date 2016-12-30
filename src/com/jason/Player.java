@@ -261,26 +261,84 @@ public class Player {
      * Guaranteed by Game.playerTwosTurn not to be called unless the current played card
      * is numeric or wild.
      *
+     * Returned card does not have to be exact card found in hand -- discard happens elsewhere.
+     *
      * @param currentPlayedCard the current played card
      * @param currentColor      the selected color of the last move
      * @return                  the card to discard, or null if no playable card found.
      */
-    public Card decidePlayerTwoDiscard(Card currentPlayedCard, String currentColor) { // *** NEEDS TO BE TESTED ***
+    public Card decidePlayerTwoDiscard(Card currentPlayedCard, String currentColor) { // switch cases can be functionally tested
 
         // Debug:
         Main.out("Player Two is playing with a " + strategy + " strategy.");
 
-        Card cardToDiscard;
         switch(strategy) {
             case Player.STRATEGY_BOLD:
-                // todo
-                return null;
+                return getBoldStrategyCard(currentPlayedCard, currentColor);
             case Player.STRATEGY_CAUTIOUS:
+                // another difference from bold: play the card with the higher face value - don't look for higher color group sizes
+                // and of course, try to discard high non-numeric face cards first
                 // todo
                 return null;
             case Player.STRATEGY_DUMB:
                 // todo
                 return null;
+        }
+        return null;
+    }
+
+    /**
+     * Pick a card from hand based on bold strategy.
+     *
+     * @param currentPlayedCard the current played card
+     * @param currentColor      the current chosen color
+     * @return                  the preferred card, or null if no legal card found
+     */
+    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // *** TESTING IN PROGRESS ***
+        if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+            // return the highest numeric face of currentColor
+            return hand.getHighestFace(currentColor, true);
+
+        } else {
+            // try to match the number
+            Card card1 = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue());
+
+            // try to match the color
+            Card card2 = hand.getHighestFace(currentPlayedCard.getColor(), true);
+
+            // compare the two, return the one with the highest card group
+            if(card1 != null && card2 != null) {
+                if(hand.getColorGroupSize(card1.getColor()) > hand.getColorGroupSize(card2.getColor())) { // *** TESTED ***
+                    return card1;
+                } else {
+                    return card2;
+                }
+            }
+            if(card1 != null || card2 != null) {
+                if(card1 != null) {
+                    return card1;
+                } else {
+                    return card2;
+                }
+            }
+            CardValueMap cvm = new CardValueMap();
+
+            // return the highest non-numeric card from the cpc color group
+            Card highestNonNumericFace = hand.getHighestFace(currentPlayedCard.getColor(), false);
+            if(highestNonNumericFace != null) {
+                return highestNonNumericFace;
+            }
+
+            // return a wild card if present
+            Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+            if(hand.hasCard(wild)) {
+                return wild;
+            }
+            // return a wild draw four card if present
+            Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
+            if(hand.hasCard(wildDrawFour)) {
+                return wildDrawFour;
+            }
         }
         return null;
     }

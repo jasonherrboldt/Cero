@@ -91,6 +91,7 @@ public class Hand {
                 if(c.equals(card)) {
                     index = i;
                 }
+                i++;
             }
             if(index == -1 || index > colorList.size() - 1) {
                 throw new IllegalArgumentException("Card not in hand.");
