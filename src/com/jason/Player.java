@@ -309,24 +309,24 @@ public class Player {
             // compare the two, return the one with the highest card group
             if(card1 != null && card2 != null) {
                 if(hand.getColorGroupSize(card1.getColor()) > hand.getColorGroupSize(card2.getColor())) {
-                    return card1; // *** TESTED ***
+                    return card1; // tested
                 } else {
-                    return card2; // *** TESTED ***
+                    return card2; // tested
                 }
             }
             if(card1 != null || card2 != null) {
                 if(card1 != null) {
-                    return card1; // *** TESTED ***
+                    return card1; // tested
                 } else {
-                    return card2; // *** TESTED ***
+                    return card2; // tested
                 }
             }
             CardValueMap cvm = new CardValueMap();
 
-            // return the highest non-numeric card from the cpc color group
+            // try to return a non-numeric card from the cpc color group
             Card highestNonNumericFace = hand.getHighestFace(currentPlayedCard.getColor(), false);
             if(highestNonNumericFace != null) {
-                return highestNonNumericFace;
+                return highestNonNumericFace; // tested
             }
 
             // return a wild card if present
