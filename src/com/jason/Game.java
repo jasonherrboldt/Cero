@@ -90,12 +90,18 @@ public class Game {
 
             if(!isPlayerOnesTurn) {
                 Main.out("Player two had the first move.");
+
+
+                // ************* this entire block will have to be repeated for all future moves *************
                 if(nonNumericCardReceived(player2) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
                     Main.out("Player two was forbidden from discarding.");
                 } else {
                     playerTwosTurn();
                 }
                 isPlayerOnesTurn = !isPlayerOnesTurn; // only happens here!
+                // ************* this entire block will have to be repeated for all future moves *************
+
+
             } else { // player one's turn
                 if(nonNumericCardReceived(player1) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
                     Main.out("Player one, you were forbidden from discarding. " +
@@ -112,6 +118,8 @@ public class Game {
 
     /**
      * Determines if the player has to react to a non-numeric card move.
+     *
+     * ***** THIS METHOD MUST ALWAYS BE CALLED BEFORE playerTwosTurn TO CATCH AND HANDLE DRAW TWO CARDS. *****
      *
      * @param  player the player who has the current move
      * @return true if a non-numeric card has been received, false otherwise.
@@ -176,6 +184,7 @@ public class Game {
                 }
             }
         } else {
+            // Must be a reverse, skip, or draw two.
             Main.out("Player Two was forbidden from discarding.");
         }
     }

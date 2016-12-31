@@ -14,10 +14,13 @@ public class TestPlayer {
 
     private CardValueMap cvm;
     private Hand classHand;
-    // private Player player;
-
-    // Not instantiated in setup:
     private List<Card> cardList;
+    private Hand getBoldStrategyCard_numeric_hand;
+    private Card blueNine;
+    private Card yellowThree;
+    private Card greenThree;
+    private Card blueFour;
+    private Card getBoldStrategyCard_currentPlayedCard;
 
     @Before
     public void setup() {
@@ -37,6 +40,27 @@ public class TestPlayer {
         cardList.add(new Card(Card.YELLOW, Card.ONE, cvm));
         cardList.add(new Card(Card.YELLOW, Card.ZERO, cvm));
         cardList.add(new Card(Card.YELLOW, Card.SIX, cvm));
+
+
+        getBoldStrategyCard_numeric_hand = new Hand();
+
+        // all legal cards that can match the cpc:
+        blueNine = new Card(Card.BLUE, Card.NINE, cvm);
+        yellowThree = new Card(Card.YELLOW, Card.THREE, cvm);
+        greenThree = new Card(Card.GREEN, Card.THREE, cvm);
+        blueFour = new Card(Card.BLUE, Card.FOUR, cvm);
+
+        getBoldStrategyCard_currentPlayedCard = new Card(Card.BLUE, Card.THREE, cvm);
+
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.THREE, cvm));
     }
 
     @Test
@@ -199,15 +223,6 @@ public class TestPlayer {
         // (Can't test for player2 when strategy is bold or cautious -- result is always random.)
     }
 
-    /*
-        cardList.add(new Card(Card.GREEN, Card.THREE, cvm));
-        cardList.add(new Card(Card.RED, Card.DRAW_TWO, cvm));
-        cardList.add(new Card(Card.RED, Card.EIGHT, cvm));
-        cardList.add(new Card(Card.YELLOW, Card.ONE, cvm));
-        cardList.add(new Card(Card.YELLOW, Card.ZERO, cvm));
-        cardList.add(new Card(Card.YELLOW, Card.SIX, cvm));
-     */
-
     @Test
     public void testPlayer_getBoldStrategyCard_wild() {
         Player player2 = new Player("", true);
@@ -222,35 +237,40 @@ public class TestPlayer {
     public void testPlayer_getBoldStrategyCard_numeric_matchNumber() {
         Player player2 = new Player("", true);
 
-        Hand hand = new Hand();
-        hand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
-        hand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
-        hand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
-        hand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
-        hand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
-        hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        hand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
-        hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        hand.addCard(new Card(Card.YELLOW, Card.THREE, cvm));
-
-        player2.setHand(hand.getAllCards());
-        Card currentPlayedCard = new Card(Card.BLUE, Card.THREE, cvm);
+        // the best card to pick at the moment is the yellow three, since it has the largest matching color group
+        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
         String currentColor = Card.BLUE;
-        Card yellowThree = new Card(Card.YELLOW, Card.THREE, cvm);
+        // make sure no actual discarding happens during call to getBoldStrategyCard (handled elsewhere)
         int handSizeBefore = player2.getHand().getSize();
-        assertTrue(player2.getBoldStrategyCard(currentPlayedCard, currentColor).equals(yellowThree));
+        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(yellowThree));
+        int handSizeAfter = player2.getHand().getSize();
+        assertEquals(handSizeBefore, handSizeAfter);
+    }
+
+    @Test
+    public void testPlayer_getBoldStrategyCard_numeric_matchColor() {
+        Player player2 = new Player("", true);
+        String currentColor = Card.BLUE;
+        // ditch the yellow three
+        // now it should favor the blue nine, because it's the next biggest matching color group
+        getBoldStrategyCard_numeric_hand.discard(yellowThree);
+        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
+        int handSizeBefore = player2.getHand().getSize();
+        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(blueNine));
         int handSizeAfter = player2.getHand().getSize();
         assertEquals(handSizeBefore, handSizeAfter);
 
-        // do it again, but ditch the yellow three
-        // now it should favor the blue nine, because it's the next biggest matching color group
-        hand.discard(yellowThree);
-        player2.setHand(hand.getAllCards());
-        Card blueNIne = new Card(Card.BLUE, Card.NINE, cvm);
-        assertTrue(player2.getBoldStrategyCard(currentPlayedCard, currentColor).equals(blueNIne));
+        // now ditch the green three and the blue nine, leaving no other legal choice but the blue four
+        getBoldStrategyCard_numeric_hand.discard(greenThree);
+        getBoldStrategyCard_numeric_hand.discard(blueNine);
+        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
+        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(blueFour));
     }
 
-    // public void testPlayer_getBoldStrategyCard_numeric_matchColor() {
+    @Test
+    public void testPlayer_getBoldStrategyCard_nonNumeric() {
+
+    }
 }
 
 

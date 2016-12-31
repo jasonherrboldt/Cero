@@ -308,17 +308,17 @@ public class Player {
 
             // compare the two, return the one with the highest card group
             if(card1 != null && card2 != null) {
-                if(hand.getColorGroupSize(card1.getColor()) > hand.getColorGroupSize(card2.getColor())) { // *** TESTED ***
-                    return card1;
+                if(hand.getColorGroupSize(card1.getColor()) > hand.getColorGroupSize(card2.getColor())) {
+                    return card1; // *** TESTED ***
                 } else {
-                    return card2;
+                    return card2; // *** TESTED ***
                 }
             }
             if(card1 != null || card2 != null) {
                 if(card1 != null) {
-                    return card1;
+                    return card1; // *** TESTED ***
                 } else {
-                    return card2;
+                    return card2; // *** TESTED ***
                 }
             }
             CardValueMap cvm = new CardValueMap();
