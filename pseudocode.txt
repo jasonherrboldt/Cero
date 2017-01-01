@@ -32,41 +32,117 @@ Main
 
 Player
 
-    public Card decidePlayerTwoDiscard(Card currentPlayedCard, String currentColor)
-        switch strategy
-            bold
-                if cpc is wild
-                    return highest numeric face of currentColor
+    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor)
+        if cpc is wild
+            return highest numeric face of currentColor
+        else
+            // try to match the number
+            let card1 be the number from the largest color group that matches cpc.color
+
+            // try to match the color
+            let card2 be the highest numeric face of cpc.color
+
+            // compare the two, return the one with the highest card group
+            if card1 is not null and card2 is not null
+                if hand.getColorGroupSize(card1.color) > hand.getColorGroupSize(card1.color)
+                    return card1
                 else
-                    // try to match the number
-                    let card1 be the number from the largest color group that matches cpc.color
+                    return card2
 
-                    // try to match the color
-                    let card2 be the highest numeric face of cpc.color
+            if card1 is not null or card2 is not null
+                if card1 is not null
+                    return card1
+                else
+                    return card2
 
-                    // compare the two, return the one with the highest card group
-                    if card1 is not null and card2 is not null
-                        if hand.getColorGroupSize(card1.color) > hand.getColorGroupSize(card1.color)
-                            return card1
-                        else
-                            return card2
-                    if card1 is not null or card2 is not null
-                        if card1 is not null
-                            return card1
-                        else
-                            return card2
-                    if hand has card wild
-                        return a new wild card
-                    if hand has card wild draw four
-                        return a new wild draw four
-            cautious
-            dumb
+            if hand has card wild
+                return a new wild card
+
+            if hand has card wild draw four
+                return a new wild draw four
 
 
+    public Card getCautiousStrategyCard(Card currentPlayedCard, String currentColor)
+        if cpc is wild
+            return highest non-numeric face of current color
+        else
+            if hand has card wild
+                return a new wild card
+
+            if hand has card wild draw four
+                return a new wild draw four
+
+            // try to match the number
+            let card1 be the number from the largest color group that matches cpc.color
+
+            // try to match the color
+            let card2 be the highest non-numeric face of cpc.color
+
+            // compare the two, return the one with the highest value
+            if card1 is not null and card2 is not null
+                if hand.getHighestFace(color, false) > hand.getHighestFace(color, false)
+                    return card1
+                else
+                    return card2
+
+            if card1 is not null or card2 is not null
+                if card1 is not null
+                    return card1
+                else
+                    return card2
+
+
+
+public boolean skipPlayersTurn(player)
+	player has to skip its turn and potentially draw cards if
+	    cpc is nn and lpc is n
+	player does not have to draw cards or skip if
+	    cpc is numeric, lpc is anything
 
 
 
 
+
+
+        // stop player from reacting to non-numeric cards that it played last time  
+        // as if they were discarded by player one.
+        // if(currentPlayedCard.equals(player.getMyLastPlayedCard())) {
+        if(currentPlayedCard.isNumberCard()) {
+            return false;
+        }
+        if(!currentPlayedCard.isNumberCard() && !player.getMyLastPlayedCard().isNumberCard()) {
+            // act as if a numeric card was received.
+            return !player.getMyLastPlayedCard().equals(new Card(Card.COLORLESS, Card.WILD, cvm));
+        } else {
+            String face = currentPlayedCard.getFace();
+            if (face.equalsIgnoreCase(Card.SKIP)) {
+                return true;
+            }
+            if (face.equalsIgnoreCase(Card.REVERSE)) {
+                return true;
+            }
+            if (face.equalsIgnoreCase(Card.DRAW_TWO)) {
+                for(int i = 0; i < 2; i++) {
+                    draw(player);
+                }
+                return true;
+            }
+            if(!isFirstMove) { // don't need to check for this...
+                if (face.equalsIgnoreCase(Card.WILD) || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                    currentColor = getOtherPlayersChosenColor(player);
+                } else {
+                    currentColor = currentPlayedCard.getColor();
+                }
+                if(face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                    for(int i = 0; i < 4; i++) {
+                        draw(player);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        // return false;
 
 
 
@@ -131,23 +207,6 @@ public GameState startGame()
 			let gameStateMessage = playerTwosTurn(gameStateMessage)
 	populate gameState's fields
 	return gameState
-
-
-public boolean nonNumericCardReceived(player)
-	if cpc is skip
-		return true
-	if cpc is reverse
-		return true
-	if cpc is draw two
-		make player draw two cards
-		return true
-	if isFirstMove = false
-		if cpc is wild or cpc is wild draw four
-			let the current color be the other player's chosen color
-			if cpc is wild draw four
-				make player draw four cards
-			return true
-	return false
 
 
 

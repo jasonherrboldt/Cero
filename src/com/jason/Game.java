@@ -17,19 +17,14 @@ public class Game {
     /*
      * TODO:
      *
-     *    Space out the console output for computer steps; make it look like the
-     *    computer is thinking about what its doing, instead of just showing a dump
-     *    of steps to the user. Might be fun to have it complain if it has to draw more
-     *    than three cards.
+     *    MUST-HAVES:
      *
-     *    Once the user can play the computer, set up another game so that the computer
-     *    can play itself. Let each player pick a random strategy each time, and let them
-     *    play like 10k games. Each time a game is won, the game.play method will return
-     *    an object containing the winning player and the strategy it used to win. Whatever
-     *    class calls game.play will take that information, collate it, and display it to the
-     *    user after the 10k games have finished.
+     *    Automatically draw cards for player one when it receives a draw two or draw four card.
      *
-     *    Servlet-like actions:
+     *    Must call player1.setMyLastPlayedCard(currentPlayedCard); for player one's turn to prevent unnecessary
+     *    automatic draws and turn skips for non-numeric cards. (I think this would happen in game.discard.)
+     *
+     *    Required Game methods:
      *
      *        game.startGame: Shuffles deck, deals first hand, pops first card off of deck.
      *        Picks a random first player. Allows player2 to discard if its turn first. Returns
@@ -45,6 +40,23 @@ public class Game {
      *        returns gameState object to servlet. (Must handle incorrectly discarded cards.)
      *
      *        game.draw: ads new card to hand, returns gameState object to servlet.
+     *
+     *
+     *
+     *    NICE-TO-HAVES:
+     *
+     *    Space out the console output for computer steps; make it look like the
+     *    computer is thinking about what its doing, instead of just showing a dump
+     *    of steps to the user. Might be fun to have it complain if it has to draw more
+     *    than three cards.
+     *
+     *    Once the user can play the computer, set up another game so that the computer
+     *    can play itself. Let each player pick a random strategy each time, and let them
+     *    play like 10k games. Each time a game is won, the game.play method will return
+     *    an object containing the winning player and the strategy it used to win. Whatever
+     *    class calls game.play will take that information, collate it, and display it to the
+     *    user after the 10k games have finished.
+     *
      */
 
     private Deck deck;
@@ -93,7 +105,7 @@ public class Game {
 
 
                 // ************* this entire block will have to be repeated for all future moves *************
-                if(nonNumericCardReceived(player2) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                if(skipPlayersTurn(player2) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
                     Main.out("Player two was forbidden from discarding.");
                 } else {
                     playerTwosTurn();
@@ -103,7 +115,7 @@ public class Game {
 
 
             } else { // player one's turn
-                if(nonNumericCardReceived(player1) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                if(skipPlayersTurn(player1)) { // && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {  ****** NO! handled by nonNumericCardReceived
                     Main.out("Player one, you were forbidden from discarding. " +
                             "The first move switches to player two.");
                     isPlayerOnesTurn = false;
@@ -117,50 +129,110 @@ public class Game {
     }
 
     /**
-     * Determines if the player has to react to a non-numeric card move.
+     * Determines if the player has to react to a non-numeric card move. Will return false if the current
+     * played card is the same as the last card the player discarded - this is to prevent endless merry-go-rounds
+     * of non-numeric discards.
      *
-     * ***** THIS METHOD MUST ALWAYS BE CALLED BEFORE playerTwosTurn TO CATCH AND HANDLE DRAW TWO CARDS. *****
+     * ***** THIS METHOD MUST ALWAYS BE CALLED BEFORE Game.playerTwosTurn TO HANDLE NON-NUMERIC CARDS. *****
      *
      * @param  player the player who has the current move
-     * @return true if a non-numeric card has been received, false otherwise.
+     * @return true if a non-numeric card has been received, false otherwise. Also return false if (see above).
      */
-    public boolean nonNumericCardReceived(Player player) { // tested
-        String face = currentPlayedCard.getFace();
-        if (face.equalsIgnoreCase(Card.SKIP)) {
-            return true;
-        }
-        if (face.equalsIgnoreCase(Card.REVERSE)) {
-            return true;
-        }
-        if (face.equalsIgnoreCase(Card.DRAW_TWO)) {
-            for(int i = 0; i < 2; i++) {
-                draw(player);
-            }
-            return true;
-        }
-        if(!isFirstMove) {
-            if (face.equalsIgnoreCase(Card.WILD) || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                if(!isFirstMove) {
-                    currentColor = getOtherPlayersChosenColor(player);
-                } else {
-                    currentColor = currentPlayedCard.getColor();
-                }
-                if(face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    for(int i = 0; i < 4; i++) {
+    public boolean skipPlayersTurn(Player player) { // *** NEEDS TESTING ***
+            if(isFirstMove) {
+                if(!currentPlayedCard.isNumberCard()) {
+                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
+                        draw(player);
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                Card lastPlayedCard = player.getMyLastPlayedCard();
+                Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+
+                boolean lastPlayedCardIsNumeric = lastPlayedCard.isNumberCard();
+                boolean lastPlayedCardIsWild = lastPlayedCard.equals(wild);
+                boolean lastPlayedCardIsNonNumericAndNonWild = !lastPlayedCard.isNumberCard() && !lastPlayedCard.equals(wild);
+
+                boolean currentPlayedCardIsNumeric = currentPlayedCard.isNumberCard();
+                boolean currentPlayedCardIsWild = currentPlayedCard.equals(wild);
+                boolean currentPlayedCardIsNonNumericAndNonWild = !currentPlayedCard.isNumberCard()
+                        && !currentPlayedCard.equals(wild);
+
+                // todo: come back later and fold the below conditionals together so as to prettify them a bit:
+                // (Leaving them alone for now because I nearly lost my mind trying to design the algorithm.)
+
+                if (lastPlayedCardIsNumeric && currentPlayedCardIsNumeric) {
+                    return false; // do not skip player's turn
+                }
+                if (lastPlayedCardIsWild && currentPlayedCardIsNumeric) {
+                    return false; // do not skip player's turn
+                }
+                if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
+                    return false; // do not skip player's turn
+                }
+
+                if (lastPlayedCardIsNumeric && currentPlayedCardIsNonNumericAndNonWild) {
+                    // draw as needed and skip player's turn
+                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                        draw(player);
+                        draw(player);
+                        return true;
+                    }
+                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                        draw(player);
+                        draw(player);
+                        return true;
                     }
                 }
+                if (lastPlayedCardIsWild && currentPlayedCardIsNonNumericAndNonWild) {
+                    // draw as needed and skip player's turn
+                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                        draw(player);
+                        draw(player);
+                        return true;
+                    }
+                    if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                        draw(player);
+                        draw(player);
+                        return true;
+                    }
+                }
+
+                if (lastPlayedCardIsNumeric && currentPlayedCardIsWild) {
+                    player.chosenColor = getOtherPlayersChosenColor(player);
+                    return false; // do not skip player's turn
+                }
+                if (lastPlayedCardIsWild && currentPlayedCardIsWild) {
+                    player.chosenColor = getOtherPlayersChosenColor(player);
+                    return false; // do not skip player's turn
+                }
+
+                if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNumeric) {
+                    Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
+                            "No action taken, returned true.");
+                    return true;
+                }
+                if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsWild) {
+                    Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
+                            "No action taken, returned true.");
+                    return true;
+                }
+
+                Main.out("WARN: logic in Game.skipPlayersTurn fell through to the bottom. No action taken, returning true.");
                 return true;
             }
-        }
-        return false;
+        return true;
     }
 
     /**
      * Player two's turn.
      */
     public void playerTwosTurn() { // not unit tested - might only be functionally testable.
-        if(!nonNumericCardReceived(player2) || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+        if(!skipPlayersTurn(player2) || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) { // 2nd conditional unnecessary? ****************
             if(isPlayerOnesTurn) {
                 Main.out("ERROR: Game.playerTwosTurn called during player one's turn. No action taken.");
             } else {
@@ -170,6 +242,7 @@ public class Game {
                     }
                 }
                 currentPlayedCard = playerTwoMove();
+                player2.setMyLastPlayedCard(currentPlayedCard);
                 if(currentPlayedCard == null) {
                     Main.out("ERROR: Game.playerTwoMove returned a null card to Game.playerTwosFirstMove." +
                             "No action taken (showstopper).");
@@ -420,6 +493,10 @@ public class Game {
         return isFirstMove;
     }
 
+    public void setIsFirstMove(boolean isFirstMove) {
+        this.isFirstMove = isFirstMove;
+    }
+
     public String getCurrentColor() {
         return currentColor;
     }
@@ -439,4 +516,14 @@ public class Game {
     public boolean isPlayerOnesTurn() {
         return isPlayerOnesTurn;
     }
+
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
+
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
+    }
+
+
 }

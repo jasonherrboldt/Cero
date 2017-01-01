@@ -12,13 +12,23 @@ import static org.junit.Assert.*;
 public class TestGame {
 
     private CardValueMap cvm;
-    private Player player;
+    private Player player1;
+    private Player player2;
     private List<Card> hand;
+
+    private Card numeric;
+    private Card wild;
+    private Card nonNumericAndNonWild;
 
     @Before
     public void setup() {
+        player1 = new Player("Player One", false);
+        player2 = new Player("Player Two", true);
         cvm = new CardValueMap();
 
+        numeric = new Card(Card.RED, Card.SEVEN, cvm);
+        wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+        nonNumericAndNonWild = new Card(Card.GREEN, Card.SKIP, cvm);
     }
 
     @Test
@@ -41,18 +51,17 @@ public class TestGame {
     @Test
     public void testGame_draw_nonEmptyDeck() {
         Game game = new Game("");
-        player = new Player("Draw Non-Empty Deck Test", false);
         hand = new ArrayList<>();
         hand.add(new Card(Card.GREEN, Card.ZERO, cvm));
-        player.setHand(hand);
-        assertEquals(player.getHand().getSize(), 1);
+        player1.setHand(hand);
+        assertEquals(player1.getHand().getSize(), 1);
 
         Stack<Card> discardPile = new Stack<>();
         game.setDiscardPile(discardPile);
 
-        assertEquals(player.getHand().getSize(), 1);
-        game.draw(player);
-        assertEquals(player.getHand().getSize(), 2);
+        assertEquals(player1.getHand().getSize(), 1);
+        game.draw(player1);
+        assertEquals(player1.getHand().getSize(), 2);
     }
 
     @Test
@@ -60,11 +69,10 @@ public class TestGame {
         Game game = new Game("");
 
         // Give the game a player with a hand of one card.
-        player = new Player("Draw Empty Deck Test", false);
         hand = new ArrayList<>();
         hand.add(new Card(Card.GREEN, Card.ZERO, cvm));
-        player.setHand(hand);
-        assertEquals(player.getHand().getSize(), 1);
+        player1.setHand(hand);
+        assertEquals(player1.getHand().getSize(), 1);
 
         // Give the game a discard pile of three cards.
         Stack<Card> discardPile = new Stack<>();
@@ -81,10 +89,10 @@ public class TestGame {
         assertEquals(game.getDeck().getDeckSize(), 0);
 
         // Try to draw from an empty deck.
-        game.draw(player);
+        game.draw(player1);
 
         // Player should now have two cards instead of one.
-        assertEquals(player.getHand().getSize(), 2);
+        assertEquals(player1.getHand().getSize(), 2);
 
         // Deck should now have 2 cards (3 from the discard pile minus one for the draw).
         assertEquals(game.getDeck().getDeckSize(), 2);
@@ -108,7 +116,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_gameObject() {
-        Game game = new Game("Test Player");
+        Game game = new Game("");
 
         // Make sure the isFirstMove indicator is getting updated.
         assertTrue(game.isFirstMove());
@@ -130,26 +138,61 @@ public class TestGame {
     }
 
     @Test
-    public void testGame_nonNumericCardReceived() {
-        Game game = new Game("Test Player");
-        player = new Player("Non Numeric Card Received Test", false);
-        Card numericCard = new Card(Card.GREEN, Card.ONE, cvm);
-        List<Card> hand = new ArrayList<>();
-        hand.add(numericCard);
-        player.setHand(hand);
+    public void testGame_skipPlayersTurn_0() {
+        // very first turn
+        Game game = new Game("");
+        game.setPlayerOnesTurn(true);
+        game.setCurrentPlayedCard(numeric);
+        assertFalse(game.skipPlayersTurn(player1));
 
-        game.setCurrentPlayedCard(numericCard);
-        assertFalse(game.nonNumericCardReceived(player));
+        game.setCurrentPlayedCard(nonNumericAndNonWild);
+        assertTrue(game.skipPlayersTurn(player1));
+    }
 
-        Card nonNumericCard = new Card(Card.RED, Card.DRAW_TWO, cvm);
-        game.setCurrentPlayedCard(nonNumericCard);
-        assertTrue(game.nonNumericCardReceived(player));
+    @Test
+    public void testGame_skipPlayersTurn_1() {
+        /*
+        if(lastPlayedCardIsNumeric && currentPlayedCardIsNumeric) {
+            return false; // do not skip player's turn
+        }
+        */
+        Game game = new Game("");
+        game.setIsFirstMove(false);
+        game.setPlayerOnesTurn(false);
+        player2.setMyLastPlayedCard(numeric);
+        game.setPlayer2(player2);
+        game.setCurrentPlayedCard(numeric);
+
+        assertFalse(game.skipPlayersTurn(player2));
+
+        /*
+        if(lastPlayedCardIsWild && currentPlayedCardIsNumeric) {
+            return false; // do not skip player's turn
+        }
+        */
+
+        game.setPlayerOnesTurn(false);
+        player2.setMyLastPlayedCard(wild);
+        game.setPlayer2(player2);
+        game.setCurrentPlayedCard(numeric);
+        assertFalse(game.skipPlayersTurn(player2));
+
+        /*
+        if(lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
+            return false; // do not skip player's turn
+        }
+        */
+        game.setPlayerOnesTurn(false);
+        player2.setMyLastPlayedCard(nonNumericAndNonWild);
+        game.setPlayer2(player2);
+        game.setCurrentPlayedCard(nonNumericAndNonWild);
+        assertFalse(game.skipPlayersTurn(player2));
 
     }
 
     @Test
     public void testGame_playerTwoMove() {
-        Game game = new Game("Test Player");
+        Game game = new Game("");
 
         game.startGame();
         game.setPlayerOnesTurn(false);
@@ -168,7 +211,9 @@ public class TestGame {
 
     @Test
     public void testGame_getOtherPlayersChosenColor() {
-        Game game = new Game("Test Player");
+        player1.setMyLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
+        player2.setMyLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
+        Game game = new Game("");
         game.startGame();
         List<Player> players = game.getPlayers();
         if(players.size() == 2) {

@@ -153,7 +153,7 @@ public class Hand {
      * Get the highest value face card of a specified color.
      *
      * @param color     The color to search.
-     * @param numeric   Whether or not the search should include non-numeric cards.
+     * @param numeric   If the search should include only numeric cards.
      * @return          The highest value card of the given color, or null if no card found.
      */
     public Card getHighestFace(String color, boolean numeric) { // tested

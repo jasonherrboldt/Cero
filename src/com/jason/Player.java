@@ -37,6 +37,12 @@ public class Player {
     public int otherPlayersHandCount;
     private boolean ceroCalled;
     public String chosenColor;
+    private Card myLastPlayedCard;
+
+    // for strategy getters:
+    private Card wild;
+    Card wildDrawFour;
+    private CardValueMap cvm;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
@@ -45,6 +51,12 @@ public class Player {
         score = 0;
         otherPlayersHandCount = 0;
         ceroCalled = false;
+        myLastPlayedCard = null;
+
+        // for strategy getters:
+        cvm = new CardValueMap();
+        wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+        wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
     }
 
     /**
@@ -276,8 +288,6 @@ public class Player {
             case Player.STRATEGY_BOLD:
                 return getBoldStrategyCard(currentPlayedCard, currentColor);
             case Player.STRATEGY_CAUTIOUS:
-                // another difference from bold: play the card with the higher face value - don't look for higher color group sizes
-                // and of course, try to discard high non-numeric face cards first
                 // todo
                 return null;
             case Player.STRATEGY_DUMB:
@@ -287,20 +297,17 @@ public class Player {
         return null;
     }
 
-    // *********** Abstract away the guts of the bold strategy—they can be reused by the cautious strategy. ***********
-
     /**
-     * Pick a card from hand based on bold strategy.
+     * Pick a card from hand based on the bold strategy.
      *
      * @param currentPlayedCard the current played card
      * @param currentColor      the current chosen color
      * @return                  the preferred card, or null if no legal card found
      */
-    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // *** TESTING IN PROGRESS ***
+    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // tested
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
             return hand.getHighestFace(currentColor, true); // tested
-
         } else {
             // try to match the number
             Card card1 = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue());
@@ -323,7 +330,6 @@ public class Player {
                     return card2; // tested
                 }
             }
-            CardValueMap cvm = new CardValueMap();
 
             // try to return a non-numeric card from the cpc color group
             Card highestNonNumericFace = hand.getHighestFace(currentPlayedCard.getColor(), false);
@@ -332,18 +338,56 @@ public class Player {
             }
 
             // return a wild card if present
-            Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
             if(hand.hasCard(wild)) {
                 return wild; // tested
             }
             // return a wild draw four card if present
-            Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
             if(hand.hasCard(wildDrawFour)) {
                 return wildDrawFour; // tested
             }
         }
         return null; // tested
     }
+
+    /**
+     * Pick a card from hand based on the cautious strategy.
+     *
+     * Differences from bold strategy:
+     *
+     *     try to discard high non-numeric face cards before anything else (either colorless or not)
+     *
+     *     if a cpc can be matched both by color and by number, play the card with the higher numeric value first -
+     *     don't look for higher color group sizes
+     *
+     * @param currentPlayedCard the current played card
+     * @param currentColor      the current chosen color
+     * @return                  the preferred card, or null if no legal card found
+     */
+    public Card getCautiousStrategyCard(Card currentPlayedCard, String currentColor) { // *** TESTING IN PROGRESS ***
+        if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+            // return the highest non-numeric face of currentColor
+            return hand.getHighestFace(currentColor, false);
+        } else {
+            if(hand.hasCard(wild)) {
+                return wild;
+            }
+            if(hand.hasCard(wildDrawFour)) {
+                return wildDrawFour;
+            }
+        }
+
+
+        return null;
+    }
+
+    public Card getMyLastPlayedCard() {
+        return myLastPlayedCard;
+    }
+
+    public void setMyLastPlayedCard(Card myLastPlayedCard) {
+        this.myLastPlayedCard = myLastPlayedCard;
+    }
+
 }
 
 
