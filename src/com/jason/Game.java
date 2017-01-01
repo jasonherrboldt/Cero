@@ -138,16 +138,17 @@ public class Game {
      * @param  player the player who has the current move
      * @return true if a non-numeric card has been received, false otherwise. Also return false if (see above).
      */
-    public boolean skipPlayersTurn(Player player) { // *** NEEDS TESTING ***
+    public boolean skipPlayersTurn(Player player) { // *** TESTING IN PROGRESS ***
             if(isFirstMove) {
                 if(!currentPlayedCard.isNumberCard()) {
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
                         draw(player);
-                        return true;
+                        return true; // tested
                     }
+                    return true; // tested
                 } else {
-                    return false;
+                    return false; // tested
                 }
             } else {
                 Card lastPlayedCard = player.getMyLastPlayedCard();
@@ -166,26 +167,33 @@ public class Game {
                 // (Leaving them alone for now because I nearly lost my mind trying to design the algorithm.)
 
                 if (lastPlayedCardIsNumeric && currentPlayedCardIsNumeric) {
-                    return false; // do not skip player's turn
+                    // do not skip player's turn
+                    return false; // tested
                 }
                 if (lastPlayedCardIsWild && currentPlayedCardIsNumeric) {
-                    return false; // do not skip player's turn
+                    // do not skip player's turn
+                    return false; // tested
                 }
                 if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
-                    return false; // do not skip player's turn
+                    // do not skip player's turn
+                    return false; // tested
                 }
+
+
 
                 if (lastPlayedCardIsNumeric && currentPlayedCardIsNonNumericAndNonWild) {
                     // draw as needed and skip player's turn
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
                         draw(player);
-                        return true;
+                        return true; // tested
                     }
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                         draw(player);
                         draw(player);
-                        return true;
+                        draw(player);
+                        draw(player);
+                        return true; // tested
                     }
                 }
                 if (lastPlayedCardIsWild && currentPlayedCardIsNonNumericAndNonWild) {
@@ -193,39 +201,51 @@ public class Game {
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
                         draw(player);
-                        return true;
+                        return true; // tested
                     }
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                         draw(player);
                         draw(player);
-                        return true;
+                        draw(player);
+                        draw(player);
+                        return true; // tested
                     }
                 }
 
+
+
+
                 if (lastPlayedCardIsNumeric && currentPlayedCardIsWild) {
                     player.chosenColor = getOtherPlayersChosenColor(player);
-                    return false; // do not skip player's turn
+                    // do not skip player's turn
+                    return false; // tested
                 }
                 if (lastPlayedCardIsWild && currentPlayedCardIsWild) {
                     player.chosenColor = getOtherPlayersChosenColor(player);
-                    return false; // do not skip player's turn
+                    // do not skip player's turn
+                    return false; // tested
                 }
+
+
+
 
                 if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNumeric) {
                     Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
                             "No action taken, returned true.");
-                    return true;
+                    return true; // tested
                 }
                 if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsWild) {
                     Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
                             "No action taken, returned true.");
-                    return true;
+                    return true; // tested
                 }
+
+
+
 
                 Main.out("WARN: logic in Game.skipPlayersTurn fell through to the bottom. No action taken, returning true.");
                 return true;
             }
-        return true;
     }
 
     /**
