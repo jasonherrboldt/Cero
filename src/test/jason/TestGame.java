@@ -129,6 +129,7 @@ public class TestGame {
 
         // Make sure the current played card is correctly reflected everywhere.
         Card currentPlayedCard = game.getCurrentPlayedCard();
+        game.setTestStartGame(false);
         assertEquals(game.getCurrentColor(), currentPlayedCard.getColor());
         Stack<Card> discardPile = game.getDiscardPile();
         assertTrue(discardPile.get(0) != null);
@@ -146,6 +147,7 @@ public class TestGame {
         // very first turn
         Game game = new Game("");
         game.setIsFirstMove(true);
+        game.setTestStartGame(true);
         game.startGame();
 
         game.setCurrentPlayedCard(numeric);

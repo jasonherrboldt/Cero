@@ -69,7 +69,8 @@ public class Game {
     private String currentColor;
     private boolean isFirstMove;
     private static final int MAX_P2_DRAW_LOOP = 100;
-    
+    boolean testStartGame;
+
     public Game(String playerOneName) {
         cvm = new CardValueMap();
         deck = new Deck();
@@ -81,6 +82,7 @@ public class Game {
         discardPile = new Stack<>();
         currentColor = "";
         isFirstMove = true;
+        testStartGame = false;
     }
 
     /**
@@ -92,13 +94,12 @@ public class Game {
         } else {
             deck.shuffle();
             dealHands();
-            currentPlayedCard = verifyFirstCard(deck.popCard()); // comment out when testing (see below)
-
-            // for testing only!
-            // uncomment out when testing testGame.testGame_skipPlayersTurn_0
-            // and comment out line above
-            // currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
-            // setPlayerOnesTurn(true);
+            if(testStartGame) {
+                 currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
+                 setPlayerOnesTurn(true);
+            } else {
+                currentPlayedCard = verifyFirstCard(deck.popCard());
+            }
 
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
@@ -557,6 +558,10 @@ public class Game {
 
     public void setPlayer2(Player player2) {
         this.player2 = player2;
+    }
+
+    public void setTestStartGame(boolean testStartGame) {
+        this.testStartGame = testStartGame;
     }
 
 
