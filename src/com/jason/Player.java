@@ -287,6 +287,8 @@ public class Player {
         return null;
     }
 
+    // *********** Abstract away the guts of the bold strategy—they can be reused by the cautious strategy. ***********
+
     /**
      * Pick a card from hand based on bold strategy.
      *
@@ -340,7 +342,7 @@ public class Player {
                 return wildDrawFour; // tested
             }
         }
-        return null;
+        return null; // tested
     }
 }
 

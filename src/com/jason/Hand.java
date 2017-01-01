@@ -111,15 +111,18 @@ public class Hand {
         if(card != null) {
             boolean cardFound = false;
             List<Card> colorList = getColorList(card.getColor());
-            for(Card c : colorList) {
-                if(card.equals(c)) {
-                    cardFound = true;
+            if(colorList != null) {
+                for(Card c : colorList) {
+                    if(card.equals(c)) {
+                        cardFound = true;
+                    }
                 }
+                return cardFound;
             }
-            return cardFound;
         } else {
             throw new IllegalArgumentException("ERROR: null card handed to hasCard.");
         }
+        return false;
     }
 
     /**

@@ -238,6 +238,22 @@ public class TestPlayer {
     }
 
     @Test
+    public void testPlayer_getBoldStrategyCard_null() {
+        Player player2 = new Player("", true);
+        List<Card> cards = new ArrayList<>();
+        Card redOne = new Card(Card.RED, Card.ONE, cvm);
+        Card blueTwo = new Card(Card.BLUE, Card.TWO, cvm);
+        Card greenThree = new Card(Card.GREEN, Card.THREE, cvm);
+        cards.add(redOne);
+        cards.add(blueTwo);
+        cards.add(greenThree);
+        player2.setHand(cards);
+        Card currentPlayedCard = new Card(Card.YELLOW, Card.SIX, cvm);
+        String currentColor = Card.YELLOW;
+        assertEquals(player2.getBoldStrategyCard(currentPlayedCard, currentColor), null);
+    }
+
+    @Test
     public void testPlayer_getBoldStrategyCard_numeric_matchNumber() {
         Player player2 = new Player("", true);
         // the best card to pick at the moment is the yellow three, since it has the largest matching color group
