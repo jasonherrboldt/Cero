@@ -69,7 +69,10 @@ public class Game {
     private String currentColor;
     private boolean isFirstMove;
     private static final int MAX_P2_DRAW_LOOP = 100;
-    boolean testStartGame;
+
+    // *************** get this garbage out of here. ***************
+    private boolean testStartGame;
+    // *************** get this garbage out of here. ***************
 
     public Game(String playerOneName) {
         cvm = new CardValueMap();
@@ -82,7 +85,10 @@ public class Game {
         discardPile = new Stack<>();
         currentColor = "";
         isFirstMove = true;
+
+        // *************** get this garbage out of here. ***************
         testStartGame = false;
+        // *************** get this garbage out of here. ***************
     }
 
     /**
@@ -94,12 +100,18 @@ public class Game {
         } else {
             deck.shuffle();
             dealHands();
+
+
+            // *************** get this garbage out of here. ***************
             if(testStartGame) {
+                // Maybe inject currentPlayedCard into startGame? And if it's not null... etc.
                  currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
                  setPlayerOnesTurn(true);
             } else {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
             }
+            // *************** get this garbage out of here. ***************
+
 
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
