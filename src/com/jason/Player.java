@@ -297,7 +297,7 @@ public class Player {
     public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // *** TESTING IN PROGRESS ***
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
-            return hand.getHighestFace(currentColor, true);
+            return hand.getHighestFace(currentColor, true); // tested
 
         } else {
             // try to match the number
@@ -332,12 +332,12 @@ public class Player {
             // return a wild card if present
             Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
             if(hand.hasCard(wild)) {
-                return wild;
+                return wild; // tested
             }
             // return a wild draw four card if present
             Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
             if(hand.hasCard(wildDrawFour)) {
-                return wildDrawFour;
+                return wildDrawFour; // tested
             }
         }
         return null;

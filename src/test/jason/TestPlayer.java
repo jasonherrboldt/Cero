@@ -21,9 +21,13 @@ public class TestPlayer {
     private Card greenThree;
     private Card blueFour;
     private Card getBoldStrategyCard_currentPlayedCard;
+    private int handSizeBefore;
+    private int handSizeAfter;
 
     @Before
     public void setup() {
+        handSizeBefore = 0;
+        handSizeAfter = 0;
         cvm = new CardValueMap();
         classHand = new Hand();
         classHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
@@ -239,10 +243,14 @@ public class TestPlayer {
         // the best card to pick at the moment is the yellow three, since it has the largest matching color group
         player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
         String currentColor = Card.BLUE;
+        testPlayer_getBoldStrategy_helper(player2, currentColor, yellowThree);
+    }
+
+    private void testPlayer_getBoldStrategy_helper(Player player, String currentColor, Card card) {
         // make sure no actual discarding happens during call to getBoldStrategyCard (handled elsewhere)
-        int handSizeBefore = player2.getHand().getSize();
-        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(yellowThree));
-        int handSizeAfter = player2.getHand().getSize();
+        handSizeBefore = player.getHand().getSize();
+        assertTrue(player.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(card));
+        handSizeAfter = player.getHand().getSize();
         assertEquals(handSizeBefore, handSizeAfter);
     }
 
@@ -251,33 +259,25 @@ public class TestPlayer {
         Player player2 = new Player("", true);
         String currentColor = Card.BLUE;
 
+        // add a wild card and wild draw four card to the hand to tempt the method into returning the wrong card
+        Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+        getBoldStrategyCard_numeric_hand.addCard(wild);
+        Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
+        getBoldStrategyCard_numeric_hand.addCard(wildDrawFour);
+        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
+
         // ditch the yellow three from getBoldStrategyCard_numeric_hand
         // now it should favor the blue nine, because it's the next biggest matching color group
         getBoldStrategyCard_numeric_hand.discard(yellowThree);
         player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        int handSizeBefore = player2.getHand().getSize();
-        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(blueNine));
-        int handSizeAfter = player2.getHand().getSize();
-        assertEquals(handSizeBefore, handSizeAfter);
+        testPlayer_getBoldStrategy_helper(player2, currentColor, blueNine);
 
         // now ditch the green three and the blue nine, leaving no other legal choice but the blue four
         getBoldStrategyCard_numeric_hand.discard(greenThree);
         getBoldStrategyCard_numeric_hand.discard(blueNine);
         player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(blueFour));
+        testPlayer_getBoldStrategy_helper(player2, currentColor, blueFour);
     }
-
-    /*
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.GREEN, Card.THREE, cvm)); // legal (ditched)
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.BLUE, Card.NINE, cvm)); // legal (ditched)
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.THREE, cvm)); // legal (ditched)
-     */
 
     @Test
     public void testPlayer_getBoldStrategyCard_nonNumeric() {
@@ -301,10 +301,7 @@ public class TestPlayer {
         // should return the blue reverse
         getBoldStrategyCard_numeric_hand.addCard(blueReverse);
         player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        int handSizeBefore = player2.getHand().getSize();
-        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(blueReverse));
-        int handSizeAfter = player2.getHand().getSize();
-        assertEquals(handSizeBefore, handSizeAfter);
+        testPlayer_getBoldStrategy_helper(player2, currentColor, blueReverse);
 
         // ditch the blue reverse
         getBoldStrategyCard_numeric_hand.discard(blueReverse);
@@ -314,10 +311,7 @@ public class TestPlayer {
         Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
         getBoldStrategyCard_numeric_hand.addCard(wild);
         player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        handSizeBefore = player2.getHand().getSize();
-        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(wild));
-        handSizeAfter = player2.getHand().getSize();
-        assertEquals(handSizeBefore, handSizeAfter);
+        testPlayer_getBoldStrategy_helper(player2, currentColor, wild);
 
         // ditch the wild
         getBoldStrategyCard_numeric_hand.discard(wild);
@@ -327,10 +321,7 @@ public class TestPlayer {
         Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
         getBoldStrategyCard_numeric_hand.addCard(wildDrawFour);
         player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        handSizeBefore = player2.getHand().getSize();
-        assertTrue(player2.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(wildDrawFour));
-        handSizeAfter = player2.getHand().getSize();
-        assertEquals(handSizeBefore, handSizeAfter);
+        testPlayer_getBoldStrategy_helper(player2, currentColor, wildDrawFour);
     }
 }
 
