@@ -145,14 +145,17 @@ public class TestGame {
     public void testGame_skipPlayersTurn_0() {
         // very first turn
         Game game = new Game("");
-        game.setPlayerOnesTurn(true);
+        game.setIsFirstMove(true);
+        game.startGame();
+
         game.setCurrentPlayedCard(numeric);
         assertFalse(game.skipPlayersTurn(player1));
 
-        game.setCurrentPlayedCard(drawTwo);
+        game.setIsFirstMove(true);
         List<Card> cards = new ArrayList<>();
         player1.setHand(cards);
         game.setPlayer1(player1);
+        game.setCurrentPlayedCard(drawTwo);
         int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
         assertTrue(game.skipPlayersTurn(player1));
         int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();

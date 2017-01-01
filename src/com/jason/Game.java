@@ -92,7 +92,14 @@ public class Game {
         } else {
             deck.shuffle();
             dealHands();
-            currentPlayedCard = verifyFirstCard(deck.popCard());
+            currentPlayedCard = verifyFirstCard(deck.popCard()); // comment out when testing (see below)
+
+            // for testing only!
+            // uncomment out when testing testGame.testGame_skipPlayersTurn_0
+            // and comment out line above
+            // currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
+            // setPlayerOnesTurn(true);
+
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
 
@@ -119,6 +126,7 @@ public class Game {
                     Main.out("Player one, you were forbidden from discarding. " +
                             "The first move switches to player two.");
                     isPlayerOnesTurn = false;
+                    isFirstMove = false;
                     playerTwosTurn();
                 }
                 // don't flip turns here because it's still player one's turn.
@@ -151,7 +159,13 @@ public class Game {
                     return false; // tested
                 }
             } else {
-                Card lastPlayedCard = player.getMyLastPlayedCard();
+                // this is a problem when player one is skipped on the first move and it switches over to player two
+
+                // Card lastPlayedCard = player.getMyLastPlayedCard();
+                Card lastPlayedCard = currentPlayedCard;
+                if(player.getMyLastPlayedCard() != null) {
+                    lastPlayedCard = player.getMyLastPlayedCard();
+                }
                 Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
 
                 boolean lastPlayedCardIsNumeric = lastPlayedCard.isNumberCard();
