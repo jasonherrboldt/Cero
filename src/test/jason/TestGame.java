@@ -21,6 +21,8 @@ public class TestGame {
     private Card nonNumericAndNonWild;
     private Card drawTwo;
     private Card drawFour;
+    private Card skip;
+    private Card reverse;
 
     @Before
     public void setup() {
@@ -33,6 +35,8 @@ public class TestGame {
         nonNumericAndNonWild = new Card(Card.GREEN, Card.SKIP, cvm);
         drawTwo = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
         drawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
+        skip = new Card(Card.BLUE, Card.SKIP, cvm);
+        reverse = new Card(Card.BLUE, Card.REVERSE, cvm);
     }
 
     @Test
@@ -121,7 +125,7 @@ public class TestGame {
     @Test
     public void testGame_startGame_gameObject() {
         Game game = new Game("");
-        game.startGame(null);
+        game.startGame(null, true);
 
         // Make sure the current played card is correctly reflected everywhere.
         Card currentPlayedCard = game.getCurrentPlayedCard();
@@ -140,36 +144,59 @@ public class TestGame {
 
     @Test
     public void testGame_skipPlayersTurn_firstTurn_numeric() {
-        // very first turn
-//        Game game = new Game("");
-//        game.setIsFirstMove(true);
-//        game.startGame(numeric); // inject card here
+        Game game = new Game("");
+        game.setIsFirstMove(true);
+        game.startGame(numeric, true); // inject card here
 //
 //        // game.setCurrentPlayedCard(numeric); // ******** REPLACE THIS **********
-//        assertFalse(game.skipPlayersTurn(player1));
+        assertFalse(game.skipPlayersTurn(player1));
 
 //        game.setIsFirstMove(true); // get rid of this
 //
-//        // make this a new test
-//
+//        // make this a new test:
 //        game.setCurrentPlayedCard(nonNumericAndNonWild); // ******** REPLACE THIS **********
 //        assertTrue(game.skipPlayersTurn(player1));
     }
 
-//    @Test
-//    public void testGame_skipPlayersTurn_firstTurn_drawTwo() {
-//        // very first turn
-//        List<Card> cards = new ArrayList<>();
-//        player1.setHand(cards);
-//        Game game = new Game("");
-//        game.setPlayer1(player1);
-//        game.startGame(drawTwo); // inject card here
-//        int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
-//        game.setIsFirstMove(true); // necessary?
-//
-//        int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();
-//        assertEquals((playerOneHandSizeBefore + 2), playerOneHandSizeAfter);
-//    }
+    /**
+     * I'm going to have to write a whole new suite of tests that handle the 2nd move. Shit.
+     */
+
+    @Test
+    public void testGame_skipPlayersTurn_firstTurn_drawTwo() {
+        List<Card> cards = new ArrayList<>();
+        player1.setHand(cards);
+        Game game = new Game("");
+        game.setPlayer1(player1);
+        game.startGame(drawTwo, true); // inject card here
+        int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
+        game.setIsFirstMove(true); // necessary?
+
+        assertTrue(game.skipPlayersTurn(player1));
+        int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals((playerOneHandSizeBefore + 2), playerOneHandSizeAfter);
+    }
+
+    @Test
+    public void testGame_skipPlayersTurn_firstTurn_skip() {
+        Game game = new Game("");
+        List<Card> cards = new ArrayList<>();
+        player1.setHand(cards);
+        game.setPlayer1(player1);
+        game.startGame(skip, true);
+        int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
+        assertTrue(game.skipPlayersTurn(player1));
+        int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals((playerOneHandSizeBefore), playerOneHandSizeAfter);
+    }
+
+    @Test
+    public void testGame_skipPlayersTurn_firstTurn_reverse() {
+        // also need to test that cards are not being drawn to player one's hand.
+        Game game = new Game("");
+        game.startGame(reverse, true);
+        assertTrue(game.skipPlayersTurn(player1));
+    }
 
     @Test
     public void testGame_skipPlayersTurn_1() {
@@ -322,7 +349,7 @@ public class TestGame {
     public void testGame_playerTwoMove() {
         Game game = new Game("");
 
-        game.startGame(null);
+        game.startGame(null, false);
         game.setPlayerOnesTurn(false);
 
         // Make sure the happy path returns a card.
@@ -342,7 +369,7 @@ public class TestGame {
         player1.setMyLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
         player2.setMyLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
         Game game = new Game("");
-        game.startGame(null);
+        game.startGame(null, false);
         List<Player> players = game.getPlayers();
         if(players.size() == 2) {
             Player playerBlue = players.get(0);
@@ -364,7 +391,7 @@ public class TestGame {
         assertTrue(game.isFirstMove());
 
         // Start a new game.
-        game.startGame(null);
+        game.startGame(null, true);
         assertTrue(game.isFirstMove());
 
         // Play the first hand.

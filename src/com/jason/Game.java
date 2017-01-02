@@ -94,9 +94,10 @@ public class Game {
     /**
      * Start the game. (Can only be called once.)
      *
-     * @param firstPlayedCard for testing
+     * @param firstPlayedCard   for testing
+     * @param _isPlayerOnesTurn for testing
      */
-    public void startGame(Card firstPlayedCard) { // tested
+    public void startGame(Card firstPlayedCard, boolean _isPlayerOnesTurn) { // *** NEEDS TESTING ***
         if(!isFirstMove) {
             Main.out("ERROR: Game.startGame called after first move has already been played. No action taken.");
         } else {
@@ -107,8 +108,8 @@ public class Game {
             if(firstPlayedCard == null) {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
             } else {
-                currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
-                setPlayerOnesTurn(true);
+                currentPlayedCard = firstPlayedCard;
+                setPlayerOnesTurn(_isPlayerOnesTurn);
             }
 
             discardPile.add(currentPlayedCard);
@@ -167,13 +168,20 @@ public class Game {
      * @return true if a non-numeric card has been received, false otherwise. Also return false if (see above).
      */
     public boolean skipPlayersTurn(Player player) { // *** TESTING IN PROGRESS ***
-            if(isFirstMove) {
+
+        /**
+         * This hot mess of a method is going to need major surgery - it should return true ONCE and false ONCE.
+         * Might make sense to break it up into two methods - one that handles numeric cards, and one that doesn't.
+         */
+
+        if(isFirstMove) {
                 if(!currentPlayedCard.isNumberCard()) {
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
                         draw(player);
                         return true; // tested
                     }
+                    // is skip or reverse
                     return true; // tested
                 } else {
                     return false; // tested
@@ -202,15 +210,15 @@ public class Game {
 
                 if (lastPlayedCardIsNumeric && currentPlayedCardIsNumeric) {
                     // do not skip player's turn
-                    return false; // tested
+                    return false;
                 }
                 if (lastPlayedCardIsWild && currentPlayedCardIsNumeric) {
                     // do not skip player's turn
-                    return false; // tested
+                    return false;
                 }
                 if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
                     // do not skip player's turn
-                    return false; // tested
+                    return false;
                 }
 
 
@@ -220,14 +228,14 @@ public class Game {
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
                         draw(player);
-                        return true; // tested
+                        return true;
                     }
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                         draw(player);
                         draw(player);
                         draw(player);
                         draw(player);
-                        return true; // tested
+                        return true;
                     }
                 }
                 if (lastPlayedCardIsWild && currentPlayedCardIsNonNumericAndNonWild) {
@@ -235,14 +243,14 @@ public class Game {
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                         draw(player);
                         draw(player);
-                        return true; // tested
+                        return true;
                     }
                     if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                         draw(player);
                         draw(player);
                         draw(player);
                         draw(player);
-                        return true; // tested
+                        return true;
                     }
                 }
 
