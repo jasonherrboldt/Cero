@@ -52,7 +52,8 @@ public class Main {
 //        out("Your answer: " + answer);
 
         Game game = new Game("David Lightman");
-        game.startGame();
+        game.startGame(null);
+        game.playFirstHand();
         out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString() + "\n");
         game.printHand(game.player1);
 

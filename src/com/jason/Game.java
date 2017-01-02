@@ -71,7 +71,7 @@ public class Game {
     private static final int MAX_P2_DRAW_LOOP = 100;
 
     // *************** get this garbage out of here. ***************
-    private boolean testStartGame;
+    // private boolean testStartGame;
     // *************** get this garbage out of here. ***************
 
     public Game(String playerOneName) {
@@ -87,31 +87,29 @@ public class Game {
         isFirstMove = true;
 
         // *************** get this garbage out of here. ***************
-        testStartGame = false;
+        // testStartGame = false;
         // *************** get this garbage out of here. ***************
     }
 
     /**
      * Start the game. (Can only be called once.)
+     *
+     * @param firstPlayedCard for testing
      */
-    public void startGame() { // tested
+    public void startGame(Card firstPlayedCard) { // tested
         if(!isFirstMove) {
             Main.out("ERROR: Game.startGame called after first move has already been played. No action taken.");
         } else {
             deck.shuffle();
             dealHands();
 
-
-            // *************** get this garbage out of here. ***************
-            if(testStartGame) {
-                // Maybe inject currentPlayedCard into startGame? And if it's not null... etc.
-                 currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
-                 setPlayerOnesTurn(true);
-            } else {
+            // for testing:
+            if(firstPlayedCard == null) {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
+            } else {
+                currentPlayedCard = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
+                setPlayerOnesTurn(true);
             }
-            // *************** get this garbage out of here. ***************
-
 
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
@@ -119,13 +117,22 @@ public class Game {
             // Let the players see how many cards are in each other's decks.
             player1.updateOtherPlayersHandCount(player2.showHandCount());
             player2.updateOtherPlayersHandCount(player1.showHandCount());
+        }
+    }
 
-            if(!isPlayerOnesTurn) {
+    /**
+     * Play the first hand.
+     */
+    public void playFirstHand() {
+        if(!isFirstMove) { // tested
+            Main.out("ERROR: Game.playFirstHand called after first move has already been played. No action taken.");
+        } else {
+            if (!isPlayerOnesTurn) {
                 Main.out("Player two had the first move.");
 
 
                 // ************* this entire block will have to be repeated for all future moves *************
-                if(skipPlayersTurn(player2) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                if (skipPlayersTurn(player2) && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
                     Main.out("Player two was forbidden from discarding.");
                 } else {
                     playerTwosTurn();
@@ -135,7 +142,7 @@ public class Game {
 
 
             } else { // player one's turn
-                if(skipPlayersTurn(player1)) { // && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {  ****** NO! handled by nonNumericCardReceived
+                if (skipPlayersTurn(player1)) { // && !currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) { // NO! handled by skipPlayersTurn
                     Main.out("Player one, you were forbidden from discarding. " +
                             "The first move switches to player two.");
                     isPlayerOnesTurn = false;
@@ -572,9 +579,9 @@ public class Game {
         this.player2 = player2;
     }
 
-    public void setTestStartGame(boolean testStartGame) {
-        this.testStartGame = testStartGame;
-    }
+//    public void setTestStartGame(boolean testStartGame) {
+//        this.testStartGame = testStartGame;
+//    }
 
 
 }
