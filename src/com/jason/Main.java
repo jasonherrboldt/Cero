@@ -54,8 +54,7 @@ public class Main {
         Game game = new Game("David Lightman");
         game.startGame(null, true);
         game.playFirstHand();
-        out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString() + "\n");
-        game.printHand(game.player1);
+        // game.playSubsequentHand();
 
 //        List<Player> players = game.getPlayers();
 //        for(Player p : players) {

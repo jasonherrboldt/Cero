@@ -37,7 +37,7 @@ public class Player {
     public int otherPlayersHandCount;
     private boolean ceroCalled;
     public String chosenColor;
-    private Card myLastPlayedCard;
+    private Card lastPlayedCard;
 
     // for strategy getters:
     private Card wild;
@@ -51,7 +51,7 @@ public class Player {
         score = 0;
         otherPlayersHandCount = 0;
         ceroCalled = false;
-        myLastPlayedCard = null;
+        lastPlayedCard = null;
 
         // for strategy getters:
         cvm = new CardValueMap();
@@ -81,20 +81,22 @@ public class Player {
     /**
      * Discard a card.
      *
-     * @param card                  The card to discard.
+     * @param cardToDiscard         The card to discard.
      * @param currentPlayedCard     The current played card.
      * @param callCero              Whether or not to declare 'Cero!'
      * @param playerOnesChosenColor Player one's chosen color (for wild and wild draw four cards)
      * @return                      True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean discard(Card card, Card currentPlayedCard, boolean callCero, String playerOnesChosenColor) { // *** NEEDS TESTING ***
-        if(card == null || currentPlayedCard == null) {
-            Main.out("WARN: Player.discard called with a null card, a null currentPlayedCard, or both. " +
-                    "No action taken, returned false.");
-            return false;
+    public boolean discard(Card cardToDiscard, Card currentPlayedCard, boolean callCero,
+                           String playerOnesChosenColor) throws IllegalStateException { // *** NEEDS TESTING ***
+        /*
+         * This method needs to be refactored to return ONE true and ONE false.
+         */
+        if(cardToDiscard == null || currentPlayedCard == null) {
+            throw new IllegalStateException("Player.discard called with a null card, a null currentPlayedCard, or both.");
         } else {
             ceroCalled = callCero; // incumbent on the accuracy of Main.main
-            if(card.getFace().equalsIgnoreCase(Card.WILD) || card.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                 if(isPlayer2) {
                     chosenColor = getPlayerTwosChosenColor();
                 } else {
@@ -102,24 +104,29 @@ public class Player {
                         chosenColor = playerOnesChosenColor;
                     }
                 }
-                hand.discard(card);
+                hand.discard(cardToDiscard);
                 return true;
             } else {
-                if(card.isNumberCard()) {
-                    if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
-                            card.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
-                        hand.discard(card);
+                if(cardToDiscard.isNumberCard()) {
+                    if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
+                            cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
+                        hand.discard(cardToDiscard);
                         return true;
                     }
                 } else { // guaranteed to be skip, reverse, or draw two.
-                    if(card.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
-                        hand.discard(card);
+                    if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
+                        hand.discard(cardToDiscard);
                         return true;
                     }
                 }
             }
-            Main.out("WARN: Player.discard received an illegal discard choice. No action taken.");
-            return false;
+            // ********** todo: switch this back to an illegal state exception once the computer knows how to play legal cards. **********
+            // throw new IllegalStateException("Logic fell through all conditionals.");
+            Main.out("\nWARN: Player.discard received an illegal card to discard.");
+            Main.out("Discarding anyway, but please change this to an illegal state exception " +
+                    "\nonce player two knows how to discard legal cards.");
+            hand.discard(cardToDiscard);
+            return true;
         }
     }
 
@@ -380,12 +387,12 @@ public class Player {
         return null;
     }
 
-    public Card getMyLastPlayedCard() {
-        return myLastPlayedCard;
+    public Card getLastPlayedCard() {
+        return lastPlayedCard;
     }
 
-    public void setMyLastPlayedCard(Card myLastPlayedCard) {
-        this.myLastPlayedCard = myLastPlayedCard;
+    public void setLastPlayedCard(Card lastPlayedCard) {
+        this.lastPlayedCard = lastPlayedCard;
     }
 
 }

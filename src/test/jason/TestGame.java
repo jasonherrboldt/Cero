@@ -15,14 +15,17 @@ public class TestGame {
     private Player player1;
     private Player player2;
     private List<Card> hand;
-
     private Card numeric;
     private Card wild;
+    private Card wildDrawFour;
     private Card nonNumericAndNonWild;
     private Card drawTwo;
     private Card drawFour;
     private Card skip;
     private Card reverse;
+    private int playerHandSizeBefore;
+    private int playerHandSizeAfter;
+    private Game game;
 
     @Before
     public void setup() {
@@ -32,6 +35,7 @@ public class TestGame {
 
         numeric = new Card(Card.RED, Card.SEVEN, cvm);
         wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+        wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
         nonNumericAndNonWild = new Card(Card.GREEN, Card.SKIP, cvm);
         drawTwo = new Card(Card.YELLOW, Card.DRAW_TWO, cvm);
         drawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
@@ -41,10 +45,10 @@ public class TestGame {
 
     @Test
     public void testGame_verifyFirstCard() {
-        Game game = new Game("");
+        game = new Game("Player One");
 
         Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
-        Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
+        // Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
         assertEquals(game.getDeck().getDeckSize(), Deck.DECK_SIZE);
 
         Card notWild = game.verifyFirstCard(wild);
@@ -58,7 +62,7 @@ public class TestGame {
 
     @Test
     public void testGame_draw_nonEmptyDeck() {
-        Game game = new Game("");
+        game = new Game("Player One");
         hand = new ArrayList<>();
         hand.add(new Card(Card.GREEN, Card.ZERO, cvm));
         player1.setHand(hand);
@@ -74,7 +78,7 @@ public class TestGame {
 
     @Test
     public void testGame_draw_emptyDeck() {
-        Game game = new Game("");
+        game = new Game("Player One");
 
         // Give the game a player with a hand of one card.
         hand = new ArrayList<>();
@@ -111,7 +115,7 @@ public class TestGame {
 
     @Test
     public void testGame_dealHands() {
-        Game game = new Game("");
+        game = new Game("Player One");
         List<Player> players = game.getPlayers();
         for(Player p : players) {
             assertEquals(p.getHand(), null);
@@ -124,7 +128,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_gameObject() {
-        Game game = new Game("");
+        game = new Game("Player One");
         game.startGame(null, true);
 
         // Make sure the current played card is correctly reflected everywhere.
@@ -144,62 +148,61 @@ public class TestGame {
 
     @Test
     public void testGame_skipPlayersFirstTurn_numeric() {
-        Game game = new Game("");
+        List<Card> cards = new ArrayList<>();
+        player1.setHand(cards);
+        game = new Game("Player One");
+        game.setPlayer1(player1);
         game.setIsFirstMove(true);
-        game.startGame(numeric, true); // inject card here
-//
-//        // game.setCurrentPlayedCard(numeric); // ******** REPLACE THIS **********
+        game.startGame(numeric, true);
+        // should not skip player's first turn, should not increase player's hand size
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
         assertFalse(game.skipPlayersFirstTurn(player1));
-
-//        game.setIsFirstMove(true); // get rid of this
-//
-//        // make this a new test:
-//        game.setCurrentPlayedCard(nonNumericAndNonWild); // ******** REPLACE THIS **********
-//        assertTrue(game.skipPlayersTurn(player1));
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertTrue(playerHandSizeBefore == playerHandSizeAfter);
     }
 
     @Test
     public void testGame_skipPlayersFirstTurn_drawTwo() {
         List<Card> cards = new ArrayList<>();
         player1.setHand(cards);
-        Game game = new Game("");
+        game = new Game("Player One");
         game.setPlayer1(player1);
-        game.startGame(drawTwo, true); // inject card here
-        int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
-        // game.setIsFirstMove(true); // necessary?
-
+        game.startGame(drawTwo, true);
+        // should skip player's first turn, hand size should go up 2.
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
         assertTrue(game.skipPlayersFirstTurn(player1));
-        int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();
-        assertEquals((playerOneHandSizeBefore + 2), playerOneHandSizeAfter);
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals((playerHandSizeBefore + 2), playerHandSizeAfter);
     }
 
     @Test
     public void testGame_skipPlayersFirstTurn_skip() {
-        Game game = new Game("");
+        game = new Game("Player One");
         List<Card> cards = new ArrayList<>();
         player1.setHand(cards);
         game.setPlayer1(player1);
         game.startGame(skip, true);
-        int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
+        // should skip player's first turn, hand size should not go up.
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
         assertTrue(game.skipPlayersFirstTurn(player1));
-        int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();
-        assertEquals((playerOneHandSizeBefore), playerOneHandSizeAfter);
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals((playerHandSizeBefore), playerHandSizeAfter);
     }
 
     @Test
     public void testGame_skipPlayersFirstTurn_reverse() {
-        // also need to test that cards are not being drawn to player one's hand.
-        Game game = new Game("");
+        game = new Game("Player One");
         game.startGame(reverse, true);
-        int playerOneHandSizeBefore = game.getPlayer1().getHand().getSize();
+        // should skip player's first turn, hand size should not go up.
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
         assertTrue(game.skipPlayersFirstTurn(player1));
-        int playerOneHandSizeAfter = game.getPlayer1().getHand().getSize();
-        assertEquals((playerOneHandSizeBefore), playerOneHandSizeAfter);
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals((playerHandSizeBefore), playerHandSizeAfter);
     }
 
     @Test
-    public void testGame_skipPlayersFirstTurn_exception() {
-        Game game = new Game("");
+    public void testGame_skipPlayersFirstTurn_exception_notFirstTurn() {
+        game = new Game("Player One");
         game.startGame(reverse, true);
         game.setIsFirstMove(false);
         try {
@@ -211,15 +214,154 @@ public class TestGame {
     }
 
     @Test
+    public void testGame_skipPlayersFirstTurn_exception_wildOrWD4() {
+        // wild card
+        game = new Game("Player One");
+        game.startGame(wild, true);
+        game.setIsFirstMove(true);
+        try {
+            game.skipPlayersFirstTurn(player1);
+            fail();
+        } catch (IllegalStateException e) {
+            assertEquals(e.getMessage(), "skipPlayersFirstTurn was called with wild or " +
+                    "wild draw four card - not allowed for first turn.");
+        }
+
+        // wild draw four card
+        game = new Game("Player One");
+        game.startGame(wildDrawFour, true);
+        game.setIsFirstMove(true);
+        try {
+            game.skipPlayersFirstTurn(player1);
+            fail();
+        } catch (IllegalStateException e) {
+            assertEquals(e.getMessage(), "skipPlayersFirstTurn was called with wild or " +
+                    "wild draw four card - not allowed for first turn.");
+        }
+    }
+
+    @Test
+    public void testGame_playFirstHand_exception() {
+        game = new Game("Player One");
+        game.startGame(numeric, true);
+        game.setIsFirstMove(false);
+        try {
+            game.playFirstHand();
+            fail();
+        } catch (IllegalStateException e) {
+            assertEquals(e.getMessage(), "Game.playFirstHand called after first move has already been played.");
+        }
+    }
+
+    @Test
+    public void testGame_playFirstHand_switchP1Move_drawTwo() {
+
+        // draw two
+
+        // Create a new game object
+        game = new Game("Player One");
+
+        // Start a new game, let player one have the first move
+        game.startGame(drawTwo, true);
+        assertTrue(game.isFirstMove());
+        assertTrue(game.isPlayerOnesTurn());
+
+        // assert it's no longer player one's turn, and that it's no longer the first move.
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
+        game.playFirstHand();
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertFalse(game.isPlayerOnesTurn());
+        assertFalse(game.isFirstMove());
+        assertEquals(playerHandSizeBefore + 2, playerHandSizeAfter);
+    }
+
+    @Test
+    public void testGame_playFirstHand_switchP1Move_skip() {
+        // Create a new game object
+        game = new Game("Player One");
+
+        // Start a new game, let player one have the first move
+        game.startGame(skip, true);
+        assertTrue(game.isFirstMove());
+        assertTrue(game.isPlayerOnesTurn());
+
+        // assert it's no longer player one's turn, and that it's no longer the first move.
+        game.playFirstHand();
+        assertFalse(game.isPlayerOnesTurn());
+        assertFalse(game.isFirstMove());
+    }
+
+    @Test
+    public void testGame_playFirstHand_switchP1Move_reverse() {
+
+        // Create a new game object
+        game = new Game("Player One");
+
+        // Start a new game, let player one have the first move
+        game.startGame(reverse, true);
+        assertTrue(game.isFirstMove());
+        assertTrue(game.isPlayerOnesTurn());
+
+        // assert it's no longer player one's turn, and that it's no longer the first move.
+        game.playFirstHand();
+        assertFalse(game.isPlayerOnesTurn());
+        assertFalse(game.isFirstMove());
+    }
+
+    @Test
+    public void testGame_playFirstHand_switchP2Move_drawTwo() {
+        // Create a new game object
+        game = new Game("Player One");
+
+        // Start a new game, let player two have the first move.
+        game.startGame(drawTwo, false);
+        assertTrue(game.isFirstMove());
+        assertFalse(game.isPlayerOnesTurn());
+
+        // assert it's no longer player two's turn, and that it's no longer the first move.
+        playerHandSizeBefore = game.getPlayer2().getHand().getSize();
+        game.playFirstHand();
+        playerHandSizeAfter = game.getPlayer2().getHand().getSize();
+        assertTrue(game.isPlayerOnesTurn());
+        assertFalse(game.isFirstMove());
+        assertEquals(playerHandSizeBefore + 2, playerHandSizeAfter);
+    }
+
+    @Test
+    public void testGame_playFirstHand_switchP2Move_skip() {
+        // Create a new game object
+        game = new Game("Player One");
+
+        // Start a new game, let player two have the first move.
+        game.startGame(skip, false);
+        assertTrue(game.isFirstMove());
+        assertFalse(game.isPlayerOnesTurn());
+
+        // assert it's no longer player two's turn, and that it's no longer the first move.
+        game.playFirstHand();
+        assertTrue(game.isPlayerOnesTurn());
+        assertFalse(game.isFirstMove());
+    }
+
+    @Test
+    public void testGame_playFirstHand_switchP2Move_reverse() {
+        // Create a new game object
+        game = new Game("Player One");
+
+        // Start a new game, let player two have the first move.
+        game.startGame(reverse, false);
+        assertTrue(game.isFirstMove());
+        assertFalse(game.isPlayerOnesTurn());
+
+        // assert it's no longer player two's turn, and that it's no longer the first move.
+        game.playFirstHand();
+        assertTrue(game.isPlayerOnesTurn());
+        assertFalse(game.isFirstMove());
+    }
+
+    @Test
     public void testGame_skipPlayersSubsequentTurn_exception() {
-        Game game = new Game("");
-        // game.setIsFirstMove(false); // no
-//        game.setPlayerOnesTurn(false);
-//        game.setIsFirstMove(true);
-//        player2.setMyLastPlayedCard(numeric);
-//        game.setPlayer2(player2);
-//        // game.setCurrentPlayedCard(numeric); // no
-//        game.startGame(numeric, false);
+        game = new Game("Player One");
         game.setIsFirstMove(true);
         try {
             game.skipPlayersSubsequentTurn(player2);
@@ -230,158 +372,87 @@ public class TestGame {
     }
 
     @Test
-    public void testGame_skipPlayersSubsequentTurn_numeric_numeric() {
-        /*
-        if(lastPlayedCardIsNumeric && currentPlayedCardIsNumeric) {
-            return false; // do not skip player's turn
-        }
-        */
-        Game game = new Game("");
-        // game.setIsFirstMove(false); // no
-        game.setPlayerOnesTurn(false);
-        game.setIsFirstMove(true);
-        player2.setMyLastPlayedCard(numeric);
-        game.setPlayer2(player2);
-        // game.setCurrentPlayedCard(numeric); // no
-        game.startGame(numeric, false);
-        game.setIsFirstMove(false);
+    public void testGame_skipPlayersSubsequentTurn_lpcNumeric_cpcNumeric_p1() {
+        // Start the game with a numeric first card. Player one has the first turn.
+        game = new Game("Player One");
+        game.startGame(numeric, true);
+
+        // Assert player two should not draw or skip the 2nd move.
+        game.playFirstHand();
+        player2.setLastPlayedCard(numeric);
+        playerHandSizeBefore = game.getPlayer2().getHand().getSize();
         assertFalse(game.skipPlayersSubsequentTurn(player2));
+        playerHandSizeAfter = game.getPlayer2().getHand().getSize();
+        assertEquals(playerHandSizeBefore, playerHandSizeAfter);
     }
 
-        /*
-        if(lastPlayedCardIsWild && currentPlayedCardIsNumeric) {
-            return false; // do not skip player's turn
-        }
-        */
+    @Test
+    public void testGame_skipPlayersSubsequentTurn_lpcNumeric_cpcNumeric_p2() {
+        // Start the game with a numeric first card. Player two has the first turn.
+        game = new Game("Player One");
+        game.startGame(numeric, false);
 
-//        game.setPlayerOnesTurn(false);
-//        player2.setMyLastPlayedCard(wild);
-//        game.setPlayer2(player2);
-//        // game.setCurrentPlayedCard(numeric); // no
-//        assertFalse(game.skipPlayersSubsequentTurn(player2));
-//
-//        /*
-//        if(lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
-//            return false; // do not skip player's turn
-//        }
-//        */
-//        game.setPlayerOnesTurn(false);
-//        player2.setMyLastPlayedCard(nonNumericAndNonWild);
-//        game.setPlayer2(player2);
-//        // game.setCurrentPlayedCard(nonNumericAndNonWild); // no
-//        assertFalse(game.skipPlayersSubsequentTurn(player2));
-//    }
-//
-//    @Test
-//    public void testGame_skipPlayersTurn_2() {
-//
-//        Game game = new Game("");
-//        game.setIsFirstMove(false);
-//        game.setPlayerOnesTurn(false);
-//        player2.setMyLastPlayedCard(numeric);
-//        game.setPlayer2(player2);
-//        game.setCurrentPlayedCard(drawTwo);
-//
-//        List<Card> cards = new ArrayList<>();
-//        player2.setHand(cards);
-//        game.setPlayer2(player2);
-//
-//        // if (lastPlayedCardIsNumeric && currentPlayedCardIsNonNumericAndNonWild) {
-//        // Make sure player two draws two cards
-//        int playerTwoHandSizeBefore = game.getPlayer2().getHand().getSize();
-//        assertTrue(game.skipPlayersTurn(player2));
-//        int playerTwoHandSizeAfter = game.getPlayer2().getHand().getSize();
-//        assertEquals((playerTwoHandSizeBefore + 2), playerTwoHandSizeAfter);
-//
-//        // Make sure player two draws four cards
-//        game.setPlayerOnesTurn(false);
-//        game.setCurrentPlayedCard(drawFour);
-//        playerTwoHandSizeBefore = game.getPlayer2().getHand().getSize();
-//        assertTrue(game.skipPlayersTurn(player2));
-//        playerTwoHandSizeAfter = game.getPlayer2().getHand().getSize();
-//        assertEquals((playerTwoHandSizeBefore + 4), playerTwoHandSizeAfter);
-//
-//        // if (lastPlayedCardIsWild && currentPlayedCardIsNonNumericAndNonWild) {
-//        // Make sure player two draws two cards
-//        player2.setMyLastPlayedCard(wild);
-//        game.setCurrentPlayedCard(drawTwo);
-//        playerTwoHandSizeBefore = game.getPlayer2().getHand().getSize();
-//        assertTrue(game.skipPlayersTurn(player2));
-//        playerTwoHandSizeAfter = game.getPlayer2().getHand().getSize();
-//        assertEquals((playerTwoHandSizeBefore + 2), playerTwoHandSizeAfter);
-//
-//        // Make sure player two draws four cards
-//        game.setPlayerOnesTurn(false);
-//        game.setCurrentPlayedCard(drawFour);
-//        playerTwoHandSizeBefore = game.getPlayer2().getHand().getSize();
-//        assertTrue(game.skipPlayersTurn(player2));
-//        playerTwoHandSizeAfter = game.getPlayer2().getHand().getSize();
-//        assertEquals((playerTwoHandSizeBefore + 4), playerTwoHandSizeAfter);
-//    }
-//
-//    @Test
-//    public void testGame_skipPlayersTurn_3() {
-//        /*
-//        if (lastPlayedCardIsNumeric && currentPlayedCardIsWild) {
-//            player.chosenColor = getOtherPlayersChosenColor(player);
-//            return false; // do not skip player's turn
-//        }
-//        */
-//        Game game = new Game("");
-//        game.setIsFirstMove(false);
-//        game.setPlayerOnesTurn(false);
-//        player2.setMyLastPlayedCard(numeric);
-//        player1.chosenColor = Card.GREEN;
-//        game.setPlayer1(player1);
-//        game.setPlayer2(player2);
-//        game.setCurrentPlayedCard(wild);
-//
-//        assertFalse(game.skipPlayersTurn(player2));
-//        assertTrue(player2.chosenColor.equalsIgnoreCase(Card.GREEN));
-//
-//        /*
-//        if (lastPlayedCardIsWild && currentPlayedCardIsWild) {
-//            player.chosenColor = getOtherPlayersChosenColor(player);
-//            return false; // do not skip player's turn
-//        }
-//         */
-//        player2.setMyLastPlayedCard(wild);
-//        player1.chosenColor = Card.RED;
-//        assertFalse(game.skipPlayersTurn(player2));
-//        assertTrue(player2.chosenColor.equalsIgnoreCase(Card.RED));
-//    }
-//
-//    @Test
-//    public void testGame_skipPlayersTurn_4() {
-//    /*
-//                if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNumeric) {
-//                    Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
-//                            "No action taken, returned true.");
-//                    return true;
-//                }
-//                if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsWild) {
-//                    Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
-//                            "No action taken, returned true.");
-//                    return true;
-//                }
-//     */
-//
-//        Game game = new Game("");
-//        game.setIsFirstMove(false);
-//        game.setPlayerOnesTurn(false);
-//        player2.setMyLastPlayedCard(nonNumericAndNonWild);
-//        game.setCurrentPlayedCard(numeric);
-//        game.setPlayer2(player2);
-//        assertTrue(game.skipPlayersTurn(player2));
-//
-//        game.setCurrentPlayedCard(wild);
-//        assertTrue(game.skipPlayersTurn(player2));
-//
-//    }
+        // Assert player two should not draw or skip the 2nd move.
+        game.playFirstHand();
+        player1.setLastPlayedCard(numeric);
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
+        assertFalse(game.skipPlayersSubsequentTurn(player1));
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals(playerHandSizeBefore, playerHandSizeAfter);
+    }
+
+    /*
+        Do not skip my turn (return false):
+        Lpc n, Cpc n: draw nothing, do not skip my turn (done for p1 and p2)
+        Lpc w, Cpc n: draw nothing, do not skip my turn (done for p1 and p2)
+        Lpc nn-nw, Cpc nn-nw: (same card bounces back) draw nothing, do not skip my turn
+        Lpc n, Cpc w: set my color to other player's preferred color, draw nothing, do not skip my turn
+        Lpc w, Cpc w: set my color to other player's preferred color, draw nothing, do not skip my turn
+
+        Skip my turn (return true)
+        Lpc n, Cpc nn-nw: skip my turn and potentially draw
+        Lpc w, Cpc nn-nw: skip my turn and potentially draw
+
+        Blow up — throw an illegal state exception (put user warning in the exception:): Lpc nn-nw, Cpc n: (should never happen)
+        Lpc nn-nw, Cpc w: (should never happen)
+     */
+
+    @Test
+    public void testGame_skipPlayersSubsequentTurn_lpcWild_cpcNumeric_p1() {
+        // Start the game with a numeric first card. Player one has the first turn.
+        game = new Game("Player One");
+        game.startGame(numeric, true);
+
+        // Assert player two should not draw or skip the 2nd move.
+        game.playFirstHand();
+        player2.setLastPlayedCard(wild);
+        game.setCurrentPlayedCard(numeric);
+        playerHandSizeBefore = game.getPlayer2().getHand().getSize();
+        assertFalse(game.skipPlayersSubsequentTurn(player2));
+        playerHandSizeAfter = game.getPlayer2().getHand().getSize();
+        assertEquals(playerHandSizeBefore, playerHandSizeAfter);
+    }
+
+
+    @Test
+    public void testGame_skipPlayersSubsequentTurn_lpcWild_cpcNumeric_p2() {
+        // Start the game with a numeric first card. Player two has the first turn.
+        game = new Game("Player One");
+        game.startGame(numeric, false);
+
+        // Assert player two should not draw or skip the 2nd move.
+        game.playFirstHand();
+        player1.setLastPlayedCard(wild);
+        game.setCurrentPlayedCard(numeric);
+        playerHandSizeBefore = game.getPlayer1().getHand().getSize();
+        assertFalse(game.skipPlayersSubsequentTurn(player1));
+        playerHandSizeAfter = game.getPlayer1().getHand().getSize();
+        assertEquals(playerHandSizeBefore, playerHandSizeAfter);
+    }
 
     @Test
     public void testGame_playerTwoMove() {
-        Game game = new Game("");
+        game = new Game("Player One");
 
         game.startGame(null, false);
         game.setPlayerOnesTurn(false);
@@ -400,9 +471,9 @@ public class TestGame {
 
     @Test
     public void testGame_getOtherPlayersChosenColor() {
-        player1.setMyLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
-        player2.setMyLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
-        Game game = new Game("");
+        player1.setLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
+        player2.setLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
+        game = new Game("Player One");
         game.startGame(null, false);
         List<Player> players = game.getPlayers();
         if(players.size() == 2) {
@@ -417,22 +488,6 @@ public class TestGame {
                     "List of players from game.getPlayers must have a size of exactly two.");
         }
     }
-
-    @Test
-    public void testGame_playFirstHand_notFirstMove() {
-        // Create a new game object.
-        Game game = new Game("");
-        assertTrue(game.isFirstMove());
-
-        // Start a new game.
-        game.startGame(null, true);
-        assertTrue(game.isFirstMove());
-
-        // Play the first hand.
-        game.playFirstHand();
-        assertFalse(game.isFirstMove());
-    }
-
 }
 
 

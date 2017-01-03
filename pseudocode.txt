@@ -1,5 +1,32 @@
 
 
+skipPlayersTurn
+
+If it's the first move, call helper method A, inject the player. Test method A separately. Test method A. Method A should return one true and one false only. (This should be a separate method called skipPlayersFirstTurn.)
+
+Else call helper method B, inject the player. Test method B. Method B should return one true and one false only. (This should be a separate method called skipPlayersSubsequentTurn.)
+
+For method B:
+
+Do not skip my turn (return false):
+Lpc n, Cpc n: draw nothing, do not skip my turn
+Lpc w, Cpc n: draw nothing, do not skip my turn
+Lpc nn-nw, Cpc nn-nw: draw nothing, do not skip my turn
+Lpc n, Cpc w: set my color to other player's preferred color, do not skip my turn
+Lpc w, Cpc w: set my color to other player's preferred color, do not skip my turn
+
+Skip my turn (return true)
+Lpc n, Cpc nn-nw: skip my turn and potentially draw
+Lpc w, Cpc nn-nw: skip my turn and potentially draw
+
+Blow up  throw an illegal state exception (put user warning in the exception:): Lpc nn-nw, Cpc n: (should never happen)
+Lpc nn-nw, Cpc w: (should never happen)
+
+
+
+
+
+
 Main
 
     game.startGame() // (possible automatic moves: player2 might draw or discard, player1 might draw)
