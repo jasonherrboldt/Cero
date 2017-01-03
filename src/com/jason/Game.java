@@ -161,7 +161,7 @@ public class Game {
     // public void playSubsequentHand() {
 
     /**
-     * Determine whether or not the first move should be automatically skipped.
+     * Determine whether or not the first move should be automatically skipped and auto-draws cards as needed.
      *
      * @param player the player who has the current move
      * @return       true if the player's move should be skipped, false otherwise
@@ -202,6 +202,7 @@ public class Game {
         } else {
 
             // todo: this method must return exactly ONE true and ONE false.
+            // Also, why is this method so hairy, and skipPlayersFirstTurn is so simple? And it works?
 
             // special case for 2nd move - if 1st move is skipped, 2nd player needs to get its last played card
             // from somewhere else. Set it to the current card to prevent auto double skipping.
@@ -238,8 +239,13 @@ public class Game {
                 return false; // tested 2017-01-03
             }
             if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
+                if(!lastPlayedCard.equals(currentPlayedCard)) {
+                    // tested 2017-01-03
+                    throw new IllegalStateException("A non-numeric, non-wild card can not come back to the " +
+                            "player that dealt it unless it is exactly the same card.");
+                }
                 // do not skip player's turn
-                return false;
+                return false; // tested 2017-01-03
             }
 
 
@@ -278,24 +284,24 @@ public class Game {
             if (lastPlayedCardIsNumeric && currentPlayedCardIsWild) {
                 player.chosenColor = getOtherPlayersChosenColor(player);
                 // do not skip player's turn
-                return false; // tested
+                return false; // tested 2017-01-03
             }
             if (lastPlayedCardIsWild && currentPlayedCardIsWild) {
                 player.chosenColor = getOtherPlayersChosenColor(player);
                 // do not skip player's turn
-                return false; // tested
+                return false;
             }
 
 
             if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNumeric) {
                 Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
                         "No action taken, returned true.");
-                return true; // tested
+                return true;
             }
             if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsWild) {
                 Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
                         "No action taken, returned true.");
-                return true; // tested
+                return true;
             }
 
 
