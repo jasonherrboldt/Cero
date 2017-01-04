@@ -195,14 +195,13 @@ public class Game {
      * @param player the player who has the current move
      * @return true if the player's move should be skipped, false otherwise.
      */
-    public boolean skipPlayersSubsequentTurn(Player player) { // *** NEEDS TO BE TESTED ***
+    public boolean skipPlayersSubsequentTurn(Player player) { // *** TESTING IN PROGRESS ***
         if(isFirstMove) {
             // tested
             throw new IllegalStateException("Game.skipPlayersSubsequentTurn called when isFirstMove == true.");
         } else {
 
             // todo: this method must return exactly ONE true and ONE false.
-            // Also, why is this method so hairy, and skipPlayersFirstTurn is so simple? And it works?
 
             // special case for 2nd move - if 1st move is skipped, 2nd player needs to get its last played card
             // from somewhere else. Set it to the current card to prevent auto double skipping.
@@ -254,7 +253,7 @@ public class Game {
                 if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
                     draw(player);
                     draw(player);
-                    return true;
+                    return true; // tested 2017-01-03
                 }
                 if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                     draw(player);
