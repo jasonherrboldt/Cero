@@ -25,20 +25,19 @@ public class Main {
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
 
     public static void main(String[] args) {
-//        Game game = new Game("");
-//        GameState gameState = game.startGame();
-//        String currentPlayedCardString = gameState.getCurrentPlayedCard().getPrintString();
-//        Main.out("Current card: " + currentPlayedCardString);
 
 //        outNoReturn("Please enter your name (no special characters): ");
 //        String name = System.console().readLine();
 //        while(!isValid(name)) {
-//            outNoReturn("Please try again.");
+//            outNoReturn("Please try again. ");
 //            out("Allowed characters are a-z, A-Z, and space: ");
 //            name = System.console().readLine();
 //        }
 //        System.out.println("Welcome, " + name + "! Let's begin.");
 
+
+
+        // test Q&A:
 //        String answer = getUserResponse_yesNo("Do you believe in love?");
 //        out("Your answer: " + answer);
 //
@@ -51,17 +50,61 @@ public class Main {
 //        answer = getUserResponse_chosenColor();
 //        out("Your answer: " + answer);
 
-        Game game = new Game("David Lightman");
+
+
+        /* main pseudocode
+        Welcome the user, get name.
+        inner winner exists = false
+        Game game = new Game(user's name)
+        game.playFirstHand (handles auto skipping and auto draws as needed)
+
+        while both player's scores are < 500
+            it is now player one's turn
+            if !skipTurn(player 1) // handles auto draws
+                prompt user to move
+                if player one has discarded last card
+                    inner winner exists
+                if !skipTurn(player 2) // handles auto draws
+                    player two moves
+                    if player two has discarded last card
+                        inner winner exists
+            else // player one is forbidden from discarding
+                player two moves // no need to check for turn skipping or auto drawing
+                if player two has discarded last card
+                    inner winner exists
+            if inner winner exists
+                update winner's score
+                    if either winner's score is >= 500
+                        announce winner // while loop exits
+                    else
+                        start a new inner game
+                        game.playFirstHand
+                        // back to the top
+                inner winner exists = false
+         */
+
+        String testName = "David Lightman";
+        boolean innerWinnerExists = false;
+        int playerOneScore = 0;
+        int playerTwoScore = 0;
+        int maxTestTurns = 10;
+        int winningScore = 500;
+
+        Game game = new Game(testName);
+        out("Starting game, playing the first hand...");
         game.startGame(null, true);
         game.playFirstHand();
-        // game.playSubsequentHand();
+        out("\nBack to main.");
 
-//        List<Player> players = game.getPlayers();
-//        for(Player p : players) {
-//            if(p.getScore() > 500) {
-//                // we have a winner
-//            }
-//        }
+        // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
+        if(!game.skipTurn(game.getPlayer1())) {
+            out("\nIt's your turn, " + testName);
+        } else {
+            out("\n" + testName + ", you were forbidden from discarding.");
+        }
+
+
+
     }
 
     /**
@@ -115,8 +158,9 @@ public class Main {
             String response = "";
             while(!validAnswerReceived) {
                 outNoReturn(question + " ");
-                response = System.console().readLine();
-                if(response.equalsIgnoreCase("y") || response.equalsIgnoreCase("n")) {
+                response = System.console().readLine().trim();
+                if(response.equalsIgnoreCase("y") || response.equalsIgnoreCase("n") ||
+                        response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("no")) {
                     validAnswerReceived = true;
                 } else {
                     out(userCorrectionMessage);
@@ -216,7 +260,7 @@ public class Main {
         while(!validAnswerReceived) {
             outNoReturn("What is your chosen color for the next move? ");
             response = System.console().readLine();
-            if(validColorChoices.contains(response.toLowerCase())) {
+            if(validColorChoices.contains(response.toLowerCase().trim())) {
                 validAnswerReceived = true;
             } else {
                 out(userCorrectionMessage + " Acceptable answers are " + validColorChoices + ", (case insensitive).");

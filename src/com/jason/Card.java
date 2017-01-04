@@ -111,7 +111,7 @@ public class Card {
      *
      * @return      True if this card has a numeric face value, false otherwise.
      */
-    public boolean isNumberCard() { // tested
+    public boolean isNumeric() { // tested
         int faceVal = cvm.getValue(face);
         return faceVal >= 0 && faceVal < 10;
     }
@@ -134,5 +134,16 @@ public class Card {
         } else {
             return "(" + getColor() + ") " + getFace();
         }
+    }
+
+    /**
+     * @return true if a card is non-numeric (i.e. wild, skip, rev, d2, or d4)
+     */
+    public boolean isNonNumeric() {
+        return isColorlessCard() || !isNumeric();
+    }
+
+    public boolean isNonNumericNonWild() {
+        return isNonNumeric() && !this.face.equalsIgnoreCase(WILD);
     }
 }

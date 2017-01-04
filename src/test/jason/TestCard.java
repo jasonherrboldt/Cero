@@ -33,8 +33,8 @@ public class TestCard {
         Card numericCard = new Card(Card.YELLOW, Card.FOUR, cvm);
         Card nonNumericCard = new Card(Card.YELLOW, Card.WILD, cvm);
 
-        assertTrue(numericCard.isNumberCard());
-        assertFalse(nonNumericCard.isNumberCard());
+        assertTrue(numericCard.isNumeric());
+        assertFalse(nonNumericCard.isNumeric());
     }
 
     @Test

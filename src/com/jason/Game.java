@@ -19,14 +19,9 @@ public class Game {
      *
      *    MUST-HAVES:
      *
+     *    Need to redesign testPlayer_otherPlayerForgotToCallCero_player2. See comment.
+     *
      *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
-     *
-     *    Automatically draw cards for player one when it receives a draw two or draw four card.
-     *
-     *    Must call player1.setLastPlayedCard(currentPlayedCard) for player one's turn to prevent unnecessary
-     *    automatic draws and turn skips for non-numeric cards. (I think this would happen in game.discard.)
-     *
-     *    Make all class member variables private (yes, even Card) and create setters / getters for them.
      *
      *    Go through every method and make sure the javadoc comments still make sense.
      *
@@ -66,15 +61,16 @@ public class Game {
      */
 
     private Deck deck;
-    public Player player1; // the user
-    public Player player2; // the computer
+    private Player player1; // the user
+    private Player player2; // the computer
     private boolean isPlayerOnesTurn;
-    public Card currentPlayedCard;
+    private Card currentPlayedCard;
     private CardValueMap cvm;
     private Stack<Card> discardPile;
     private String currentColor;
     private boolean isFirstMove;
     private static final int MAX_P2_DRAW_LOOP = 100;
+    private Card numeric; // generic starter card
 
     public Game(String playerOneName) {
         cvm = new CardValueMap();
@@ -87,6 +83,7 @@ public class Game {
         discardPile = new Stack<>();
         currentColor = "";
         isFirstMove = true;
+        numeric = new Card(Card.RED, Card.NINE, cvm);
     }
 
     /**
@@ -124,7 +121,7 @@ public class Game {
     /**
      * Play the first hand.
      */
-    public void playFirstHand() { // tested
+    public void playFirstHand() {
         if (!isFirstMove) {
             // tested
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
@@ -132,7 +129,7 @@ public class Game {
             if (!isPlayerOnesTurn) {
                 Main.out("\n" + player2.getName() + " had the first move.\n");
                 printHand(player2);
-                if(skipPlayersFirstTurn(player2)) {
+                if(skipFirstTurn(player2)) {
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
                     isFirstMove = false;
@@ -141,11 +138,12 @@ public class Game {
                 } else {
                     playerTwosTurn();
                     isFirstMove = false;
+                    isPlayerOnesTurn = true;
                 }
             } else { // player one's turn
                 Main.out("\nIt's " + player1.getName() + "'s turn.\n");
                 printHand(player1);
-                if (skipPlayersFirstTurn(player1)) {
+                if (skipFirstTurn(player1)) {
                     Main.out("\n" + player1.getName() + ", you were forbidden from discarding. " +
                             "The first move switches to " + player2.getName() + ".");
                     isPlayerOnesTurn = false;
@@ -153,12 +151,11 @@ public class Game {
                     playerTwosTurn();
                 } else {
                     isFirstMove = false;
+                    isPlayerOnesTurn = true;
                 }
             }
         }
     }
-
-    // public void playSubsequentHand() {
 
     /**
      * Determine whether or not the first move should be automatically skipped and auto-draws cards as needed.
@@ -166,147 +163,74 @@ public class Game {
      * @param player the player who has the current move
      * @return       true if the player's move should be skipped, false otherwise
      */
-    public boolean skipPlayersFirstTurn(Player player) { // tested
+    public boolean skipFirstTurn(Player player) {
         if (!isFirstMove) {
-            throw new IllegalStateException("skipPlayersFirstTurn was called when isFirstMove == false."); // tested
+            throw new IllegalStateException("skipFirstTurn was called when isFirstMove == false."); // tested
         } else {
-            if (!currentPlayedCard.isNumberCard()) {
+            // necessary to prevent null pointer exception in skipSubsequentTurn:
+            getOtherPlayer(player).setLastPlayedCard(currentPlayedCard);
+            player.setLastPlayedCard(numeric);
+            if (!currentPlayedCard.isNumeric()) {
                 if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD) ||
                         currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    throw new IllegalStateException("skipPlayersFirstTurn was called with wild or " +
+                    throw new IllegalStateException("skipFirstTurn was called with wild or " +
                             "wild draw four card - not allowed for first turn."); // tested for wild and WD4
                 }
                 if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                    draw(player); // tested
-                    draw(player); //tested
+                    draw(player);
+                    draw(player);
                 }
                 // return true if skip, reverse, or draw two.
-                return true; // tested for draw two, skip, and reverse.
+                return true;
             } else {
                 // return false if it is numeric
-                return false; // tested
+                return false;
             }
         }
     }
 
-    /**
-     * Determines if the player has to react to a non-numeric card move and skip its turn.
-     *
-     * @param player the player who has the current move
-     * @return true if the player's move should be skipped, false otherwise.
-     */
-    public boolean skipPlayersSubsequentTurn(Player player) { // *** TESTING IN PROGRESS ***
-        if(isFirstMove) {
-            // tested
-            throw new IllegalStateException("Game.skipPlayersSubsequentTurn called when isFirstMove == true.");
-        } else {
-
-            // todo: this method must return exactly ONE true and ONE false.
-
-            // special case for 2nd move - if 1st move is skipped, 2nd player needs to get its last played card
-            // from somewhere else. Set it to the current card to prevent auto double skipping.
-            // ******* I suspect the block below is useless and should be destroyed. *******
-            // ******* this method will only be called for moves 3, 4, 5, ... *******
-//            Card lastPlayedCard = currentPlayedCard;
-//            if (player.getLastPlayedCard() != null) { // only happens on 2nd move if 1st move auto skipped
-//                lastPlayedCard = player.getLastPlayedCard();
-//            }
-
-            Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
-
-            Card lastPlayedCard = player.getLastPlayedCard();
-
-            Main.out("\nOh hai from Game.skipPlayersSubsequentTurn.");
-            Main.out("lastPlayedCard = " + lastPlayedCard.getPrintString() + ", currentPlayedCard = " +
-                    currentPlayedCard.getPrintString() + "\n");
-
-            boolean lastPlayedCardIsNumeric = lastPlayedCard.isNumberCard();
-            boolean lastPlayedCardIsWild = lastPlayedCard.equals(wild);
-            boolean lastPlayedCardIsNonNumericAndNonWild = !lastPlayedCard.isNumberCard() && !lastPlayedCard.equals(wild);
-
-            boolean currentPlayedCardIsNumeric = currentPlayedCard.isNumberCard();
-            boolean currentPlayedCardIsWild = currentPlayedCard.equals(wild);
-            boolean currentPlayedCardIsNonNumericAndNonWild = !currentPlayedCard.isNumberCard()
-                    && !currentPlayedCard.equals(wild);
-
-            if (lastPlayedCardIsNumeric && currentPlayedCardIsNumeric) {
-                // do not skip player's turn
-                return false; // tested 2017-01-03
-            }
-            if (lastPlayedCardIsWild && currentPlayedCardIsNumeric) {
-                // do not skip player's turn
-                return false; // tested 2017-01-03
-            }
-            if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNonNumericAndNonWild) {
-                if(!lastPlayedCard.equals(currentPlayedCard)) {
-                    // tested 2017-01-03
-                    throw new IllegalStateException("A non-numeric, non-wild card can not come back to the " +
-                            "player that dealt it unless it is exactly the same card.");
-                }
-                // do not skip player's turn
-                return false; // tested 2017-01-03
-            }
-
-
-            if (lastPlayedCardIsNumeric && currentPlayedCardIsNonNumericAndNonWild) {
-                // draw as needed and skip player's turn
-                if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                    draw(player);
-                    draw(player);
-                    return true; // tested 2017-01-03
-                }
-                if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    draw(player);
-                    draw(player);
-                    draw(player);
-                    draw(player);
-                    return true;
-                }
-            }
-            if (lastPlayedCardIsWild && currentPlayedCardIsNonNumericAndNonWild) {
-                // draw as needed and skip player's turn
-                if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                    draw(player);
-                    draw(player);
-                    return true;
-                }
-                if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    draw(player);
-                    draw(player);
-                    draw(player);
-                    draw(player);
-                    return true;
-                }
-            }
-
-
-            if (lastPlayedCardIsNumeric && currentPlayedCardIsWild) {
-                player.chosenColor = getOtherPlayersChosenColor(player);
-                // do not skip player's turn
-                return false; // tested 2017-01-03
-            }
-            if (lastPlayedCardIsWild && currentPlayedCardIsWild) {
-                player.chosenColor = getOtherPlayersChosenColor(player);
-                // do not skip player's turn
-                return false;
-            }
-
-
-            if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsNumeric) {
-                Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
-                        "No action taken, returned true.");
-                return true;
-            }
-            if (lastPlayedCardIsNonNumericAndNonWild && currentPlayedCardIsWild) {
-                Main.out("WARN: Game.skipPlayersTurn encountered a state that should never occur. " +
-                        "No action taken, returned true.");
-                return true;
-            }
-
-
-            Main.out("WARN: logic in Game.skipPlayersTurn fell through to the bottom. No action taken, returning true.");
-            return true;
+    public boolean skipTurn(Player player) { // tested
+        if(isFirstMove()) {
+            throw new IllegalStateException("Method called when isFirstTurn == true. Must be false.");
         }
+        if(player.getLastPlayedCard() == null) {
+            // skipFirstTurn guarantees this will never happen
+            throw new IllegalStateException("Player's last played card is null in Game.skipTurn.");
+        }
+        if(currentPlayedCard.isNumeric()) {
+            return false;
+        }
+        String cpcFace = currentPlayedCard.getFace();
+        if(currentPlayedCard.isNonNumericNonWild()) {
+            if(player.getLastPlayedCard().isNonNumericNonWild()) {
+                // it's the same non-numeric / non-wild card the player discarded last time
+                // (wild cards do not require a skipped turn)
+                return false;
+            } else {
+                if(cpcFace.equalsIgnoreCase(Card.WILD_DRAW_FOUR) || cpcFace.equalsIgnoreCase(Card.SKIP)
+                        || cpcFace.equalsIgnoreCase(Card.DRAW_TWO) || cpcFace.equalsIgnoreCase(Card.REVERSE)){
+                    if (cpcFace.equalsIgnoreCase(Card.DRAW_TWO)) {
+                        draw(player);
+                        draw(player);
+                    } else if (cpcFace.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                        draw(player);
+                        draw(player);
+                        draw(player);
+                        draw(player);
+                    }
+                    return true; // skip player's turn for all non-numeric / non-wild cpcs
+                }
+            }
+        } else if(cpcFace.equalsIgnoreCase(Card.WILD)) {
+            player.setChosenColor(getOtherPlayer(player).getChosenColor());
+            return false; // do not skip player's turn
+        }
+        /*
+            Blow up — throw an illegal state exception (put user warning in the exception:):
+            Lpc nn-nw, Cpc n: (should never happen - other user should have skipped a turn)
+            Lpc nn-nw, Cpc w: (should never happen - other user should have skipped a turn)
+         */
+        throw new IllegalStateException("Logic fell through all conditionals.");
     }
 
     /**
@@ -328,7 +252,7 @@ public class Game {
             throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
         } else {
             if(!isFirstMove) {
-                currentColor = player2.chosenColor; // could be a wild card if not first move
+                currentColor = player2.getChosenColor(); // could be a wild card if not first move
             } else {
                 currentColor = currentPlayedCard.getColor();
             }
@@ -353,9 +277,9 @@ public class Game {
             Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
             return null;
         }
-        // just discard first card for debug
-        Card cardToDiscard = player2.getHand().getFirstCard();
-        player2.discard(cardToDiscard, currentPlayedCard, false, currentColor);
+        Card cardToDiscard = player2.getHand().getFirstCard(); // debug
+        // Card cardToDiscard = new Card(Card.BLUE, Card.DRAW_TWO, cvm); // debug
+        player2.playerTwoDiscard(cardToDiscard, currentPlayedCard, false, currentColor);
         return cardToDiscard;
 
         // Currently under construction: *********************************************************************************************************************
@@ -384,11 +308,17 @@ public class Game {
 //        }
     }
 
-    public String getOtherPlayersChosenColor(Player player) {  // tested
+    /**
+     * Get the other player.
+     *
+     * @param player the player
+     * @return       the other player
+     */
+    public Player getOtherPlayer(Player player) {
         if(player.isPlayer2()) {
-            return player1.chosenColor;
+            return player1;
         } else {
-            return player2.chosenColor;
+            return player2;
         }
     }
 
@@ -506,7 +436,7 @@ public class Game {
      */
     public void setDiscardPile(Stack<Card> injectedDiscardPile) { // tested by testGame_draw_emptyDeck
         if(injectedDiscardPile.isEmpty()) {
-            Main.out("WARN: Game.setDiscardPile called with empty discardPile. No action taken.");
+            Main.out("WARN: Game.setDiscardPile called with empty discardPile.");
         }
         this.discardPile.clear();
         Iterator<Card> injectedDiscardCards = injectedDiscardPile.iterator();

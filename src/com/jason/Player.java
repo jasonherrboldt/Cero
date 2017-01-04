@@ -36,13 +36,12 @@ public class Player {
     private int score;
     public int otherPlayersHandCount;
     private boolean ceroCalled;
-    public String chosenColor;
+    private String chosenColor;
     private Card lastPlayedCard;
 
     // for strategy getters:
     private Card wild;
-    Card wildDrawFour;
-    private CardValueMap cvm;
+    private Card wildDrawFour;
 
     public Player(String name, boolean isComputer) {
         this.name = name;
@@ -54,7 +53,7 @@ public class Player {
         lastPlayedCard = null;
 
         // for strategy getters:
-        cvm = new CardValueMap();
+        CardValueMap cvm = new CardValueMap();
         wild = new Card(Card.COLORLESS, Card.WILD, cvm);
         wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
     }
@@ -87,7 +86,7 @@ public class Player {
      * @param playerOnesChosenColor Player one's chosen color (for wild and wild draw four cards)
      * @return                      True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean discard(Card cardToDiscard, Card currentPlayedCard, boolean callCero,
+    public boolean playerTwoDiscard(Card cardToDiscard, Card currentPlayedCard, boolean callCero,
                            String playerOnesChosenColor) throws IllegalStateException { // *** NEEDS TESTING ***
         /*
          * This method needs to be refactored to return ONE true and ONE false.
@@ -107,7 +106,7 @@ public class Player {
                 hand.discard(cardToDiscard);
                 return true;
             } else {
-                if(cardToDiscard.isNumberCard()) {
+                if(cardToDiscard.isNumeric()) {
                     if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
                             cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
                         hand.discard(cardToDiscard);
@@ -122,9 +121,9 @@ public class Player {
             }
             // ********** todo: switch this back to an illegal state exception once the computer knows how to play legal cards. **********
             // throw new IllegalStateException("Logic fell through all conditionals.");
-            Main.out("\nWARN: Player.discard received an illegal card to discard.");
-            Main.out("Discarding anyway, but please change this to an illegal state exception " +
-                    "\nonce player two knows how to discard legal cards.");
+            Main.out("\nWARN: Player.discard received an illegal card to discard. (Ignoring for debug.)");
+//            Main.out("Discarding anyway, but please change this to an illegal state exception " +
+//                    "\nonce player two knows how to discard legal cards.");
             hand.discard(cardToDiscard);
             return true;
         }
@@ -393,6 +392,15 @@ public class Player {
 
     public void setLastPlayedCard(Card lastPlayedCard) {
         this.lastPlayedCard = lastPlayedCard;
+    }
+
+
+    public String getChosenColor() {
+        return chosenColor;
+    }
+
+    public void setChosenColor(String chosenColor) {
+        this.chosenColor = chosenColor;
     }
 
 }

@@ -1,28 +1,50 @@
 
 
-skipPlayersTurn
-
-If it's the first move, call helper method A, inject the player. Test method A separately. Test method A. Method A should return one true and one false only. (This should be a separate method called skipPlayersFirstTurn.)
-
-Else call helper method B, inject the player. Test method B. Method B should return one true and one false only. (This should be a separate method called skipPlayersSubsequentTurn.)
-
-For method B:
-
-Do not skip my turn (return false):
-Lpc n, Cpc n: draw nothing, do not skip my turn
-Lpc w, Cpc n: draw nothing, do not skip my turn
-Lpc nn-nw, Cpc nn-nw: draw nothing, do not skip my turn
-Lpc n, Cpc w: set my color to other player's preferred color, do not skip my turn
-Lpc w, Cpc w: set my color to other player's preferred color, do not skip my turn
-
-Skip my turn (return true)
-Lpc n, Cpc nn-nw: skip my turn and potentially draw
-Lpc w, Cpc nn-nw: skip my turn and potentially draw
-
-Blow up  throw an illegal state exception (put user warning in the exception:): Lpc nn-nw, Cpc n: (should never happen)
-Lpc nn-nw, Cpc w: (should never happen)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRAVEYARD:
+
+
+boolean skipTurn (player)
+if the cpc is numeric
+    return false
+if the cpc is nn-nw
+    if my lpc is nn // lpc should never be null because 1st turn has already come and gone (showstopper)
+        // this is player's last discarded nn
+        return false (do not skip my turn)
+    else
+        if cpc is wd4, draw two, reverse, or skip
+            if cpc is draw two
+                draw two cards
+            else if cpc is draw four
+                draw four cards
+            return true (do skip my turn)
+        else if cpc is wild
+            set my color to p1s chosen color
+            return false (do not skip my turn)
 
 
 
@@ -57,137 +79,6 @@ Main
 
 
 
-Player
-
-    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor)
-        if cpc is wild
-            return highest numeric face of currentColor
-        else
-            // try to match the number
-            let card1 be the number from the largest color group that matches cpc.color
-
-            // try to match the color
-            let card2 be the highest numeric face of cpc.color
-
-            // compare the two, return the one with the highest card group
-            if card1 is not null and card2 is not null
-                if hand.getColorGroupSize(card1.color) > hand.getColorGroupSize(card1.color)
-                    return card1
-                else
-                    return card2
-
-            if card1 is not null or card2 is not null
-                if card1 is not null
-                    return card1
-                else
-                    return card2
-
-            if hand has card wild
-                return a new wild card
-
-            if hand has card wild draw four
-                return a new wild draw four
-
-
-    public Card getCautiousStrategyCard(Card currentPlayedCard, String currentColor)
-        if cpc is wild
-            return highest non-numeric face of current color
-        else
-            if hand has card wild
-                return a new wild card
-
-            if hand has card wild draw four
-                return a new wild draw four
-
-            // try to match the number
-            let card1 be the number from the largest color group that matches cpc.color
-
-            // try to match the color
-            let card2 be the highest non-numeric face of cpc.color
-
-            // compare the two, return the one with the highest value
-            if card1 is not null and card2 is not null
-                if hand.getHighestFace(color, false) > hand.getHighestFace(color, false)
-                    return card1
-                else
-                    return card2
-
-            if card1 is not null or card2 is not null
-                if card1 is not null
-                    return card1
-                else
-                    return card2
-
-
-
-public boolean skipPlayersTurn(player)
-	player has to skip its turn and potentially draw cards if
-	    cpc is nn and lpc is n
-	player does not have to draw cards or skip if
-	    cpc is numeric, lpc is anything
-
-
-
-
-
-
-        // stop player from reacting to non-numeric cards that it played last time  
-        // as if they were discarded by player one.
-        // if(currentPlayedCard.equals(player.getMyLastPlayedCard())) {
-        if(currentPlayedCard.isNumberCard()) {
-            return false;
-        }
-        if(!currentPlayedCard.isNumberCard() && !player.getMyLastPlayedCard().isNumberCard()) {
-            // act as if a numeric card was received.
-            return !player.getMyLastPlayedCard().equals(new Card(Card.COLORLESS, Card.WILD, cvm));
-        } else {
-            String face = currentPlayedCard.getFace();
-            if (face.equalsIgnoreCase(Card.SKIP)) {
-                return true;
-            }
-            if (face.equalsIgnoreCase(Card.REVERSE)) {
-                return true;
-            }
-            if (face.equalsIgnoreCase(Card.DRAW_TWO)) {
-                for(int i = 0; i < 2; i++) {
-                    draw(player);
-                }
-                return true;
-            }
-            if(!isFirstMove) { // don't need to check for this...
-                if (face.equalsIgnoreCase(Card.WILD) || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    currentColor = getOtherPlayersChosenColor(player);
-                } else {
-                    currentColor = currentPlayedCard.getColor();
-                }
-                if(face.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    for(int i = 0; i < 4; i++) {
-                        draw(player);
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-        // return false;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-GRAVEYARD:
-
-
-
 Game.playerTwoMove
     if everything is validated and OK to proceed
         let cardToDiscard be an uninitialized card
@@ -197,6 +88,8 @@ Game.playerTwoMove
                     if cardToDiscard is null
                         player two draws a card
                     else
+
+
 
 
 
@@ -234,6 +127,23 @@ public GameState startGame()
 			let gameStateMessage = playerTwosTurn(gameStateMessage)
 	populate gameState's fields
 	return gameState
+
+
+public boolean nonNumericCardReceived(player)
+	if cpc is skip
+		return true
+	if cpc is reverse
+		return true
+	if cpc is draw two
+		make player draw two cards
+		return true
+	if isFirstMove = false
+		if cpc is wild or cpc is wild draw four
+			let the current color be the other player's chosen color
+			if cpc is wild draw four
+				make player draw four cards
+			return true
+	return false
 
 
 

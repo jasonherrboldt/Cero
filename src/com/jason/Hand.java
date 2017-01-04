@@ -80,6 +80,7 @@ public class Hand {
     public void discard(Card card) throws IllegalArgumentException { // tested
         if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
+            // Main.out("WARN: Card not in hand. (Ignoring for debug.)");
         }
         if(card == null) {
             Main.out("WARN: Hand.discard received a null card. No action taken.");
