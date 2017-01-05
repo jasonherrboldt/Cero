@@ -42,7 +42,7 @@ public class Card {
     public static final String WILD = "Wild";
     public static final String WILD_DRAW_FOUR = "Wild Draw Four";
 
-    CardValueMap cvm;
+    private CardValueMap cvm;
     
     /**
      * Public constructor.
@@ -56,7 +56,10 @@ public class Card {
             Main.out("WARN: Card constructor received a null CardValueMap object.");
         }
         if(color.equalsIgnoreCase(Card.COLORLESS) && (!face.equalsIgnoreCase(Card.WILD) && !face.equalsIgnoreCase(Card.WILD_DRAW_FOUR))) {
-            Main.out("WARN: Card constructor incorrectly called with colorless color and face " + face);
+            throw new IllegalArgumentException("Card constructor incorrectly called with colorless color and face " + face);
+        }
+        if(!color.equalsIgnoreCase(Card.COLORLESS) && (face.equalsIgnoreCase(Card.WILD) || face.equalsIgnoreCase(Card.WILD_DRAW_FOUR))) {
+            throw new IllegalArgumentException("Card constructor incorrectly called with non-colorless color and face " + face);
         }
         this.cvm = cvm;
         this.color = color;

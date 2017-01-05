@@ -19,11 +19,13 @@ public class Game {
      *
      *    MUST-HAVES:
      *
-     *    Need to redesign testPlayer_otherPlayerForgotToCallCero_player2. See comment.
+     *    Go through all test classes and see if any repeating code blocks can be moved up to the class level and shared.
      *
      *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
      *
      *    Go through every method and make sure the javadoc comments still make sense.
+     *
+     *    Make sure every single method is tested. If not, leave a comment as to why.
      *
      *    NICE-TO-HAVES:
      *
@@ -102,7 +104,7 @@ public class Game {
     /**
      * Play the first hand.
      */
-    public void playFirstHand() {
+    public void playFirstHand() { // tested
         if (!isFirstMove) {
             // tested
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
@@ -140,7 +142,7 @@ public class Game {
      * @param player the player who has the current move
      * @return       true if the player's move should be skipped, false otherwise
      */
-    public boolean skipFirstTurn(Player player) {
+    public boolean skipFirstTurn(Player player) { // tested
         if (!isFirstMove) {
             throw new IllegalStateException("skipFirstTurn was called when isFirstMove == false."); // tested
         } else {
@@ -166,6 +168,12 @@ public class Game {
         }
     }
 
+    /**
+     * Decide if a player's turn should be skipped. Also handles auto-drawing for draw two and wild draw four.
+     *
+     * @param player the player
+     * @return       true if the player's turn should be skipped, false otherwise.
+     */
     public boolean skipTurn(Player player) { // tested
         if(isFirstMove()) {
             throw new IllegalStateException("Method called when isFirstTurn == true. Must be false.");
@@ -203,7 +211,7 @@ public class Game {
             return false; // do not skip player's turn
         }
         /*
-            Blow up — throw an illegal state exception (put user warning in the exception:):
+            Blow up
             Lpc nn-nw, Cpc n: (should never happen - other user should have skipped a turn)
             Lpc nn-nw, Cpc w: (should never happen - other user should have skipped a turn)
          */
@@ -217,24 +225,21 @@ public class Game {
         if(isPlayerOnesTurn) {
             throw new IllegalStateException("Called while isPlayerOnesTurn == true");
         }
-        // printHand(player2);
-        if(player2.otherPlayerIncorrectlyForgotToCallCero(player1)) {
-            for(int i = 0; i < 2; i++) {
-                draw(player1);
-            }
-        }
         currentPlayedCard = playerTwoMove();
         player2.setLastPlayedCard(currentPlayedCard);
         if(currentPlayedCard == null) {
-            throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
+            // turn this back on later:
+            // throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
+            Main.out("WARN: Game.playerTwosTurn received null from a call to Game.playerTwosMove.");
         } else {
             if(!isFirstMove) {
-                currentColor = player2.getChosenColor(); // could be a wild card if not first move
+                currentColor = player2.getChosenColor(); // could be a wild or wd4 if not first move
             } else {
                 currentColor = currentPlayedCard.getColor();
             }
             discardPile.add(currentPlayedCard);
-            Main.out("\n" + player2.getName() + " discarded the card " + currentPlayedCard.getPrintString() + "\n");
+            Main.out("\n" + player2.getName() + " tried to discard a " + currentPlayedCard.getPrintString());
+            Main.out("The current chosen color is " + currentColor);
             printHand(player2);
         }
     }
@@ -254,10 +259,16 @@ public class Game {
             Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
             return null;
         }
+        // just discard the first card in the hand for debug.
         Card cardToDiscard = player2.getHand().getFirstCard(); // debug
-        // Card cardToDiscard = new Card(Card.BLUE, Card.DRAW_TWO, cvm); // debug
-        player2.playerTwoDiscard(cardToDiscard, currentPlayedCard, false, currentColor); // remember to set the correct color here
-        return cardToDiscard;
+        // where does player two's chosen color come from? ******************************************************************************
+        if(player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
+            player2.getHand().discard(cardToDiscard);
+        } else {
+            // throw new IllegalStateException("Player two attempted to discard an illegal card.");
+            Main.out("WARN: Game.playerTwoMove attempted to discard an illegal card. (Will soon be an illegal state exception.)");
+        }
+        return cardToDiscard; // debug
 
         // Currently under construction: *********************************************************************************************************************
 //        boolean playerTwoHasDiscarded = false;
@@ -277,11 +288,18 @@ public class Game {
 //                return null;
 //            }
 //        }
-//        if(player2.discard(cardToDiscard, currentPlayedCard, false, null)) { // *** needs to decide callCero value! ***
+          // pick a color here based on strategy?
+//        if(player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
+//            player2.getHand().discard(cardToDiscard);
+//            if cardToDiscard is wild or wd4
+//                player2.setChosenColor(playerTwosChosenColor)
+//                setCurrentColor(playerTwosChosenColor);
+//            else
+//                setCurrentColor(cardToDiscard.getColor());
+//                player2.setChosenColor(cardToDiscard.getColor())
 //            return cardToDiscard;
 //        } else {
-//            Main.out("Player two attempted an illegal move. This is a showstopper. Returning null.");
-//            return null;
+//            throw new IllegalStateException("Player two attempted an illegal move.");
 //        }
     }
 
@@ -304,10 +322,10 @@ public class Game {
      *
      * @param player the player to draw
      */
-    public void draw(Player player) { // tested
+    public void draw(Player player) { // tested (just needs exception testing as well)
         if(deck == null || discardPile == null) {
-            Main.out("WARN: Game.draw called with a null deck or a null discard pile, or both. " +
-                    "No action taken.");
+            throw new IllegalStateException("Game.draw called with a null deck or a null discard pile, or both. " +
+                    "No action taken."); // *** NEEDS TESTING ***
         } else {
             if(deck.getDeckSize() == 0 && discardPile.size() > 0) {
                 refreshDeck();
@@ -322,12 +340,9 @@ public class Game {
      */
     private void refreshDeck() { // tested by testGame_draw_emptyDeck
         if(deck.getDeckSize() == 0) {
-            // Main.out("Deck is empty! Replenishing with discard pile...");
             replaceDeckWithDiscardPile();
-            // Main.out("Shuffling deck...");
             deck.shuffle();
             discardPile.clear();
-            // Main.out("Deck size is now " + deck.getDeckSize());
         }
     }
 
@@ -368,7 +383,9 @@ public class Game {
      * @return      A verified card
      */
     public Card verifyFirstCard(Card card) { // tested
-        if (card != null) {
+        if (card == null) {
+            throw new IllegalStateException("Game.verifyFirstCard called with a null card.");
+        } else {
             while (card.equals(new Card(Card.COLORLESS, Card.WILD, cvm))
                     || card.equals(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm))) {
                 deck.clearDeck();
@@ -377,9 +394,6 @@ public class Game {
                 card = deck.popCard();
             }
             return card;
-        } else {
-            Main.out("WARN: Game.verifyFirstCard called with a null card. No action taken, null returned.");
-            return null;
         }
     }
 
@@ -483,6 +497,10 @@ public class Game {
 
     public String getCurrentColor() {
         return currentColor;
+    }
+
+    public void setCurrentColor(String color) {
+        currentColor = color;
     }
 
     public Card getCurrentPlayedCard() {

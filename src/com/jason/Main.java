@@ -14,7 +14,7 @@ public class Main {
     /*
         set PATH=[path\to\jdk\bin];%PATH%, e.g.
         set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH%
-        (must be > java 1.6)
+        (must be >= java 1.8)
 
         javac src/com/jason/*.java
         java -cp ./src com.jason.Main
@@ -50,41 +50,6 @@ public class Main {
 //        answer = getUserResponse_chosenColor();
 //        out("Your answer: " + answer);
 
-
-
-        /* main pseudocode
-        Welcome the user, get name.
-        inner winner exists = false
-        Game game = new Game(user's name)
-        game.playFirstHand (handles auto skipping and auto draws as needed)
-
-        while both player's scores are < 500
-            it is now player one's turn
-            if !skipTurn(player 1) // handles auto draws
-                prompt user to move
-                if player one has discarded last card
-                    inner winner exists
-                if !skipTurn(player 2) // handles auto draws
-                    player two moves
-                    allow the user to declare that player two forgot to say 'Cero plus one!'
-                    (make player two draw two cards if applicable)
-                    if player two has no cards left
-                        inner winner exists
-            else // player one is forbidden from discarding
-                player two moves // no need to check for turn skipping or auto drawing
-                if player two has discarded last card
-                    inner winner exists
-            if inner winner exists
-                update winner's score
-                    if either winner's score is >= 500
-                        announce winner // while loop exits
-                    else
-                        start a new inner game
-                        game.playFirstHand
-                        // back to the top
-                inner winner exists = false
-         */
-
         String testName = "David Lightman";
         boolean innerWinnerExists = false;
         int playerOneScore = 0;
@@ -106,9 +71,6 @@ public class Main {
         } else {
             out("\n" + testName + ", you were forbidden from discarding.");
         }
-
-
-
     }
 
     /**

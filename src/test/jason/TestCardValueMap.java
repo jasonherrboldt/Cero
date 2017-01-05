@@ -39,16 +39,3 @@ public class TestCardValueMap {
         assertEquals(cvm.getValue(Card.WILD), 50);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -13,10 +13,13 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  *     BOLD: Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
  *           Will switch to CAUTIOUS if player1 has < 4 cards. Will switch back to BOLD if player1 has > 3 cards.
+ *
  *     CAUTIOUS: will discard non-numeric cards ASAP.
+ *
  *     NEUTRAL: (for player1)
- *     DUMB: will look blindly for first matching card in hand - don't try to switch the deck color to your favor.
- *             Decide randomly to play a non-numeric card (if any are present).
+ *
+ *     DUMB: will look blindly for first matching card in hand - will not try to switch the deck color to its favor.
+ *             Randomly decides to play a non-numeric card if any are present.
  *
  *    "A defensive strategy would advise playing a high card in order to reduce the point value of the hand.
  *    However, an offensive strategy would suggest playing a 0 when the player wants to continue on the current
@@ -35,7 +38,6 @@ public class Player {
     private String strategy;
     private int score;
     public int otherPlayersHandCount;
-    private boolean ceroCalled;
     private String chosenColor;
     private Card lastPlayedCard;
     List<String> colors;
@@ -50,7 +52,6 @@ public class Player {
         strategy = "";
         score = 0;
         otherPlayersHandCount = 0;
-        ceroCalled = false;
         lastPlayedCard = null;
 
         // for strategy getters:
@@ -88,79 +89,37 @@ public class Player {
     /**
      * Discard a card.
      *
-     * @param cardToDiscard         The card to discard.
-     * @param currentPlayedCard     The current played card.
-     * @param callCero              Whether or not to declare 'Cero plus one!'
-     * @param playerOnesChosenColor Player one's chosen color (for wild and wild draw four cards)
-     * @return                      True if the discarded card was deemed legal, false otherwise.
+     * @param cardToDiscard     The card to discard.
+     * @param currentPlayedCard The current played card.
+     * @return                  True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean playerTwoDiscard(Card cardToDiscard, Card currentPlayedCard, boolean callCero,
-                           String playerOnesChosenColor) throws IllegalStateException { // *** NEEDS TESTING ***
-        /*
-         * This method needs to be refactored to return ONE true and ONE false.
-         */
+    public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard) { // tested
         if(cardToDiscard == null || currentPlayedCard == null) {
             throw new IllegalStateException("Player.discard called with a null card, a null currentPlayedCard, or both.");
         } else {
-            ceroCalled = callCero; // incumbent on the accuracy of Main.main
             if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                if(isPlayer2) {
-                    chosenColor = getPlayerTwosChosenColor();
-                } else {
-                    if(playerOnesChosenColor != null) {
-                        chosenColor = playerOnesChosenColor;
-                    }
-                }
-                hand.discard(cardToDiscard);
                 return true;
             } else {
                 if(cardToDiscard.isNumeric()) {
                     if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
                             cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
-                        hand.discard(cardToDiscard);
                         return true;
+                    } else {
+                        Main.out("\nWARN: Player.discard decided that " + cardToDiscard.getPrintString() + " is not " +
+                                "a valid discard. Returning false.");
+                        return false; // illegal card choice
                     }
                 } else { // guaranteed to be skip, reverse, or draw two.
                     if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
-                        hand.discard(cardToDiscard);
                         return true;
+                    } else {
+                        Main.out("\nWARN: Player.discard decided that " + cardToDiscard.getPrintString() + " is not " +
+                                "a valid discard. Returning false.");
+                        return false;
                     }
                 }
             }
-            // ********** todo: switch this back to an illegal state exception once the computer knows how to play legal cards. **********
-            // throw new IllegalStateException("Logic fell through all conditionals.");
-            Main.out("\nWARN: Player.discard received an illegal card to discard. (Ignoring for debug.)");
-//            Main.out("Discarding anyway, but please change this to an illegal state exception " +
-//                    "\nonce player two knows how to discard legal cards.");
-            hand.discard(cardToDiscard);
-            return true;
         }
-    }
-
-    /**
-     * Allow either player to call 'Cero!' on the other player if the other player has not already done so after
-     * discarding penultimate card.
-     *
-     * @param otherPlayer the player to inspect
-     * @return            true if the other player incorrectly forgot to declare 'Cero plus one!', false otherwise.
-     */
-    public boolean otherPlayerIncorrectlyForgotToCallCero(Player otherPlayer) { // *** NEEDS TO BE TESTED ***
-        if(isPlayer2()) {
-            // dumb players never check
-            if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
-                return false;
-            } else {
-                // even bold and cautious players sometimes forget (NOT TESTABLE)
-                if (otherPlayer.getHand().getSize() == 1 && !otherPlayer.ceroCalled && Main.getRandomBoolean()) {
-                    return true;
-                }
-            }
-        } else { // player1
-            if (otherPlayer.getHand().getSize() == 1 && !otherPlayer.ceroCalled) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -233,19 +192,8 @@ public class Player {
     }
 
     /**
-     * @return true if player has called 'Cero!' on the other player, false otherwise.
+     * @return true if a random strategy has been selected, false otherwise.
      */
-    boolean isCeroCalled() { // no test needed
-        return this.ceroCalled;
-    }
-
-    /**
-     * Reset this player's cero called value to false.
-     */
-    void setCeroCalled(boolean ceroCalled) { // no test needed
-        this.ceroCalled = ceroCalled;
-    }
-
     public boolean setRandomStrategy() { // tested
         int randomNum = ThreadLocalRandom.current().nextInt(1, 3 + 1);
         switch(randomNum) {
@@ -262,9 +210,15 @@ public class Player {
         return false;
     }
 
-    public String getPlayerTwosChosenColor() { // *** DOUBLE CHECK TESTS ***
+    /**
+     * Returns a chosen color based on the player's strategy. Bold and cautious strategies pick the color
+     * with the most cards left; dumb picks a color completely at random.
+     *
+     * @return the chosen color
+     */
+    public String pickStrategyColor() { // tested
         if (!isPlayer2()) {
-            Main.out("WARN: Player.getPlayerTwosChosenColor called for player 1. No action taken, returned null.");
+            Main.out("WARN: Player.pickStrategyColor called for player 1. No action taken, returned null.");
             return null;
         } else {
             if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
@@ -279,8 +233,6 @@ public class Player {
 
     /**
      * Let the program decide the best card to discard based on its strategy.
-     * Guaranteed by Game.playerTwosTurn not to be called unless the current played card
-     * is numeric or wild.
      *
      * Returned card does not have to be exact card found in hand -- discard happens elsewhere.
      *
@@ -289,6 +241,11 @@ public class Player {
      * @return                  the card to discard, or null if no playable card found.
      */
     public Card decidePlayerTwoDiscard(Card currentPlayedCard, String currentColor) { // switch cases can be functionally tested
+
+        if(currentPlayedCard.isNonNumericNonWild()) {
+            throw new IllegalStateException("Player.decidePlayerTwoDiscard was called with a non-numeric, " +
+                    "non-wild current played card.");
+        }
 
         // Debug:
         Main.out("Player Two is playing with a " + strategy + " strategy.");
@@ -313,10 +270,10 @@ public class Player {
      * @param currentColor      the current chosen color
      * @return                  the preferred card, or null if no legal card found
      */
-    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // tested
+    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // *** NEEDS TESTING! ***
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
-            return hand.getHighestFace(currentColor, true); // tested
+            return hand.getHighestFace(currentColor, true);
         } else {
             // try to match the number
             Card card1 = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue());
@@ -327,35 +284,36 @@ public class Player {
             // compare the two, return the one with the highest card group
             if(card1 != null && card2 != null) {
                 if(hand.getColorGroupSize(card1.getColor()) > hand.getColorGroupSize(card2.getColor())) {
-                    return card1; // tested
+                    return card1;
                 } else {
-                    return card2; // tested
+                    return card2;
                 }
             }
             if(card1 != null || card2 != null) {
                 if(card1 != null) {
-                    return card1; // tested
+                    return card1;
                 } else {
-                    return card2; // tested
+                    return card2;
                 }
             }
 
             // try to return a non-numeric card from the cpc color group
             Card highestNonNumericFace = hand.getHighestFace(currentPlayedCard.getColor(), false);
             if(highestNonNumericFace != null) {
-                return highestNonNumericFace; // tested
+                return highestNonNumericFace;
             }
 
             // return a wild card if present
             if(hand.hasCard(wild)) {
-                return wild; // tested
+                return wild;
             }
             // return a wild draw four card if present
             if(hand.hasCard(wildDrawFour)) {
-                return wildDrawFour; // tested
+                return wildDrawFour;
             }
         }
-        return null; // tested
+        // no legal card found
+        return null;
     }
 
     /**
@@ -375,18 +333,50 @@ public class Player {
     public Card getCautiousStrategyCard(Card currentPlayedCard, String currentColor) { // *** TESTING IN PROGRESS ***
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest non-numeric face of currentColor
-            return hand.getHighestFace(currentColor, false);
+            return hand.getHighestFace(currentColor, false); // tested
         } else {
+
+            // highest-value cards go first
             if(hand.hasCard(wild)) {
-                return wild;
+                return wild; // tested
             }
+
             if(hand.hasCard(wildDrawFour)) {
-                return wildDrawFour;
+                return wildDrawFour; // tested
+            }
+
+            // 2nd highest-value cards go next - draw two, skip, reverse
+            // *** UNDER CONSTRUCTION ***
+//            Card highestNonNumericFace = hand.getHighestFaceNonNumeric(currentPlayedCard.getColor(), false);
+//            if(highestNonNumericFace != null) {
+//                return highestNonNumericFace;
+//            }
+
+            // 3rd option is a numeric card
+
+            // try to match the number
+            Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue());
+
+            // try to match the color
+            Card colorMatch = hand.getHighestFace(currentPlayedCard.getColor(), true);
+
+            // compare the two, return the one with the highest value
+            if(numberMatch != null && colorMatch != null) {
+                if(numberMatch.getValue() > colorMatch.getValue()) {
+                    return numberMatch;
+                } else {
+                    return colorMatch;
+                }
+            }
+            if(numberMatch != null || colorMatch != null) {
+                if(numberMatch != null) {
+                    return numberMatch;
+                } else {
+                    return colorMatch;
+                }
             }
         }
-
-
-        return null;
+        return null; // tested
     }
 
     public Card getLastPlayedCard() {
@@ -407,28 +397,3 @@ public class Player {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

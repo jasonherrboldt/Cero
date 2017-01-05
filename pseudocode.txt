@@ -1,9 +1,55 @@
 
 
 
+        /* main pseudocode
+        Welcome the user, get name.
+        inner winner exists = false
+        Game game = new Game(user's name)
+        game.playFirstHand (handles auto skipping and auto draws as needed)
+
+        while both player's scores are < 500
+            it is now player one's turn
+            if !skipTurn(player 1) // handles auto draws
+                prompt user to move // discard proceeded by possible draws
+                while discarded card is not valid
+                    prompt user to try again or draw
+                else
+                    if player one has discarded last card
+                        inner winner exists
+                        if inner winner doesn't exist
+                            if !skipTurn(player 2) // handles auto draws
+                                player two moves
+                                if player two has no cards left
+                                    inner winner exists
+            else // player one is forbidden from discarding
+                player two moves // no need to check for turn skipping or auto drawing
+                if player two has discarded last card
+                    inner winner exists
+            if inner winner exists
+                update winner's score
+                    if either winner's score is >= 500
+                        announce winner // while loop exits
+                    else
+                        start a new inner game
+                        game.playFirstHand
+                        // back to the top
+                inner winner exists = false
+         */
 
 
 
+Identify where each of these actions occurs:
+
+if player two discards a wild or a wd4
+    player two must pick a color (Game.playerTwoMove -- under construction)
+    player two must set its own chosen color (Game.playerTwoMove calls Player.setChosenColor)
+    player two must tell the game object what its chosen color is (Game.playerTwoMove calls Game.setCurrentColor)
+    the game object must tell player one what player two's chosen color is (Main.main calls Game.getCurrentColor)
+
+if player one discards a wild or a wd4
+    player one must pick a color (Main.main calls getUserResponse_chosenColor)
+    player one must tell the game object what its chosen color is (Main.main calls Game.[???] which calls Game.setCurrentColor
+    player two must be able to get that color to decide its next move (Game.playerTwoMove calls Game.getCurrentColor)
 
 
 
@@ -191,9 +237,28 @@ public Card playerTwoMove()
 
 
 
+        For testGame_skipTurn:
 
+        Do not skip my turn (return false):
+        Lpc n, Cpc n: draw nothing, do not skip my turn (done)
+        Lpc w, Cpc n: draw nothing, do not skip my turn (done)
+        Lpc nn-nw, Cpc nn-nw: (same card bouncing back) draw nothing, do not skip my turn (done)
+        Lpc n, Cpc w: set my color to other player's preferred color, draw nothing, do not skip my turn (done)
+        Lpc w, Cpc w: set my color to other player's preferred color, draw nothing, do not skip my turn (done)
 
+        Skip my turn (return true)
+        Lpc n, Cpc nn-nw: skip my turn and potentially draw (draw two) (done)
+        Lpc n, Cpc nn-nw: skip my turn and potentially draw (skip) (done)
+        Lpc n, Cpc nn-nw: skip my turn and potentially draw (reverse) (done)
+        Lpc n, Cpc nn-nw: skip my turn and potentially draw (draw four) (done)
+        Lpc w, Cpc nn-nw: skip my turn and potentially draw (draw two) (done)
+        Lpc w, Cpc nn-nw: skip my turn and potentially draw (skip) (done)
+        Lpc w, Cpc nn-nw: skip my turn and potentially draw (reverse) (done)
+        Lpc w, Cpc nn-nw: skip my turn and potentially draw (draw four) (done)
 
+        Blow up — throw an illegal state exception (put user warning in the exception:):
+        Lpc nn-nw, Cpc n: (should never happen - other user should have skipped a turn)
+        Lpc nn-nw, Cpc w: (should never happen - other user should have skipped a turn)
 
 
 

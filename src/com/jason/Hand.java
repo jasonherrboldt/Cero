@@ -11,7 +11,10 @@ import java.util.*;
 public class Hand {
 
     private List<List<Card>> listOfListOfCards;
-    
+
+    /**
+     * Public constructor.
+     */
     public Hand() {
         listOfListOfCards = new ArrayList<>();
     }
@@ -74,16 +77,14 @@ public class Hand {
     /**
      * Discard a card.
      *
-     * @param card                          The card to discard.
-     * @throws IllegalArgumentException     If card not found in hand.
+     * @param card The card to discard.
      */
-    public void discard(Card card) throws IllegalArgumentException { // tested
+    public void discard(Card card) { // tested
         if (!hasCard(card)) {
             throw new IllegalArgumentException("Card not in hand.");
-            // Main.out("WARN: Card not in hand. (Ignoring for debug.)");
         }
         if(card == null) {
-            Main.out("WARN: Hand.discard received a null card. No action taken.");
+            throw new IllegalArgumentException("Card is null.");
         } else {
             List<Card> colorList = getColorList(card.getColor());
             int index = -1;
@@ -153,25 +154,49 @@ public class Hand {
     /**
      * Get the highest value face card of a specified color.
      *
-     * @param color     The color to search.
-     * @param numeric   If the search should include only numeric cards.
-     * @return          The highest value card of the given color, or null if no card found.
+     * @param color   The color to search.
+     * @param numeric If the search should include only numeric cards.
+     * @return        The highest value card of the given color, or null if no card found.
      */
     public Card getHighestFace(String color, boolean numeric) { // tested
         int highestValue = numeric ? 9 : 50;
         if(color == null) {
-            Main.out("WARN: Hand.getHighestFace called with null color. No action taken, returned null.");
-        } else {
-            List<Card> colorList = getColorList(color);
-            if(colorList == null) {
-                return null;
+            throw new IllegalArgumentException("Hand.getHighestFace called with null color.");
+        }
+        List<Card> colorList = getColorList(color);
+        if(colorList == null) {
+            return null;
+        }
+        // Sort the color group descending by face value.
+        Collections.sort(colorList, (Card c1, Card c2) -> c2.getValue() - (c1.getValue()));
+        for(Card c : colorList) {
+            if(c.getValue() <= highestValue) {
+                return c;
             }
-            // Sort the color group descending by face value.
-            Collections.sort(colorList, (Card c1, Card c2) -> c2.getValue() - (c1.getValue()));
-            for(Card c : colorList) {
-                if(c.getValue() <= highestValue) {
-                    return c;
-                }
+        }
+        return null;
+    }
+
+    /**
+     * Get the highest non-numeric value face card of a specified color.
+     *
+     * @param color The color to search.
+     * @return      The highest value card of the given color, or null if no card found.
+     */
+    public Card getHighestNonNumericFace(String color) {
+        int lowestValue = 20;
+        if(color == null) {
+            throw new IllegalArgumentException("Hand.getHighestNonNumericFace called with null color.");
+        }
+        List<Card> colorList = getColorList(color);
+        if(colorList == null) {
+            return null;
+        }
+        // Sort the color group descending by face value.
+        Collections.sort(colorList, (Card c1, Card c2) -> c2.getValue() - (c1.getValue()));
+        for(Card c : colorList) {
+            if(c.getValue() >= lowestValue) {
+                return c;
             }
         }
         return null;

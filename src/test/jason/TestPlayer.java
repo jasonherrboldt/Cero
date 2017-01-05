@@ -2,6 +2,7 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,23 +13,24 @@ import static junit.framework.TestCase.fail;
 
 public class TestPlayer {
 
-    private CardValueMap cvm;
-    private Hand classHand;
-    private List<Card> cardList;
-    private Hand getBoldStrategyCard_numeric_hand;
     private Card blueNine;
     private Card yellowThree;
     private Card greenThree;
     private Card blueFour;
-    private Card getBoldStrategyCard_currentPlayedCard;
-    private int handSizeBefore;
-    private int handSizeAfter;
+    private Card yellowSix;
+    private Card blueDrawTwo;private Card wild;
+    private Card wildDrawFour;
+    private Card redDrawTwo;
+    private Card yellowReverse;
+    private CardValueMap cvm;
+    private Hand classHand;
+    private Hand cautiousHand;
+    private List<Card> cardList;
+    private Hand getBoldStrategyCard_numeric_hand;
     private Player player2;
 
     @Before
     public void setup() {
-        handSizeBefore = 0;
-        handSizeAfter = 0;
         cvm = new CardValueMap();
         classHand = new Hand();
         classHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
@@ -46,26 +48,41 @@ public class TestPlayer {
         cardList.add(new Card(Card.YELLOW, Card.ZERO, cvm));
         cardList.add(new Card(Card.YELLOW, Card.SIX, cvm));
 
-
-        getBoldStrategyCard_numeric_hand = new Hand();
-
         // all legal cards that can match the cpc:
         blueNine = new Card(Card.BLUE, Card.NINE, cvm);
         yellowThree = new Card(Card.YELLOW, Card.THREE, cvm);
         greenThree = new Card(Card.GREEN, Card.THREE, cvm);
         blueFour = new Card(Card.BLUE, Card.FOUR, cvm);
+        yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
+        blueDrawTwo = new Card(Card.BLUE, Card.DRAW_TWO, cvm);
+        wild = new Card(Card.COLORLESS, Card.WILD, cvm);
+        wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
+        redDrawTwo = new Card(Card.RED, Card.DRAW_TWO, cvm);
+        yellowReverse = new Card(Card.YELLOW, Card.REVERSE, cvm);
 
-        getBoldStrategyCard_currentPlayedCard = new Card(Card.BLUE, Card.THREE, cvm);
-
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        getBoldStrategyCard_numeric_hand = new Hand();
+        getBoldStrategyCard_numeric_hand.addCard(greenThree);
+        getBoldStrategyCard_numeric_hand.addCard(redDrawTwo);
         getBoldStrategyCard_numeric_hand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(blueNine);
+        getBoldStrategyCard_numeric_hand.addCard(blueFour);
         getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
         getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
         getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        getBoldStrategyCard_numeric_hand.addCard(new Card(Card.YELLOW, Card.THREE, cvm));
+        getBoldStrategyCard_numeric_hand.addCard(yellowThree);
+
+
+        cautiousHand = new Hand();
+        cautiousHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
+        cautiousHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        cautiousHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        cautiousHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
+        cautiousHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
+        cautiousHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
     }
 
     @Test
@@ -90,188 +107,108 @@ public class TestPlayer {
     }
 
     @Test
-    public void testPlayer_discard_number() {
+    public void testPlayer_isLegalDiscard_legal_numberNotColor() {
+        player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        assertTrue(player2.isLegalDiscard(greenThree, yellowThree));
+    }
+
+    @Test
+    public void testPlayer_isLegalDiscard_legal_colorNotNumber() {
+        player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        assertTrue(player2.isLegalDiscard(yellowSix, yellowThree));
+    }
+
+    @Test
+    public void testPlayer_isLegalDiscard_legal_colorAndNumber() {
+        player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        assertTrue(player2.isLegalDiscard(yellowSix, yellowSix));
+    }
+
+    @Test
+    public void testPlayer_isLegalDiscard_legal_nonNumericNonWild() {
+        player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        player2.getHand().addCard(blueDrawTwo);
+        assertTrue(player2.isLegalDiscard(blueDrawTwo, blueFour));
+    }
+
+    @Test
+    public void testPlayer_isLegalDiscard_legal_wild() {
+        player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        player2.getHand().addCard(wild);
+        assertTrue(player2.isLegalDiscard(wild, blueFour));
+    }
+
+    @Test
+    public void testPlayer_isLegalDiscard_legal_wildDrawFour() {
+        player2 = new Player("", true);
+        player2.setHand(classHand.getAllCards());
+        player2.getHand().addCard(wildDrawFour);
+
+        int handSize = player2.getHand().getSize();
+        assertTrue(player2.isLegalDiscard(wildDrawFour, blueFour));
+    }
+
+    @Test
+    public void testPlayer_isLegalDiscard_illegal() {
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
 
         int handSize = player2.getHand().getSize();
         int cardsDiscarded = 0;
 
-        // legal - match number but not color
-        Card greenThree = new Card(Card.GREEN, Card.THREE, cvm);
-        Card cpcYellowThree = new Card(Card.YELLOW, Card.THREE, cvm); // 'cpc' = 'current played card'
-
-        assertTrue(player2.playerTwoDiscard(greenThree, cpcYellowThree, false, null));
-        cardsDiscarded++;
-        assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
-
-        // legal - match color but not number
-        Card yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
-        assertTrue(player2.playerTwoDiscard(yellowSix, cpcYellowThree, false, null));
-        cardsDiscarded++;
-        assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
-
-        // illegal - match neither color nor number
-        Card redEight = new Card(Card.RED, Card.EIGHT, cvm);
-
-        // Re-introduce this assertion once the computer knows how to discard legal cards. *************************************
-//        try {
-//            player2.playerTwoDiscard(redEight, cpcYellowThree, false, null);
-//            fail();
-//        } catch (IllegalStateException e) {
-//            assertEquals(e.getMessage(), "Logic fell through all conditionals.");
-//        }
-
-        assertTrue(player2.playerTwoDiscard(redEight, cpcYellowThree, false, null));
-        cardsDiscarded++;
+        assertFalse(player2.isLegalDiscard(yellowSix, blueNine));
         assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
     }
 
     @Test
-    public void testPlayer_discard_colorNonNumeric() {
-        player2 = new Player("", true);
-        player2.setHand(cardList);
-
-        // only need to match color
-        Card cpcRedThree = new Card(Card.RED, Card.THREE, cvm);
-        Card redDrawTwo = new Card(Card.RED, Card.DRAW_TWO, cvm);
-        assertTrue(player2.playerTwoDiscard(redDrawTwo, cpcRedThree, false, null));
-
-    }
-
-    @Test
-    public void testPlayer_discard_colorless() {
-        player2 = new Player("", true);
-        Card colorlessWild = new Card(Card.COLORLESS, Card.WILD, cvm);
-        List<Card> hand = new ArrayList<>();
-        hand.add(colorlessWild);
-        player2.setHand(hand);
-
-        Card cpcBlueOne = new Card(Card.BLUE, Card.ONE, cvm);
-        assertTrue(player2.playerTwoDiscard(colorlessWild, cpcBlueOne, false, null));
-
-        Card colorlessWildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
-        hand.add(colorlessWildDrawFour);
-        player2.setHand(hand);
-
-        assertTrue(player2.playerTwoDiscard(colorlessWildDrawFour, cpcBlueOne, false, null));
-    }
-
-    @Test
-    public void testPlayer_discard_nullArgs() {
-        player2 = new Player("", true);
-        player2.setHand(cardList);
-        Card realCard = new Card(Card.YELLOW, Card.FIVE, cvm);
-
-        try {
-            player2.playerTwoDiscard(null, null, false, null);
-            fail();
-        } catch (IllegalStateException e) {
-            assertEquals(e.getMessage(), "Player.discard called with a null card, a null currentPlayedCard, or both.");
-        }
-
-        try {
-            player2.playerTwoDiscard(realCard, null, false, null);
-            fail();
-        } catch (IllegalStateException e) {
-            assertEquals(e.getMessage(), "Player.discard called with a null card, a null currentPlayedCard, or both.");
-        }
-
-        try {
-            player2.playerTwoDiscard(null, realCard, false, null);
-            fail();
-        } catch (IllegalStateException e) {
-            assertEquals(e.getMessage(), "Player.discard called with a null card, a null currentPlayedCard, or both.");
-        }
-
-    }
-
-    @Test
-    public void testPlayer_discard_callCero() {
-        // todo ******************************************************************************************************************************
-    }
-
-    @Test
-    public void testPlayer_setRandomStrategy() {
+    public void testPlayer_setRandomStrategy_1() {
         player2 = new Player("", true);
         assertTrue(player2.getStrategy().equals(""));
         assertTrue(player2.setRandomStrategy());
+        assertFalse(player2.getStrategy().equals(""));
     }
 
     @Test
-    public void testPlayer_getPlayerTwosChosenColor() {
+    public void testPlayer_setRandomStrategy_2() {
+        player2 = new Player("", true);
+        player2.setRandomStrategy();
+        String firstStrategy = player2.getStrategy();
+        boolean strategyReplaced = false;
+        // generate 20 random strategies and assert at least one of them comes back different.
+        for(int i = 0; i < 20; i++) {
+            player2.setRandomStrategy();
+            if (!player2.getStrategy().equalsIgnoreCase(firstStrategy)) {
+                strategyReplaced = true;
+            }
+        }
+        assertTrue(strategyReplaced);
+    }
+
+    @Test
+    public void testPlayer_pickStrategyColor() {
         // Can't test for a dumb player -- returns a random color.
         // Bold and cautious players always return color of highest count.
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
 
         player2.setStrategy(Player.STRATEGY_BOLD);
-        assertEquals(player2.getPlayerTwosChosenColor(), Card.YELLOW);
+        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
 
         player2.setStrategy(Player.STRATEGY_CAUTIOUS);
-        assertEquals(player2.getPlayerTwosChosenColor(), Card.YELLOW);
+        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
 
         // Test the unhappy path.
         Player player1 = new Player("", false);
-        assertEquals(player1.getPlayerTwosChosenColor(), null);
+        assertEquals(player1.pickStrategyColor(), null);
     }
 
     @Test
-    public void testPlayer_otherPlayerForgotToCallCero_player1() {
-        player2 = new Player("", true);
-        List<Card> hand = new ArrayList<>();
-        Card blueFour = new Card(Card.BLUE, Card.FOUR, cvm);
-        Card yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
-        hand.add(blueFour);
-        hand.add(yellowSix);
-        player2.setHand(hand);
-
-        // Player two legally discards penultimate card, but forgets to declare 'Cero plus one!'.
-        Card currentPlayedCard = new Card(Card.YELLOW, Card.NINE, cvm);
-        assertTrue(player2.playerTwoDiscard(yellowSix, currentPlayedCard, false, null));
-
-        // player one has to call out player 2's mistake
-        Player player1 = new Player("", false);
-        assertTrue(player1.otherPlayerIncorrectlyForgotToCallCero(player2));
-    }
-
-    @Test
-    public void testPlayer_otherPlayerForgotToCallCero_player2() {
-        Player player1 = new Player("", false);
-        List<Card> hand = new ArrayList<>();
-        Card blueFour = new Card(Card.BLUE, Card.FOUR, cvm);
-        Card yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
-        hand.add(blueFour);
-        hand.add(yellowSix);
-        player1.setHand(hand);
-
-        // Player one legally discards penultimate card, but forgets to declare 'Cero plus one!'.
-        Card currentPlayedCard = new Card(Card.YELLOW, Card.NINE, cvm);
-
-
-        // Whoops - player1 cannot call playerTwoDiscard. Need to figure out something else here.
-        assertTrue(player1.playerTwoDiscard(yellowSix, currentPlayedCard, false, null)); // ultimately happens in Game.playerTwoMove
-
-
-        Player player2_dumb = new Player("", true);
-        player2_dumb.setStrategy(Player.STRATEGY_DUMB);
-        assertFalse(player2_dumb.otherPlayerIncorrectlyForgotToCallCero(player1));
-
-        // (Can't test for player2 when strategy is bold or cautious -- result is always random.)
-    }
-
-    @Test
-    public void testPlayer_getBoldStrategyCard_wild() {
-        player2 = new Player("", true);
-        player2.setHand(classHand.getAllCards());
-        Card currentPlayedCard = new Card(Card.COLORLESS, Card.WILD, cvm);
-        String currentColor = Card.YELLOW;
-        Card yellowSix = new Card(Card.YELLOW, Card.SIX, cvm);
-        assertTrue(player2.getBoldStrategyCard(currentPlayedCard, currentColor).equals(yellowSix));
-    }
-
-    @Test
-    public void testPlayer_getBoldStrategyCard_null() {
+    public void testPlayer_getCautiousStrategyCard_null() {
         player2 = new Player("", true);
         List<Card> cards = new ArrayList<>();
         Card redOne = new Card(Card.RED, Card.ONE, cvm);
@@ -283,96 +220,99 @@ public class TestPlayer {
         player2.setHand(cards);
         Card currentPlayedCard = new Card(Card.YELLOW, Card.SIX, cvm);
         String currentColor = Card.YELLOW;
-        assertEquals(player2.getBoldStrategyCard(currentPlayedCard, currentColor), null);
+        assertEquals(player2.getCautiousStrategyCard(currentPlayedCard, currentColor), null);
     }
 
     @Test
-    public void testPlayer_getBoldStrategyCard_numeric_matchNumber() {
+    public void testPlayer_getCautiousStrategyCard_wild() {
         player2 = new Player("", true);
-        // the best card to pick at the moment is the yellow three, since it has the largest matching color group
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        String currentColor = Card.BLUE;
-        testPlayer_getBoldStrategy_helper(player2, currentColor, yellowThree);
-    }
-
-    private void testPlayer_getBoldStrategy_helper(Player player, String currentColor, Card card) {
-        // make sure no actual discarding happens during call to getBoldStrategyCard (handled elsewhere)
-        handSizeBefore = player.getHand().getSize();
-        assertTrue(player.getBoldStrategyCard(getBoldStrategyCard_currentPlayedCard, currentColor).equals(card));
-        handSizeAfter = player.getHand().getSize();
-        assertEquals(handSizeBefore, handSizeAfter);
+        player2.setHand(cautiousHand.getAllCards());
+        Card currentPlayedCard = new Card(Card.COLORLESS, Card.WILD, cvm);
+        String currentColor = Card.YELLOW;
+        assertTrue(player2.getCautiousStrategyCard(currentPlayedCard, currentColor).equals(yellowReverse));
     }
 
     @Test
-    public void testPlayer_getBoldStrategyCard_numeric_matchColor() {
-        player2 = new Player("", true);
-        String currentColor = Card.BLUE;
+    public void testPlayer_getCautiousStrategyCard_higherFirst_wd4() {
+        // make sure the cautious strategy gets rid of higher value cards first
+        // when there are other legal lower value cards in the hand.
+        player2 = new Player("Player Two", true);
+        player2.setHand(cautiousHand.getAllCards());
 
-        // add a wild card and wild draw four card to the hand to tempt the method into returning the wrong card
-        Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
-        getBoldStrategyCard_numeric_hand.addCard(wild);
-        Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
-        getBoldStrategyCard_numeric_hand.addCard(wildDrawFour);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
+        // get rid of the wild so the wd4 is the most attractive option
+        player2.getHand().discard(wild);
+        assertTrue(player2.getCautiousStrategyCard(yellowThree, yellowThree.getColor()).equals(wildDrawFour));
+    }
 
-        // ditch the yellow three from getBoldStrategyCard_numeric_hand
-        // now it should favor the blue nine, because it's the next biggest matching color group
-        getBoldStrategyCard_numeric_hand.discard(yellowThree);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        testPlayer_getBoldStrategy_helper(player2, currentColor, blueNine);
+    @Ignore // *** UNDER CONSTRUCTION *************************************************************************************************
+    public void testPlayer_getCautiousStrategyCard_higherFirst_drawTwo() {
+        // make sure the cautious strategy gets rid of higher value cards first
+        // when there are other legal lower value cards in the hand.
+        player2 = new Player("Player Two", true);
+        player2.setHand(cautiousHand.getAllCards());
 
-        // now ditch the green three and the blue nine, leaving no other legal choice but the blue four
-        getBoldStrategyCard_numeric_hand.discard(greenThree);
-        getBoldStrategyCard_numeric_hand.discard(blueNine);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        testPlayer_getBoldStrategy_helper(player2, currentColor, blueFour);
+        // let the cpc be a red nine
+        // get rid of the wild and wd4 cards so the red draw two is the most attractive option
+        player2.getHand().discard(wild);
+        player2.getHand().discard(wildDrawFour);
+        Card redNine = new Card(Card.RED, Card.NINE, cvm);
+        assertTrue(player2.getCautiousStrategyCard(redNine, redNine.getColor()).equals(redDrawTwo));
     }
 
     @Test
-    public void testPlayer_getBoldStrategyCard_nonNumeric() {
-        player2 = new Player("", true);
-        String currentColor = Card.BLUE;
+    public void testPlayer_getCautiousStrategyCard_numeric_matchColor() {
+        // assert that, given no non-numeric cards, a color match is possible without a numeric match
+        player2 = new Player("Player Two", true);
+        player2.setHand(cautiousHand.getAllCards());
 
-        // ditch the same cards as in testPlayer_getBoldStrategyCard_numeric_matchColor
-        getBoldStrategyCard_numeric_hand.discard(yellowThree);
-        getBoldStrategyCard_numeric_hand.discard(greenThree);
-        getBoldStrategyCard_numeric_hand.discard(blueNine);
+        // let the cpc be a yellow three
+        // get rid of all non-numeric cards and the green three so the yellow six is the most attractive option
+        player2.getHand().discard(wild);
+        player2.getHand().discard(wildDrawFour);
+        player2.getHand().discard(yellowReverse);
+        player2.getHand().discard(redDrawTwo);
+        player2.getHand().discard(greenThree);
 
-        // ditch the blue four as well
-        getBoldStrategyCard_numeric_hand.discard(new Card(Card.BLUE, Card.FOUR, cvm));
-
-        // add a blue reverse to the hand, making it the only viable option at this point.
-        Card blueReverse = new Card(Card.BLUE, Card.REVERSE, cvm);
-
-        // set the new hand
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-
-        // should return the blue reverse
-        getBoldStrategyCard_numeric_hand.addCard(blueReverse);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        testPlayer_getBoldStrategy_helper(player2, currentColor, blueReverse);
-
-        // ditch the blue reverse
-        getBoldStrategyCard_numeric_hand.discard(blueReverse);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-
-        // add a wild card to the hand, assert that it comes back
-        Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
-        getBoldStrategyCard_numeric_hand.addCard(wild);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        testPlayer_getBoldStrategy_helper(player2, currentColor, wild);
-
-        // ditch the wild
-        getBoldStrategyCard_numeric_hand.discard(wild);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-
-        // add a wild draw four card to the hand
-        Card wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
-        getBoldStrategyCard_numeric_hand.addCard(wildDrawFour);
-        player2.setHand(getBoldStrategyCard_numeric_hand.getAllCards());
-        testPlayer_getBoldStrategy_helper(player2, currentColor, wildDrawFour);
+        assertTrue(player2.getCautiousStrategyCard(yellowThree, yellowThree.getColor()).equals(yellowSix));
     }
+
+    @Test
+    public void testPlayer_getCautiousStrategyCard_numeric_matchNumber() {
+        // assert that, given no non-numeric cards, a numeric match is possible without a color match
+        player2 = new Player("Player Two", true);
+        player2.setHand(cautiousHand.getAllCards());
+
+        // let the cpc be a blue eight
+        Card blueEight = new Card(Card.BLUE, Card.EIGHT, cvm);
+
+        // get rid of all non-numeric cards and the blue four so the red eight is the most attractive option
+        player2.getHand().discard(wild);
+        player2.getHand().discard(wildDrawFour);
+        player2.getHand().discard(yellowReverse);
+        player2.getHand().discard(redDrawTwo);
+        player2.getHand().discard(blueFour);
+
+        Card redEight = new Card(Card.RED, Card.EIGHT, cvm);
+
+        assertTrue(player2.getCautiousStrategyCard(blueEight, yellowThree.getColor()).equals(redEight));
+    }
+
+    /*
+        cautiousHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
+        cautiousHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        cautiousHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        cautiousHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
+        cautiousHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
+        cautiousHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
+        cautiousHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+     */
+
 }
+
+
 
 
 

@@ -2,8 +2,6 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.*;
 
 /**
