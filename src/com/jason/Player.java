@@ -38,6 +38,7 @@ public class Player {
     private boolean ceroCalled;
     private String chosenColor;
     private Card lastPlayedCard;
+    List<String> colors;
 
     // for strategy getters:
     private Card wild;
@@ -56,6 +57,13 @@ public class Player {
         CardValueMap cvm = new CardValueMap();
         wild = new Card(Card.COLORLESS, Card.WILD, cvm);
         wildDrawFour = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
+
+        // for when a dumb player two needs to choose a random color
+        colors = new ArrayList<>();
+        colors.add(Card.BLUE);
+        colors.add(Card.RED);
+        colors.add(Card.YELLOW);
+        colors.add(Card.GREEN);
     }
 
     /**
@@ -82,7 +90,7 @@ public class Player {
      *
      * @param cardToDiscard         The card to discard.
      * @param currentPlayedCard     The current played card.
-     * @param callCero              Whether or not to declare 'Cero!'
+     * @param callCero              Whether or not to declare 'Cero plus one!'
      * @param playerOnesChosenColor Player one's chosen color (for wild and wild draw four cards)
      * @return                      True if the discarded card was deemed legal, false otherwise.
      */
@@ -261,11 +269,6 @@ public class Player {
         } else {
             if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
                 // return a random color
-                List<String> colors = new ArrayList<>();
-                colors.add(Card.BLUE);
-                colors.add(Card.RED);
-                colors.add(Card.YELLOW);
-                colors.add(Card.GREEN);
                 Collections.shuffle(colors);
                 return colors.get(0);
             } else {

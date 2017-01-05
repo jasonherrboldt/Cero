@@ -99,7 +99,7 @@ public class TestPlayer {
 
         // legal - match number but not color
         Card greenThree = new Card(Card.GREEN, Card.THREE, cvm);
-        Card cpcYellowThree = new Card(Card.YELLOW, Card.THREE, cvm);
+        Card cpcYellowThree = new Card(Card.YELLOW, Card.THREE, cvm); // 'cpc' = 'current played card'
 
         assertTrue(player2.playerTwoDiscard(greenThree, cpcYellowThree, false, null));
         cardsDiscarded++;
@@ -114,7 +114,7 @@ public class TestPlayer {
         // illegal - match neither color nor number
         Card redEight = new Card(Card.RED, Card.EIGHT, cvm);
 
-        // Re-introduce this assertion once the computer knows how to discard legal cards.
+        // Re-introduce this assertion once the computer knows how to discard legal cards. *************************************
 //        try {
 //            player2.playerTwoDiscard(redEight, cpcYellowThree, false, null);
 //            fail();
@@ -188,7 +188,7 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_discard_callCero() {
-
+        // todo ******************************************************************************************************************************
     }
 
     @Test
@@ -250,7 +250,7 @@ public class TestPlayer {
 
 
         // Whoops - player1 cannot call playerTwoDiscard. Need to figure out something else here.
-        // assertTrue(player1.playerTwoDiscard(yellowSix, currentPlayedCard, false, null)); // ultimately happens in Game.playerTwoMove
+        assertTrue(player1.playerTwoDiscard(yellowSix, currentPlayedCard, false, null)); // ultimately happens in Game.playerTwoMove
 
 
         Player player2_dumb = new Player("", true);

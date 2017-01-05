@@ -25,25 +25,6 @@ public class Game {
      *
      *    Go through every method and make sure the javadoc comments still make sense.
      *
-     *    Required Game methods:
-     *
-     *        game.startGame: Shuffles deck, deals first hand, pops first card off of deck.
-     *        Picks a random first player. Allows player2 to discard if its turn first. Returns
-     *        object to servlet that contains player1's hand, the current played card, and a
-     *        message ("Your turn first," or "Player2 went first," etc). Would also handle
-     *        automatic draws for draw two and turn reversal for skip or reverse cards dealt
-     *        to player1. (Does NOT call the Game constructor; game object must keep track of
-     *        overall score as each new inner game is created.)
-     *
-     *        game.discard: user picks a card from the UI and clicks either Discard or Discard
-     *        and Declare 'Cero Plus One!' button. Game handles discard, allows the computer to
-     *        have its turn, takes care of any non-numeric cards discarded by computer, and
-     *        returns gameState object to servlet. (Must handle incorrectly discarded cards.)
-     *
-     *        game.draw: ads new card to hand, returns gameState object to servlet.
-     *
-     *
-     *
      *    NICE-TO-HAVES:
      *
      *    Space out the console output for computer steps; make it look like the
@@ -133,16 +114,12 @@ public class Game {
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
                     isFirstMove = false;
-                    Main.out("\nOK it's your turn, " + player1.getName() + "\n");
-                    printHand(player1);
                 } else {
                     playerTwosTurn();
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
                 }
             } else { // player one's turn
-                Main.out("\nIt's " + player1.getName() + "'s turn.\n");
-                printHand(player1);
                 if (skipFirstTurn(player1)) {
                     Main.out("\n" + player1.getName() + ", you were forbidden from discarding. " +
                             "The first move switches to " + player2.getName() + ".");
@@ -279,7 +256,7 @@ public class Game {
         }
         Card cardToDiscard = player2.getHand().getFirstCard(); // debug
         // Card cardToDiscard = new Card(Card.BLUE, Card.DRAW_TWO, cvm); // debug
-        player2.playerTwoDiscard(cardToDiscard, currentPlayedCard, false, currentColor);
+        player2.playerTwoDiscard(cardToDiscard, currentPlayedCard, false, currentColor); // remember to set the correct color here
         return cardToDiscard;
 
         // Currently under construction: *********************************************************************************************************************

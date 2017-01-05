@@ -66,7 +66,9 @@ public class Main {
                     inner winner exists
                 if !skipTurn(player 2) // handles auto draws
                     player two moves
-                    if player two has discarded last card
+                    allow the user to declare that player two forgot to say 'Cero plus one!'
+                    (make player two draw two cards if applicable)
+                    if player two has no cards left
                         inner winner exists
             else // player one is forbidden from discarding
                 player two moves // no need to check for turn skipping or auto drawing
@@ -91,14 +93,16 @@ public class Main {
         int winningScore = 500;
 
         Game game = new Game(testName);
-        out("Starting game, playing the first hand...");
+        out("\nStarting game, playing the first hand...");
         game.startGame(null, true);
         game.playFirstHand();
         out("\nBack to main.");
 
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
         if(!game.skipTurn(game.getPlayer1())) {
-            out("\nIt's your turn, " + testName);
+            out("\nIt's your turn, " + testName + "\n");
+            game.printHand(game.getPlayer1());
+            out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
         } else {
             out("\n" + testName + ", you were forbidden from discarding.");
         }
