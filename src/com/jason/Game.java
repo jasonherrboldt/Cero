@@ -52,10 +52,11 @@ public class Game {
     private Stack<Card> discardPile;
     private String currentColor;
     private boolean isFirstMove;
+    private boolean showPlayerTwoActions;
     private static final int MAX_P2_DRAW_LOOP = 100;
     private Card numeric; // generic starter card
 
-    public Game(String playerOneName) {
+    public Game(String playerOneName, boolean showPlayerTwoActions) {
         cvm = new CardValueMap();
         deck = new Deck();
         player1 = new Player(playerOneName, false);
@@ -67,6 +68,7 @@ public class Game {
         currentColor = "";
         isFirstMove = true;
         numeric = new Card(Card.RED, Card.NINE, cvm);
+        this.showPlayerTwoActions = showPlayerTwoActions;
     }
 
     /**
@@ -111,7 +113,9 @@ public class Game {
         } else {
             if (!isPlayerOnesTurn) {
                 Main.out("\n" + player2.getName() + " had the first move.\n");
-                printHand(player2);
+                if(showPlayerTwoActions) {
+                    printHand(player2);
+                }
                 if(skipFirstTurn(player2)) {
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
@@ -232,15 +236,21 @@ public class Game {
             // throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
             Main.out("WARN: Game.playerTwosTurn received null from a call to Game.playerTwosMove.");
         } else {
-            if(!isFirstMove) {
-                currentColor = player2.getChosenColor(); // could be a wild or wd4 if not first move
-            } else {
-                currentColor = currentPlayedCard.getColor();
-            }
+
+            // was returning a colorless choice when player two discards a wild card on the first move.
+//            if(!isFirstMove) {
+//                currentColor = player2.getChosenColor(); // could be a wild or wd4 if not first move
+//            } else {
+//                currentColor = currentPlayedCard.getColor();
+//            }
+
+            currentColor = currentPlayedCard.getColor();
             discardPile.add(currentPlayedCard);
-            Main.out("\n" + player2.getName() + " tried to discard a " + currentPlayedCard.getPrintString());
+            Main.out("\n" + player2.getName() + " discarded a " + currentPlayedCard.getPrintString());
             Main.out("The current chosen color is " + currentColor);
-            printHand(player2);
+            if(showPlayerTwoActions) {
+                printHand(player2);
+            }
         }
     }
 
@@ -259,48 +269,73 @@ public class Game {
             Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
             return null;
         }
-        // just discard the first card in the hand for debug.
-        Card cardToDiscard = player2.getHand().getFirstCard(); // debug
-        // where does player two's chosen color come from? ******************************************************************************
-        if(player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
-            player2.getHand().discard(cardToDiscard);
-        } else {
-            // throw new IllegalStateException("Player two attempted to discard an illegal card.");
-            Main.out("WARN: Game.playerTwoMove attempted to discard an illegal card. (Will soon be an illegal state exception.)");
-        }
-        return cardToDiscard; // debug
 
-        // Currently under construction: *********************************************************************************************************************
-//        boolean playerTwoHasDiscarded = false;
-//        int i = 0;
-//        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping
-//            cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
-//            if (cardToDiscard == null) {
-//                draw(player2);
-//            } else {
-//                playerTwoHasDiscarded = true;
-//            }
-//            i++;
-//            if(i == (MAX_P2_DRAW_LOOP - 1)) {
-//                Main.out("WARN: Game.playerTwoMove was stopped from falling into an infinite loop " +
-//                        "while trying to find a playable card in the deck. " +
-//                        "Loop aborted at iteration " + (MAX_P2_DRAW_LOOP - 1) + ", null returned.");
-//                return null;
-//            }
-//        }
-          // pick a color here based on strategy?
+        // switch from bold to cautious strategy if needed
+        if(player2.getStrategy().equalsIgnoreCase(Player.STRATEGY_BOLD) && player1.getHand().getSize() < 4) {
+            player2.setStrategy(Player.STRATEGY_CAUTIOUS); // tested in TestPlayer
+        }
+
+        // just discard the first card in the hand for debug.
+//        Card cardToDiscard = player2.getHand().getFirstCard(); // debug
 //        if(player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
 //            player2.getHand().discard(cardToDiscard);
-//            if cardToDiscard is wild or wd4
-//                player2.setChosenColor(playerTwosChosenColor)
-//                setCurrentColor(playerTwosChosenColor);
-//            else
-//                setCurrentColor(cardToDiscard.getColor());
-//                player2.setChosenColor(cardToDiscard.getColor())
-//            return cardToDiscard;
 //        } else {
-//            throw new IllegalStateException("Player two attempted an illegal move.");
+//            // throw new IllegalStateException("Player two attempted to discard an illegal card.");
+//            Main.out("WARN: Game.playerTwoMove attempted to discard an illegal card. (Will soon be an illegal state exception.)");
 //        }
+//        return cardToDiscard; // debug
+
+        // Currently under construction (will cause tests to fail): ****************************************************************************************************
+        Card cardToDiscard = null;
+        boolean playerTwoHasDiscarded = false;
+        int i = 0;
+        Main.out("\nPlayer Two is playing with a " + player2.getStrategy() + " strategy.");
+        // discard or draw until a legal card is found
+        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping while debug
+            cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
+            if (cardToDiscard == null) {
+                Main.out("Player two is drawing ");
+                draw(player2);
+            } else {
+                playerTwoHasDiscarded = true;
+            }
+            i++;
+            if(i == (MAX_P2_DRAW_LOOP - 1)) {
+                Main.out("WARN: Game.playerTwoMove was stopped from falling into an infinite loop " +
+                        "while trying to find a playable card in the deck. " +
+                        "Loop aborted at iteration " + (MAX_P2_DRAW_LOOP - 1) + ", null returned.");
+                return null;
+            }
+        }
+
+        // ******************** UNDER CONSTRUCTION *********************
+        /**
+         * some serious fuckery is going on here - player two is attempting to discard a non-numeric color
+         * for any other non-numeric color, e.g. discarding a red skip when the cpc is green draw two.
+         * literally no idea why this is happening. It's also breaking some tests, but not always. 
+         */
+        if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
+            Main.out("ERROR: " + "currentPlayedCard: " + currentPlayedCard.getPrintString() + ", hand: " +
+                    player2.getHand().getHandPrintStringList());
+            Main.out("cardToDiscard: " + cardToDiscard.getPrintString());
+            throw new IllegalStateException("Player two attempted an illegal move.");
+        } else {
+            player2.setLastPlayedCard(cardToDiscard);
+            player2.getHand().discard(cardToDiscard);
+            if(cardToDiscard.isColorlessCard()) { // wild or wd4
+                String playerTwosChosenColor = player2.selectNewColor();
+                if(playerTwosChosenColor == null) {
+                    throw new IllegalStateException("playerTwosChosenColor may not be null here.");
+                } else {
+                    player2.setChosenColor(playerTwosChosenColor);
+                    setCurrentColor(playerTwosChosenColor);
+                }
+            } else {
+                setCurrentColor(cardToDiscard.getColor());
+                player2.setChosenColor(cardToDiscard.getColor());
+            }
+            return cardToDiscard;
+        }
     }
 
     /**
@@ -331,6 +366,7 @@ public class Game {
                 refreshDeck();
             }
             Card card = deck.popCard();
+            Main.out("\nGame.draw just added the card " + card.getPrintString() + " to " + player.getName()+ "'s hand.");
             player.getHand().addCard(card);
         }
     }

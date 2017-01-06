@@ -184,7 +184,7 @@ public class Hand {
      * @param color The color to search.
      * @return      The highest value card of the given color, or null if no card found.
      */
-    public Card getHighestNonNumericFace(String color) {
+    public Card getHighestNonNumericFace(String color) { // tested
         int lowestValue = 20;
         if(color == null) {
             throw new IllegalArgumentException("Hand.getHighestNonNumericFace called with null color.");
@@ -289,7 +289,7 @@ public class Hand {
     /**
      * @return the first card of the hand (for debug).
      */
-    Card getFirstCard() { // no test needed
+    public Card getFirstCard() { // no test needed
         if(getSize() > 0) {
             return getAllCards().get(0);
         } else {

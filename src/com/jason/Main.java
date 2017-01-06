@@ -57,7 +57,7 @@ public class Main {
         int maxTestTurns = 10;
         int winningScore = 500;
 
-        Game game = new Game(testName);
+        Game game = new Game(testName, true);
         out("\nStarting game, playing the first hand...");
         game.startGame(null, true);
         game.playFirstHand();
@@ -89,7 +89,7 @@ public class Main {
      *
      * @param s The string to getPrintString.
      */
-    static void out(String s) {
+    public static void out(String s) {
         System.out.println(s);
     }
 
