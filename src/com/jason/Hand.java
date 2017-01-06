@@ -179,6 +179,7 @@ public class Hand {
 
     /**
      * Get the highest non-numeric value face card of a specified color.
+     * (Note: will not return wild or wd4 because they are colorless.)
      *
      * @param color The color to search.
      * @return      The highest value card of the given color, or null if no card found.

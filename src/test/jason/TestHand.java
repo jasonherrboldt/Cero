@@ -150,12 +150,11 @@ public class TestHand {
         assertTrue(inputCard.equals(outputCard));
     }
 
-    @Ignore // ******** BROKEN ********
+    @Test
     public void testHand_getHighestFace_nonNumeric() {
         String color = Card.BLUE;
-        Card inputCard = new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm);
-        Card outputCard = this.getHighestFaceHand.getHighestFace(color, false);
-        assertTrue(inputCard.equals(outputCard));
+        Card blueReverse = new Card(Card.BLUE, Card.REVERSE, cvm);
+        assertTrue(getHighestFaceHand.getHighestFace(color, false).equals(blueReverse));
     }
 
     @Test
@@ -165,38 +164,30 @@ public class TestHand {
 
 
 
-
     /*
         getHighestFaceHand.addCard(new Card(Card.RED, Card.THREE, cvm));
         getHighestFaceHand.addCard(new Card(Card.BLUE, Card.TWO, cvm));
         getHighestFaceHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
         getHighestFaceHand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
         getHighestFaceHand.addCard(new Card(Card.BLUE, Card.REVERSE, cvm));
-        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.WILD_DRAW_FOUR, cvm));
+        getHighestFaceHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
      */
 
-    @Ignore
-    public void testHand_getHighestNonNumericFace_nonWild() {
+    @Test
+    public void testHand_getHighestNonNumericFace_happy() {
         // ditch the wd4
-        // getHighestFaceHand.discard();
-        // assertEquals(getHighestFaceHand.getHighestNonNumericFace(Card.BLUE), blueReverse);
+        getHighestFaceHand.discard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+
+        // now blue reverse is most attractive option
+        Card blueReverse = new Card(Card.BLUE, Card.REVERSE, cvm);
+        assertTrue(getHighestFaceHand.getHighestNonNumericFace(Card.BLUE).equals(blueReverse));
     }
 
-    @Ignore
-    public void testHand_getHighestNonNumericFace_nonNumeric() {
-        String color = Card.BLUE;
-        Card inputCard = new Card(Card.BLUE, Card.WILD_DRAW_FOUR, cvm);
-        Card outputCard = this.getHighestFaceHand.getHighestNonNumericFace(color);
-        assertTrue(inputCard.equals(outputCard));
+    @Test
+    public void testHand_getHighestNonNumericFace_sad() {
+        // assert it returns null when no suitable card is found
+        assertEquals(getHighestFaceHand.getHighestNonNumericFace(Card.YELLOW), null);
     }
-
-    @Ignore
-    public void testHand_getHighestNonNumericFace_noColor() {
-        Card noCard = getHighestFaceHand.getHighestNonNumericFace(Card.GREEN);
-        assertNull(noCard);
-    }
-
-
 
 
 

@@ -244,7 +244,7 @@ public class TestPlayer {
         assertTrue(player2.getCautiousStrategyCard(yellowThree, yellowThree.getColor()).equals(wildDrawFour));
     }
 
-    @Ignore // *** UNDER CONSTRUCTION *************************************************************************************************
+    @Test
     public void testPlayer_getCautiousStrategyCard_higherFirst_drawTwo() {
         // make sure the cautious strategy gets rid of higher value cards first
         // when there are other legal lower value cards in the hand.
@@ -260,7 +260,7 @@ public class TestPlayer {
     }
 
     @Test
-    public void testPlayer_getCautiousStrategyCard_numeric_matchColor() {
+    public void testPlayer_getCautiousStrategyCard_numeric_matchColorNotNumber() {
         // assert that, given no non-numeric cards, a color match is possible without a numeric match
         player2 = new Player("Player Two", true);
         player2.setHand(cautiousHand.getAllCards());
@@ -277,7 +277,7 @@ public class TestPlayer {
     }
 
     @Test
-    public void testPlayer_getCautiousStrategyCard_numeric_matchNumber() {
+    public void testPlayer_getCautiousStrategyCard_numeric_matchNumberNotColor() {
         // assert that, given no non-numeric cards, a numeric match is possible without a color match
         player2 = new Player("Player Two", true);
         player2.setHand(cautiousHand.getAllCards());
@@ -297,6 +297,28 @@ public class TestPlayer {
         assertTrue(player2.getCautiousStrategyCard(blueEight, yellowThree.getColor()).equals(redEight));
     }
 
+    @Test
+    public void testPlayer_getCautiousStrategyCard_numeric_colorBeatsNumber() {
+        player2 = new Player("Player Two", true);
+        player2.setHand(cautiousHand.getAllCards());
+
+        // pick a cpc that could return two possible options
+        // and assert that the higher value card comes back
+
+        // drop the yellow reverse, the red draw two, and both the wild cards
+        // only want to pit numeric cards against each other
+        player2.getHand().discard(yellowReverse);
+        player2.getHand().discard(redDrawTwo);
+        player2.getHand().discard(wild);
+        player2.getHand().discard(wildDrawFour);
+
+        // make a cpc that might return a yellow six or a red eight
+        // assert the red eight comes back, even though there are more sixes (i.e. bold strategy)
+        Card redSix = new Card(Card.RED, Card.SIX, cvm);
+        Card redEight = new Card(Card.RED, Card.EIGHT, cvm);
+        assertTrue(player2.getCautiousStrategyCard(redSix, redSix.getColor()).equals(redEight));
+    }
+
     /*
         cautiousHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
         cautiousHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
@@ -309,6 +331,23 @@ public class TestPlayer {
         cautiousHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
         cautiousHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
      */
+
+    @Test
+    public void testPlayer_getCautiousStrategyCard_numeric_numberBeatsColor() {
+        player2 = new Player("Player Two", true);
+
+        // make a temp hand for custom scenario
+        List<Card> tempHand = new ArrayList<>();
+        Card redFive = new Card(Card.RED, Card.FIVE, cvm);
+        Card yellowNine = new Card(Card.YELLOW, Card.NINE, cvm);
+        tempHand.add(redFive);
+        tempHand.add(yellowNine);
+        player2.setHand(tempHand);
+
+        // let the current played card be a red 9
+        Card redNine = new Card(Card.RED, Card.NINE, cvm);
+        assertTrue(player2.getCautiousStrategyCard(redNine, redNine.getColor()).equals(yellowNine));
+    }
 
 }
 

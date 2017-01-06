@@ -270,7 +270,7 @@ public class Player {
      * @param currentColor      the current chosen color
      * @return                  the preferred card, or null if no legal card found
      */
-    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // *** NEEDS TESTING! ***
+    public Card getBoldStrategyCard(Card currentPlayedCard, String currentColor) { // ******** NEEDS TESTING! ********
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
             return hand.getHighestFace(currentColor, true);
@@ -330,7 +330,7 @@ public class Player {
      * @param currentColor      the current chosen color
      * @return                  the preferred card, or null if no legal card found
      */
-    public Card getCautiousStrategyCard(Card currentPlayedCard, String currentColor) { // *** TESTING IN PROGRESS ***
+    public Card getCautiousStrategyCard(Card currentPlayedCard, String currentColor) { // tested
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest non-numeric face of currentColor
             return hand.getHighestFace(currentColor, false); // tested
@@ -346,11 +346,10 @@ public class Player {
             }
 
             // 2nd highest-value cards go next - draw two, skip, reverse
-            // *** UNDER CONSTRUCTION ***
-//            Card highestNonNumericFace = hand.getHighestFaceNonNumeric(currentPlayedCard.getColor(), false);
-//            if(highestNonNumericFace != null) {
-//                return highestNonNumericFace;
-//            }
+            Card highestNonNumericFace = hand.getHighestNonNumericFace(currentPlayedCard.getColor());
+            if(highestNonNumericFace != null) {
+                return highestNonNumericFace; // tested
+            }
 
             // 3rd option is a numeric card
 
@@ -363,16 +362,16 @@ public class Player {
             // compare the two, return the one with the highest value
             if(numberMatch != null && colorMatch != null) {
                 if(numberMatch.getValue() > colorMatch.getValue()) {
-                    return numberMatch;
+                    return numberMatch; // tested
                 } else {
-                    return colorMatch;
+                    return colorMatch; // tested
                 }
             }
             if(numberMatch != null || colorMatch != null) {
                 if(numberMatch != null) {
-                    return numberMatch;
+                    return numberMatch; // tested
                 } else {
-                    return colorMatch;
+                    return colorMatch; // tested
                 }
             }
         }
