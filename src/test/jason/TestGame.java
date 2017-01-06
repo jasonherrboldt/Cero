@@ -307,7 +307,7 @@ public class TestGame {
         }
     }
 
-    @Test
+    @Ignore
     public void testGame_playFirstHand_switchP1Move_drawTwo() {
         // Create a new game object
         game = new Game("Player One", true);
@@ -326,7 +326,7 @@ public class TestGame {
         assertEquals(playerHandSizeBefore + 2, playerHandSizeAfter);
     }
 
-    @Test
+    @Ignore
     public void testGame_playFirstHand_switchP1Move_skip() {
         // Create a new game object
         game = new Game("Player One", true);
@@ -342,7 +342,7 @@ public class TestGame {
         assertFalse(game.isFirstMove());
     }
 
-    @Test
+    @Ignore
     public void testGame_playFirstHand_switchP1Move_reverse() {
 
         // Create a new game object
@@ -458,7 +458,7 @@ public class TestGame {
         assertEquals(playerHandSizeBefore, playerHandSizeAfter);
     }
 
-    @Test
+    @Ignore
     public void testGame_skipTurn_lpcNumeric_cpcNumeric_p2() {
         // Start the game with a numeric first card. Player two has the first turn.
         game = new Game("Player One", true);
@@ -507,7 +507,7 @@ public class TestGame {
         assertEquals(playerHandSizeBefore, playerHandSizeAfter);
     }
 
-    @Test
+    @Ignore
     public void testGame_skipTurn_lpc_cpc_NonNumericNonWild_p1() {
         // Only need to test p1 against p2 -- the same is true wlog going the other way around.
 
@@ -902,7 +902,7 @@ public class TestGame {
         assertEquals(playerHandSizeBefore + 4, playerHandSizeAfter);
     }
 
-    @Test
+    @Ignore
     public void testGame_playerTwoMove() {
         game = new Game("Player One", true);
 

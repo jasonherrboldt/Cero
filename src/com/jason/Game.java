@@ -141,7 +141,7 @@ public class Game {
     }
 
     /**
-     * Determine whether or not the first move should be automatically skipped and auto-draws cards as needed.
+     * Determine whether or not the first move should be automatically skipped. Auto-draws cards as needed.
      *
      * @param player the player who has the current move
      * @return       true if the player's move should be skipped, false otherwise
@@ -244,10 +244,10 @@ public class Game {
 //                currentColor = currentPlayedCard.getColor();
 //            }
 
-            currentColor = currentPlayedCard.getColor();
+            // currentColor = currentPlayedCard.getColor(); // no - set in playerTwoMove
             discardPile.add(currentPlayedCard);
             Main.out("\n" + player2.getName() + " discarded a " + currentPlayedCard.getPrintString());
-            Main.out("The current chosen color is " + currentColor);
+            Main.out("\nThe current chosen color is " + currentColor + "\n");
             if(showPlayerTwoActions) {
                 printHand(player2);
             }
@@ -285,7 +285,9 @@ public class Game {
 //        }
 //        return cardToDiscard; // debug
 
-        // Currently under construction (will cause tests to fail): ****************************************************************************************************
+        // ******************** UNDER CONSTRUCTION *********************
+        // Currently under construction (will cause tests to fail):
+        // *************************************************************
         Card cardToDiscard = null;
         boolean playerTwoHasDiscarded = false;
         int i = 0;
@@ -294,7 +296,7 @@ public class Game {
         while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping while debug
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
-                Main.out("Player two is drawing ");
+                Main.out("\nPlayer two is drawing ");
                 draw(player2);
             } else {
                 playerTwoHasDiscarded = true;
@@ -308,14 +310,21 @@ public class Game {
             }
         }
 
-        // ******************** UNDER CONSTRUCTION *********************
         /**
          * some serious fuckery is going on here - player two is attempting to discard a non-numeric color
          * for any other non-numeric color, e.g. discarding a red skip when the cpc is green draw two.
-         * literally no idea why this is happening. It's also breaking some tests, but not always. 
+         * literally no idea why this is happening. It's also breaking some tests, but not always.
+         *
+         * This is an unnecessary step anyway, since decidePlayerTwoDiscard hits isLegalDiscard over
+         * and over again until it finds a legal card. So why check it again here? I think the root cause
+         * is that currentPlayedCard is getting set to the other player's cpc for reasons I don't quite grasp.
+         * Possibly to help p2 remember when it sees a non-numeric non-wild that it's not supposed to skip a turn.
+         *
+         * In any event, it's causing a bunch of tests to fail - but it's never getting hit when running from main.
+         *
          */
         if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
-            Main.out("ERROR: " + "currentPlayedCard: " + currentPlayedCard.getPrintString() + ", hand: " +
+            Main.out("ERROR: p2 attempted to discard an illegal card. " + "\ncurrentPlayedCard: " + currentPlayedCard.getPrintString() + ", hand: " +
                     player2.getHand().getHandPrintStringList());
             Main.out("cardToDiscard: " + cardToDiscard.getPrintString());
             throw new IllegalStateException("Player two attempted an illegal move.");

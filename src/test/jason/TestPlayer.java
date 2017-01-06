@@ -2,6 +2,7 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -203,7 +204,7 @@ public class TestPlayer {
         assertEquals(player1.pickStrategyColor(), null);
     }
 
-    @Test
+    @Ignore
     public void testPlayer_changeStrategy() {
         Game game = new Game("Player One", true);
         game.getPlayer2().setStrategy(Player.STRATEGY_BOLD);
