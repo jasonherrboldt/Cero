@@ -52,8 +52,15 @@ if player one discards a wild or a wd4
     player two must be able to get that color to decide its next move (Game.playerTwoMove calls Game.getCurrentColor)
 
 
+@Ignore tests:
 
-How will the bold strategy pick zero cards?
+    * TestGame.testGame_playFirstHand_switchP1Move_drawTwo
+    * TestGame.testGame_playFirstHand_switchP1Move_skip
+    * TestGame.testGame_playFirstHand_switchP1Move_reverse
+    * TestGame.testGame_skipTurn_lpcNumeric_cpcNumeric_p2
+    * TestGame.testGame_skipTurn_lpc_cpc_NonNumericNonWild_p1
+    * TestGame.testGame_playerTwoMove
+    * TestPlayer.testPlayer_changeStrategy
 
 
 
@@ -274,7 +281,48 @@ public Card playerTwoMove()
 
 
 
+from Player.isLegalDiscard (1/7):
 
+
+//            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+//                return true;
+//            } else {
+//                if(cardToDiscard.isNumeric()) {
+//                    if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
+//                            cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
+//                        return true;
+//                    } else {
+//                        return false; // illegal card choice
+//                    }
+//                } else { // guaranteed by 1st part of this method to be skip, reverse, or draw two.
+//                    if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
+//                        return true;
+//                    } else {
+//                        return false;
+//                    }
+//                }
+
+//                String cardToDiscardColor = cardToDiscard.getColor();
+//                String currentPlayedCardColor = currentPlayedCard.getColor();
+//                String cardToDiscardFace = cardToDiscard.getFace();
+//                String currentPlayedCardFace = currentPlayedCard.getFace();
+//                boolean returnVal = cardToDiscardColor.equalsIgnoreCase(currentPlayedCardColor)
+//                        || cardToDiscardFace.equalsIgnoreCase(currentPlayedCardFace);
+//                return returnVal;
+//            }
+
+                // discarding a wild or WD4 is always legal:
+//                if (cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
+//                        || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+//                    return true;
+//                } else {
+//
+//                // this means the card is either numeric or non-numeric color (skip, reverse, draw two).
+//                // (non-numeric colors are cards that forced the other player to skip a turn, and have
+//                // come back around - but this player must still match either the color or the face or both.)
+//                    return cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())
+//                            || cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace());
+//                }
 
 
 

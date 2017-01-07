@@ -102,40 +102,31 @@ public class Player {
      * @param currentPlayedCard The current played card.
      * @return                  True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard) { // tested
-        if(cardToDiscard == null || currentPlayedCard == null) {
-            throw new IllegalStateException("Player.discard called with a null card, a null currentPlayedCard, or both.");
+    public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard, String currentColor) { // *** NEEDS RE-TESTING ***
+        if(cardToDiscard == null || currentPlayedCard == null || currentColor == null) {
+            throw new IllegalArgumentException("One or more args was null.");
         } else {
-            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                return true;
+
+            // if the other player discarded a wild, then cardToDiscard must match the currentColor
+            // (the other player's chosen color)
+            if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                return cardToDiscard.getColor().equalsIgnoreCase(currentColor);
+
+            // if this player discarded a WD4 last time, this player only has to match its own chosen color
+            } else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                return cardToDiscard.getColor().equalsIgnoreCase(chosenColor);
+
             } else {
-//                if(cardToDiscard.isNumeric()) {
-//                    if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()) ||
-//                            cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
-//                        return true;
-//                    } else {
-//                        return false; // illegal card choice
-//                    }
-//                } else { // guaranteed by 1st part of this method to be skip, reverse, or draw two.
-//                    if(cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())) {
-//                        return true;
-//                    } else {
-//                        return false;
-//                    }
-//                }
 
-//                return cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())
-//                        || cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace());
-
-                String cardToDiscardColor = cardToDiscard.getColor();
-                String currentPlayedCardColor = currentPlayedCard.getColor();
-                String cardToDiscardFace = cardToDiscard.getFace();
-                String currentPlayedCardFace = currentPlayedCard.getFace();
-                boolean returnVal = cardToDiscardColor.equalsIgnoreCase(currentPlayedCardColor)
-                        || cardToDiscardFace.equalsIgnoreCase(currentPlayedCardFace);
-                return returnVal;
+                // currentPlayedCard will be any card other than a wild or a wd4
+                // any of the below will be legal
+                return cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
+                        || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)
+                        || cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())
+                        || cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace());
             }
         }
+        // throw new IllegalStateException("Logic fell through all conditionals.");
     }
 
     /**
@@ -427,7 +418,7 @@ public class Player {
 
         // step through shuffled hand one card at a time and return the first legal card found
         for(Card c : shuffledHand) {
-            if(isLegalDiscard(c, currentPlayedCard)) {
+            if(isLegalDiscard(c, currentPlayedCard, currentColor)) {
                 return c; // tested
             }
         }

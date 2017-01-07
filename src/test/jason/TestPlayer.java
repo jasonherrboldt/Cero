@@ -30,6 +30,7 @@ public class TestPlayer {
     private Hand strategyHand;
     private List<Card> cardList;
     private Player player2;
+    private String blue;
 
     @Before
     public void setup() {
@@ -76,6 +77,8 @@ public class TestPlayer {
         strategyHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
         strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
         strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+
+        blue = Card.BLUE;
     }
 
     @Test
@@ -103,21 +106,21 @@ public class TestPlayer {
     public void testPlayer_isLegalDiscard_legal_numberNotColor() {
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
-        assertTrue(player2.isLegalDiscard(greenThree, yellowThree));
+        assertTrue(player2.isLegalDiscard(greenThree, yellowThree, blue));
     }
 
     @Test
     public void testPlayer_isLegalDiscard_legal_colorNotNumber() {
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
-        assertTrue(player2.isLegalDiscard(yellowSix, yellowThree));
+        assertTrue(player2.isLegalDiscard(yellowSix, yellowThree, blue));
     }
 
     @Test
     public void testPlayer_isLegalDiscard_legal_colorAndNumber() {
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
-        assertTrue(player2.isLegalDiscard(yellowSix, yellowSix));
+        assertTrue(player2.isLegalDiscard(yellowSix, yellowSix, blue));
     }
 
     @Test
@@ -125,7 +128,7 @@ public class TestPlayer {
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
         player2.getHand().addCard(blueDrawTwo);
-        assertTrue(player2.isLegalDiscard(blueDrawTwo, blueFour));
+        assertTrue(player2.isLegalDiscard(blueDrawTwo, blueFour, blue));
     }
 
     @Test
@@ -133,7 +136,7 @@ public class TestPlayer {
         player2 = new Player("", true);
         player2.setHand(classHand.getAllCards());
         player2.getHand().addCard(wild);
-        assertTrue(player2.isLegalDiscard(wild, blueFour));
+        assertTrue(player2.isLegalDiscard(wild, blueFour, blue));
     }
 
     @Test
@@ -143,7 +146,7 @@ public class TestPlayer {
         player2.getHand().addCard(wildDrawFour);
 
         int handSize = player2.getHand().getSize();
-        assertTrue(player2.isLegalDiscard(wildDrawFour, blueFour));
+        assertTrue(player2.isLegalDiscard(wildDrawFour, blueFour, blue));
     }
 
     @Test
@@ -154,9 +157,11 @@ public class TestPlayer {
         int handSize = player2.getHand().getSize();
         int cardsDiscarded = 0;
 
-        assertFalse(player2.isLegalDiscard(yellowSix, blueNine));
+        assertFalse(player2.isLegalDiscard(yellowSix, blueNine, blue));
         assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
     }
+
+    // need more isLegalDiscard tests here for when cpc is non-numeric! ****************************************
 
     @Test
     public void testPlayer_setRandomStrategy_1() {

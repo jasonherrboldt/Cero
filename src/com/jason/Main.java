@@ -70,6 +70,8 @@ public class Main {
             out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
         } else {
             out("\n" + testName + ", you were forbidden from discarding.");
+            game.setPlayerOnesTurn(false);
+            game.playerTwosTurn();
         }
     }
 

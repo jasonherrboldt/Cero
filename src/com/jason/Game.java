@@ -19,6 +19,8 @@ public class Game {
      *
      *    MUST-HAVES:
      *
+     *    Consider altering or deleting all test methods with an '@Ignore' annotation.
+     *
      *    Go through all test classes and see if any repeating code blocks can be moved up to the class level and shared.
      *
      *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
@@ -229,6 +231,10 @@ public class Game {
         if(isPlayerOnesTurn) {
             throw new IllegalStateException("Called while isPlayerOnesTurn == true");
         }
+        if(showPlayerTwoActions) {
+            Main.out("\n");
+            printHand(player2);
+        }
         currentPlayedCard = playerTwoMove();
         player2.setLastPlayedCard(currentPlayedCard);
         if(currentPlayedCard == null) {
@@ -247,8 +253,9 @@ public class Game {
             // currentColor = currentPlayedCard.getColor(); // no - set in playerTwoMove
             discardPile.add(currentPlayedCard);
             Main.out("\n" + player2.getName() + " discarded a " + currentPlayedCard.getPrintString());
-            Main.out("\nThe current chosen color is " + currentColor + "\n");
+            Main.out("\nThe current chosen color is " + currentColor);
             if(showPlayerTwoActions) {
+                Main.out("\n");
                 printHand(player2);
             }
         }
@@ -310,7 +317,7 @@ public class Game {
             }
         }
 
-        /**
+        /*
          * some serious fuckery is going on here - player two is attempting to discard a non-numeric color
          * for any other non-numeric color, e.g. discarding a red skip when the cpc is green draw two.
          * literally no idea why this is happening. It's also breaking some tests, but not always.
@@ -320,10 +327,11 @@ public class Game {
          * is that currentPlayedCard is getting set to the other player's cpc for reasons I don't quite grasp.
          * Possibly to help p2 remember when it sees a non-numeric non-wild that it's not supposed to skip a turn.
          *
-         * In any event, it's causing a bunch of tests to fail - but it's never getting hit when running from main.
+         * In any event, the conditional below  causing a bunch of tests to fail - but it's never getting hit when
+         * running from main.
          *
          */
-        if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
+        if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
             Main.out("ERROR: p2 attempted to discard an illegal card. " + "\ncurrentPlayedCard: " + currentPlayedCard.getPrintString() + ", hand: " +
                     player2.getHand().getHandPrintStringList());
             Main.out("cardToDiscard: " + cardToDiscard.getPrintString());
