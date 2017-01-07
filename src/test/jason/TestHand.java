@@ -195,11 +195,11 @@ public class TestHand {
     @Test
     public void testHand_getNumber() {
         Card correctCard = new Card(Card.RED, Card.NINE, cvm);
-        Card testCard = getNumberOfMostColorsHand.getNumberFromLargestColorGroup(9);
+        Card testCard = getNumberOfMostColorsHand.getNumberFromLargestColorGroup(9, null);
         assertTrue(correctCard.equals(testCard));
 
         // Make sure it returns null if card not found.
-        Card noCard = getNumberOfMostColorsHand.getNumberFromLargestColorGroup(4);
+        Card noCard = getNumberOfMostColorsHand.getNumberFromLargestColorGroup(4, null);
         assertNull(noCard);
     }
 

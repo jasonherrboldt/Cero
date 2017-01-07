@@ -103,6 +103,9 @@ public class Player {
      * @return                  True if the discarded card was deemed legal, false otherwise.
      */
     public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard, String currentColor) { // *** NEEDS RE-TESTING ***
+        // Main.out("oh hai from Player.isLegalDiscard.");
+        // Main.out("cardToDiscard: " + cardToDiscard.getPrintString() + ", currentPlayedCard: " + currentPlayedCard.getPrintString()
+               //  + ", currentColor:" + currentColor);
         if(cardToDiscard == null || currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or more args was null.");
         } else {
@@ -110,13 +113,40 @@ public class Player {
             // if the other player discarded a wild, then cardToDiscard must match the currentColor
             // (the other player's chosen color)
             if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                // Main.out("oh hai from conditional if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)).");
+//                Main.out("Player.isLegalDiscard has decided that the cpc is wild, and to return true if " +
+//                        "cardToDiscard.getColor().equalsIgnoreCase(currentColor), which evaluates to "
+//                        + cardToDiscard.getColor().equalsIgnoreCase(currentColor));
                 return cardToDiscard.getColor().equalsIgnoreCase(currentColor);
 
             // if this player discarded a WD4 last time, this player only has to match its own chosen color
             } else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                // Main.out("oh hai from conditional else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)).");
                 return cardToDiscard.getColor().equalsIgnoreCase(chosenColor);
 
             } else {
+
+//                Main.out("oh hai from conditional } else {.");
+//
+//                String cardToDiscardColor = cardToDiscard.getColor();
+//                String currentPlayedCardColor = currentPlayedCard.getColor();
+//                String cardToDiscardFace = cardToDiscard.getFace();
+//                String currentPlayedCardFace = currentPlayedCard.getFace();
+//
+//                Main.out("cardToDiscardColor: " + cardToDiscardColor);
+//                Main.out("cardToDiscardFace: " + cardToDiscardFace);
+//                Main.out("currentPlayedCardColor: " + currentPlayedCardColor);
+//                Main.out("currentPlayedCardFace: " + currentPlayedCardFace);
+//
+//                Main.out("cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) = "
+//                        + cardToDiscard.getFace().equalsIgnoreCase(Card.WILD));
+//                Main.out("cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR) = "
+//                        + cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR));
+//                Main.out("cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor() = "
+//                        + cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()));
+//                Main.out("cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace() = "
+//                        + cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace()));
+
 
                 // currentPlayedCard will be any card other than a wild or a wd4
                 // any of the below will be legal
@@ -272,7 +302,10 @@ public class Player {
         }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
-            return hand.getHighestFace(currentColor, true); // tested
+            Card returnCard = hand.getHighestFace(currentColor, true);
+            // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card " +
+                    // "hand.getHighestFace(currentColor, true): " + returnCard.getPrintString());
+            return returnCard; // tested
         } else {
 
             // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
@@ -281,6 +314,7 @@ public class Player {
                 CardValueMap cvm = new CardValueMap();
                 Card zeroColorMatch = new Card(currentColor, Card.ZERO, cvm);
                 if(hand.hasCard(zeroColorMatch)) {
+                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card zeroColorMatch: " + zeroColorMatch.getPrintString());
                     return zeroColorMatch; // tested
                 }
             }
@@ -288,7 +322,7 @@ public class Player {
             // numeric cards go first
 
             // try to match the number
-            Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue());
+            Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue(), currentPlayedCard);
 
             // try to match the color
             Card colorMatch = hand.getHighestFace(currentPlayedCard.getColor(), true);
@@ -296,8 +330,10 @@ public class Player {
             // compare the two, return the one with the highest card group
             if(numberMatch != null && colorMatch != null) {
                 if(hand.getColorGroupSize(numberMatch.getColor()) > hand.getColorGroupSize(colorMatch.getColor())) {
+                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1):" + numberMatch.getPrintString());
                     return numberMatch; // tested for non-zero
                 } else {
+                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): " + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
@@ -306,8 +342,10 @@ public class Player {
             if(numberMatch != null || colorMatch != null) {
                 if(numberMatch != null) {
                     // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
+                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): " + numberMatch.getPrintString());
                     return numberMatch; // tested for non-zero
                 } else {
+                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): " + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
@@ -317,6 +355,8 @@ public class Player {
             // try to return a non-numeric card from the cpc color group
             Card highestNonNumericColorFace = hand.getHighestNonNumericFace(currentPlayedCard.getColor());
             if(highestNonNumericColorFace != null) {
+                // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card highestNonNumericColorFace: "
+                        // + highestNonNumericColorFace.getPrintString());
                 return highestNonNumericColorFace; // tested
             }
 
@@ -324,15 +364,18 @@ public class Player {
 
             // return a wild card if present
             if(hand.hasCard(wild)) {
+                // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wild: " + wild.getPrintString());
                 return wild; // tested
             }
             // return a wild draw four card if present
             if(hand.hasCard(wildDrawFour)) {
+                // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wildDrawFour: " + wildDrawFour.getPrintString());
                 return wildDrawFour; // tested
             }
         }
 
         // found nothing - return null and let Game.playerTwoMove draw a card from the deck
+        // Main.out("oh hai from Player.getCautiousStrategyCard. About to return null.");
         return null; // tested
     }
 
@@ -349,16 +392,23 @@ public class Player {
         }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest non-numeric face of currentColor
-            return hand.getHighestFace(currentColor, false); // tested
+            Card returnCard = hand.getHighestFace(currentColor, false);
+            // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card hand.getHighestFace(currentColor, false): "
+                    // + returnCard.getPrintString());
+            return returnCard; // tested
         } else {
 
             // highest-value cards go first
 
             if(hand.hasCard(wild)) {
+//                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wild: "
+//                        + wild.getPrintString());
                 return wild; // tested
             }
 
             if(hand.hasCard(wildDrawFour)) {
+//                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wildDrawFour: "
+//                        + wildDrawFour.getPrintString());
                 return wildDrawFour; // tested
             }
 
@@ -366,13 +416,15 @@ public class Player {
 
             Card highestNonNumericFace = hand.getHighestNonNumericFace(currentPlayedCard.getColor());
             if(highestNonNumericFace != null) {
+//                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card highestNonNumericColorFace: "
+//                        + highestNonNumericFace.getPrintString());
                 return highestNonNumericFace; // tested
             }
 
             // 3rd option is a numeric card
 
             // try to match the number
-            Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue());
+            Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue(), currentPlayedCard);
 
             // try to match the color
             Card colorMatch = hand.getHighestFace(currentPlayedCard.getColor(), true);
@@ -380,8 +432,12 @@ public class Player {
             // compare the two, return the one with the higher value
             if(numberMatch != null && colorMatch != null) {
                 if(numberMatch.getValue() > colorMatch.getValue()) {
+                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): "
+                            + numberMatch.getPrintString());
                     return numberMatch; // tested
                 } else {
+//                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): "
+//                            + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
@@ -389,14 +445,19 @@ public class Player {
             // if only one is non-null, return it.
             if(numberMatch != null || colorMatch != null) {
                 if(numberMatch != null) {
+//                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (2): "
+//                            + numberMatch.getPrintString());
                     return numberMatch; // tested
                 } else {
+//                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (2): "
+//                            + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
         }
 
         // found nothing - return null and let Game.playerTwoMove draw a card from the deck
+        // Main.out("oh hai from Player.getCautiousStrategyCard. About to return null.");
         return null; // tested
     }
 
@@ -419,6 +480,7 @@ public class Player {
         // step through shuffled hand one card at a time and return the first legal card found
         for(Card c : shuffledHand) {
             if(isLegalDiscard(c, currentPlayedCard, currentColor)) {
+                // Main.out("oh hai from Player.getDumbStrategyCard. isLegalDiscard just returned true.");
                 return c; // tested
             }
         }

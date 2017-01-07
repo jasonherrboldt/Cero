@@ -210,12 +210,21 @@ public class Hand {
      * @param number    The number to search for.
      * @return          The card of the highest color group, or null if no card found.
      */
-    public Card getNumberFromLargestColorGroup(int number) { // tested
+    public Card getNumberFromLargestColorGroup(int number, Card currentPlayedCard) { // tested
+        // Main.out("oh hai from Hand.getNumberFromLargestColorGroup. number = " + number);
         // Hand is already sorted ascending by color group size.
         for(List<Card> list : listOfListOfCards) {
             for(Card c : list) {
-                if(c.getValue() == number) {
-                    return c;
+                // need to differentiate non-numeric cards of the same value, e.g. skip, draw two, reverse,
+                // wild, and WD4.
+                if(c.getValue() == 20 || c.getValue() == 50) {
+                    if(c.getValue() == number && c.getFace().equalsIgnoreCase(currentPlayedCard.getFace())) {
+                        return c;
+                    }
+                } else {
+                    if(c.getValue() == number) {
+                        return c;
+                    }
                 }
             }
         }

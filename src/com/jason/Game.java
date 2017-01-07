@@ -89,8 +89,10 @@ public class Game {
             // for testing:
             if (firstPlayedCard == null) {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
+                // Main.out("oh hai from Game.startGame. cpc has just been changed to " + currentPlayedCard.getPrintString());
             } else {
                 currentPlayedCard = firstPlayedCard;
+                // Main.out("oh hai from Game.startGame. cpc has just been changed to " + currentPlayedCard.getPrintString());
                 setPlayerOnesTurn(_isPlayerOnesTurn);
             }
 
@@ -153,7 +155,10 @@ public class Game {
             throw new IllegalStateException("skipFirstTurn was called when isFirstMove == false."); // tested
         } else {
             // necessary to prevent null pointer exception in skipSubsequentTurn:
+            // Main.out("oh hai from Game.skipFirstTurn. About to set the other player's lpc:");
+            // Main.out("Other player's lpc is " + getOtherPlayer(player).getLastPlayedCard());
             getOtherPlayer(player).setLastPlayedCard(currentPlayedCard);
+            // Main.out("Switch done. Other player's lpc is now " + getOtherPlayer(player).getLastPlayedCard().getPrintString());
             player.setLastPlayedCard(numeric);
             if (!currentPlayedCard.isNumeric()) {
                 if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD) ||
@@ -236,6 +241,7 @@ public class Game {
             printHand(player2);
         }
         currentPlayedCard = playerTwoMove();
+        // Main.out("oh hai from Game.playerTwosTurn. cpc has just been set to " + currentPlayedCard.getPrintString());
         player2.setLastPlayedCard(currentPlayedCard);
         if(currentPlayedCard == null) {
             // turn this back on later:
@@ -300,6 +306,7 @@ public class Game {
         int i = 0;
         Main.out("\nPlayer Two is playing with a " + player2.getStrategy() + " strategy.");
         // discard or draw until a legal card is found
+        // Main.out("oh hai from Game.playerTwoMove. cpc: " + currentPlayedCard.getPrintString());
         while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping while debug
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
@@ -337,6 +344,7 @@ public class Game {
             Main.out("cardToDiscard: " + cardToDiscard.getPrintString());
             throw new IllegalStateException("Player two attempted an illegal move.");
         } else {
+            // Main.out("oh hai from Player.getDumbStrategyCard. isLegalDiscard just returned true.");
             player2.setLastPlayedCard(cardToDiscard);
             player2.getHand().discard(cardToDiscard);
             if(cardToDiscard.isColorlessCard()) { // wild or wd4
@@ -562,6 +570,7 @@ public class Game {
 
     public void setCurrentPlayedCard(Card card) {
         this.currentPlayedCard = card;
+        // Main.out("oh hai from Game.setCurrentPlayedCard. cpc has just been changed to: " + currentPlayedCard.getPrintString());
     }
 
     public void setPlayerOnesTurn(boolean playerOnesTurn) {

@@ -209,7 +209,7 @@ public class TestPlayer {
         assertEquals(player1.pickStrategyColor(), null);
     }
 
-    @Ignore
+    @Test
     public void testPlayer_changeStrategy() {
         Game game = new Game("Player One", true);
         game.getPlayer2().setStrategy(Player.STRATEGY_BOLD);

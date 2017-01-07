@@ -1,6 +1,165 @@
 
 
 
+/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/bin/java -Didea.launcher.port=7541 "-Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin" -Dfile.encoding=UTF-8 -classpath "/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/deploy.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/cldrdata.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/jaccess.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/jfxrt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/nashorn.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/javaws.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/jfxswt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/plugin.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/ant-javafx.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/dt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/javafx-mx.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/jconsole.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/packager.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/sa-jdi.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_77.jdk/Contents/Home/lib/tools.jar:/Users/jasonherrboldt/Documents/My Code/Projects/Cero/out/production/Cero:/Applications/IntelliJ IDEA CE.app/Contents/lib/junit-4.12.jar:/Applications/IntelliJ IDEA CE.app/Contents/lib/junit.jar:/Applications/IntelliJ IDEA CE.app/Contents/lib/hamcrest-core-1.3.jar:/Applications/IntelliJ IDEA CE.app/Contents/lib/idea_rt.jar" com.intellij.rt.execution.application.AppMain com.jason.Main
+
+Starting game, playing the first hand...
+
+The current played card is (Green) 2
+
+WOPR had the first move.
+
+WOPR's hand:
+01: (Yellow) 4
+02: (Yellow) Draw Two
+03: (Blue) 1
+04: (Blue) 6
+05: (Red) 3
+06: (Red) 4
+07: Wild Draw Four
+
+
+WOPR's hand:
+01: (Yellow) 4
+02: (Yellow) Draw Two
+03: (Blue) 1
+04: (Blue) 6
+05: (Red) 3
+06: (Red) 4
+07: Wild Draw Four
+
+Player Two is playing with a Bold strategy.
+
+WOPR discarded a Wild Draw Four
+
+The current chosen color is Yellow
+
+
+WOPR's hand:
+01: (Yellow) 4
+02: (Yellow) Draw Two
+03: (Blue) 1
+04: (Blue) 6
+05: (Red) 3
+06: (Red) 4
+
+Back to main.
+
+Game.draw just added the card (Yellow) 6 to David Lightman's hand.
+
+Game.draw just added the card (Blue) 8 to David Lightman's hand.
+
+Game.draw just added the card (Green) 4 to David Lightman's hand.
+
+Game.draw just added the card (Blue) Draw Two to David Lightman's hand.
+
+David Lightman, you were forbidden from discarding.
+
+
+WOPR's hand:
+01: (Yellow) 4
+02: (Yellow) Draw Two
+03: (Blue) 1
+04: (Blue) 6
+05: (Red) 3
+06: (Red) 4
+
+Player Two is playing with a Bold strategy.
+
+Player two is drawing
+
+Game.draw just added the card (Red) 6 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) 4 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) 5 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Red) 4 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Red) Skip to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) 6 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Blue) 8 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) 6 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Blue) Skip to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) Reverse to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Yellow) 9 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Blue) Reverse to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Blue) 2 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) Skip to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Green) 7 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card (Red) 7 to WOPR's hand.
+
+Player two is drawing
+
+Game.draw just added the card Wild Draw Four to WOPR's hand.
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: Wild Draw Four, hand: [(Green) 4, (Green) 5, (Green) 6, (Green) 6, (Green) 7, (Green) Reverse, (Green) Skip, (Blue) 1, (Blue) 2, (Blue) 6, (Blue) 8, (Blue) Reverse, (Blue) Skip, (Red) 3, (Red) 4, (Red) 4, (Red) 6, (Red) 7, (Red) Skip, (Yellow) 4, (Yellow) 9, (Yellow) Draw Two, Wild Draw Four]
+cardToDiscard: Wild Draw Four
+Exception in thread "main" java.lang.IllegalStateException: Player two attempted an illegal move.
+	at com.jason.Game.playerTwoMove(Game.java:345)
+	at com.jason.Game.playerTwosTurn(Game.java:243)
+	at com.jason.Main.main(Main.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)
+
+Process finished with exit code 1
+
+
+
+
+
+
+
+
+
+
+
+
+
         /* main pseudocode
         Welcome the user, get name.
         inner winner exists = false
@@ -52,15 +211,7 @@ if player one discards a wild or a wd4
     player two must be able to get that color to decide its next move (Game.playerTwoMove calls Game.getCurrentColor)
 
 
-@Ignore tests:
 
-    * TestGame.testGame_playFirstHand_switchP1Move_drawTwo
-    * TestGame.testGame_playFirstHand_switchP1Move_skip
-    * TestGame.testGame_playFirstHand_switchP1Move_reverse
-    * TestGame.testGame_skipTurn_lpcNumeric_cpcNumeric_p2
-    * TestGame.testGame_skipTurn_lpc_cpc_NonNumericNonWild_p1
-    * TestGame.testGame_playerTwoMove
-    * TestPlayer.testPlayer_changeStrategy
 
 
 
@@ -80,6 +231,224 @@ if player one discards a wild or a wd4
 
 
 GRAVEYARD:
+
+
+@Ignore tests:
+
+    * TestGame.testGame_playFirstHand_switchP1Move_drawTwo
+    * TestGame.testGame_playFirstHand_switchP1Move_skip
+    * TestGame.testGame_playFirstHand_switchP1Move_reverse
+    * TestGame.testGame_skipTurn_lpcNumeric_cpcNumeric_p2
+    * TestGame.testGame_skipTurn_lpc_cpc_NonNumericNonWild_p1
+    * TestGame.testGame_playerTwoMove
+    * TestPlayer.testPlayer_changeStrategy
+
+
+
+Here are some scenarios that throw the illegal discard exception:
+
+SCENARIO #1:
+
+Starting game, playing the first hand...
+
+The current played card is (Yellow) Draw Two
+
+Game.draw just added the card (Blue) 6 to David Lightman's hand.
+
+Game.draw just added the card Wild to David Lightman's hand.
+
+David Lightman, you were forbidden from discarding. The first move switches to WOPR.
+
+WOPR's hand:
+01: (Green) 0
+02: (Green) 3
+03: (Green) 5
+04: (Green) Reverse
+05: (Blue) Reverse
+06: (Blue) Skip
+07: (Red) 7
+
+Player Two is playing with a Cautious strategy.
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Yellow) Draw Two, hand: [(Green) 0, (Green) 3, (Green) 5, (Green) Reverse, (Blue) Reverse, (Blue) Skip, (Red) 7]
+cardToDiscard: (Green) Reverse
+
+Process finished with exit code 1
+
+
+SCENARIO #2:
+
+The current played card is (Yellow) Draw Two
+
+Game.draw just added the card (Red) Reverse to Player One's hand.
+
+Game.draw just added the card (Yellow) 4 to Player One's hand.
+
+Player One, you were forbidden from discarding. The first move switches to WOPR.
+
+WOPR's hand:
+01: (Blue) 5
+02: (Blue) 6
+03: (Blue) Reverse
+04: (Red) 1
+05: (Red) 4
+06: (Yellow) Draw Two
+07: Wild Draw Four
+
+Player Two is playing with a Bold strategy.
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Yellow) Draw Two, hand: [(Blue) 5, (Blue) 6, (Blue) Reverse, (Red) 1, (Red) 4, (Yellow) Draw Two, Wild Draw Four]
+cardToDiscard: (Blue) Reverse
+
+
+
+SCENARIO #3:
+
+The current played card is (Yellow) Draw Two
+
+Game.draw just added the card (Green) 6 to Player One's hand.
+
+Game.draw just added the card (Green) Draw Two to Player One's hand.
+
+Player One, you were forbidden from discarding. The first move switches to WOPR.
+
+WOPR's hand:
+01: (Red) 6
+02: (Red) Reverse
+03: (Green) 1
+04: (Green) Skip
+05: (Yellow) 3
+06: (Blue) 8
+07: Wild Draw Four
+
+Player Two is playing with a Bold strategy.
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Yellow) Draw Two, hand: [(Red) 6, (Red) Reverse, (Green) 1, (Green) Skip, (Yellow) 3, (Blue) 8, Wild Draw Four]
+cardToDiscard: (Red) Reverse
+
+
+
+SCENARIO #4:
+
+The current played card is (Yellow) Draw Two
+
+Game.draw just added the card (Blue) 0 to Player One's hand.
+
+Game.draw just added the card Wild to Player One's hand.
+
+Player One, you were forbidden from discarding. The first move switches to WOPR.
+
+WOPR's hand:
+01: (Blue) 3
+02: (Blue) 8
+03: (Blue) Reverse
+04: (Green) 4
+05: (Green) 9
+06: (Red) 3
+07: (Yellow) 2
+
+Player Two is playing with a Bold strategy.
+oh hai from Player.isLegalDiscard.
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Yellow) Draw Two, hand: [(Blue) 3, (Blue) 8, (Blue) Reverse, (Green) 4, (Green) 9, (Red) 3, (Yellow) 2]
+cardToDiscard: (Blue) Reverse
+
+
+
+SCENARIO #5:
+
+The current played card is (Blue) Reverse
+
+Player One, you were forbidden from discarding. The first move switches to WOPR.
+
+
+WOPR's hand:
+01: (Green) 8
+02: (Green) 8
+03: (Green) 9
+04: (Red) 7
+05: (Red) 9
+06: (Yellow) Skip
+07: (Blue) 4
+
+Player Two is playing with a Cautious strategy.
+oh hai from Player.isLegalDiscard.
+cardToDiscard: (Yellow) Skip, currentPlayedCard: (Blue) Reverse, currentColor:Blue
+oh hai from conditional } else {.
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Blue) Reverse, hand: [(Green) 8, (Green) 8, (Green) 9, (Red) 7, (Red) 9, (Yellow) Skip, (Blue) 4]
+cardToDiscard: (Yellow) Skip
+
+
+
+SCENARIO #6:
+
+******* fucking found it *******
+
+oh hai from Game.startGame. cpc has just been changed to (Blue) Reverse
+
+The current played card is (Blue) Reverse
+oh hai from Game.skipFirstTurn. About to set the other player's lpc:
+Other player's lpc is null
+Switch done. Other player's lpc is now (Blue) Reverse
+
+Player One, you were forbidden from discarding. The first move switches to WOPR.
+
+
+WOPR's hand:
+01: (Yellow) 1
+02: (Yellow) 9
+03: (Yellow) Skip
+04: (Green) 1
+05: (Green) 5
+06: (Red) 8
+07: (Blue) Reverse
+
+Player Two is playing with a Bold strategy.
+oh hai from Game.playerTwoMove. cpc: (Blue) Reverse
+oh hai from Player.getCautiousStrategyCard. About to return the card (Yellow) Skip // ******* ******* ******* lol nope ******* ******* *******
+oh hai from Player.isLegalDiscard.
+cardToDiscard: (Yellow) Skip, currentPlayedCard: (Blue) Reverse, currentColor:Blue
+oh hai from conditional } else {.
+cardToDiscardColor: Yellow
+cardToDiscardFace: Skip
+currentPlayedCardColor: Blue
+currentPlayedCardFace: Reverse
+cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) = false
+cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR) = false
+cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor() = false
+cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace() = false
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Blue) Reverse, hand: [(Yellow) 1, (Yellow) 9, (Yellow) Skip, (Green) 1, (Green) 5, (Red) 8, (Blue) Reverse]
+cardToDiscard: (Yellow) Skip
+
+
+
+FINALLY found the culprit:
+
+first with bold:
+
+Player Two is playing with a Bold strategy.
+oh hai from Game.playerTwoMove. cpc: (Yellow) Draw Two
+oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): (Blue) Reverse
+oh hai from Player.isLegalDiscard.
+cardToDiscard: (Blue) Reverse, currentPlayedCard: (Yellow) Draw Two, currentColor:Yellow
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Yellow) Draw Two, hand: [(Blue) 4, (Blue) 9, (Blue) Reverse, (Green) Reverse, (Green) Skip, (Red) 4, Wild Draw Four]
+cardToDiscard: (Blue) Reverse
+
+and again with cautious:
+
+Player Two is playing with a Cautious strategy.
+oh hai from Game.playerTwoMove. cpc: (Green) Skip
+oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): (Blue) Reverse
+oh hai from Player.isLegalDiscard.
+cardToDiscard: (Blue) Reverse, currentPlayedCard: (Green) Skip, currentColor:Green
+ERROR: p2 attempted to discard an illegal card.
+currentPlayedCard: (Green) Skip, hand: [(Yellow) 4, (Yellow) 9, (Green) 6, (Green) 5, (Blue) 9, (Blue) Reverse, (Red) Draw Two]
+cardToDiscard: (Blue) Reverse
+
+
 
 
 boolean skipTurn (player)
