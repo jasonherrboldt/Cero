@@ -61,7 +61,7 @@ public class Game {
         deck = new Deck();
         player1 = new Player(playerOneName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
-        player2 = new Player("Tron", true);
+        player2 = new Player("WOPR", true);
         player2.setRandomStrategy();
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
@@ -467,7 +467,7 @@ public class Game {
         if(player.getHand() == null) {
             Main.out("WARN: Game.printHand called with a null hand. No action taken.");
         } else {
-            int count = 1;
+            int count = 0;
             Main.out(player.getName() + "'s hand:");
             List<String> allCards = player.getHand().getHandPrintStringList();
             for(String s : allCards) {

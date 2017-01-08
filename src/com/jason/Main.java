@@ -20,7 +20,7 @@ public class Main {
         java -cp ./src com.jason.Main
      */
 
-    private static final String userCorrectionMessage = "That is not a valid response. Please try again.";
+    private static final String userCorrectionMessage = "\nThat is not a valid response. Please try again.";
     private static final String invalidQuestionWarning =
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
 
@@ -81,42 +81,66 @@ public class Main {
                 + " cards in the discard pile.");
         out("\nThe current color is " + game.getCurrentColor() + ".");
         if(!game.skipTurn(game.getPlayer1())) {
-            out("\nIt's your turn, " + testName + "\n");
-            game.printHand(game.getPlayer1());
-            out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
-
-            boolean cardDiscarded = false;
-            while(!cardDiscarded) {
-                String drawAnswer = getUserResponse_yesNo("\nWould you like to draw a card?");
-                if(drawAnswer == null) {
-                    throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
-                } else {
-                    if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
-                        out("\nOK, drawing a card from the deck...");
-                        game.draw(game.getPlayer1());
-                        game.printHand(game.getPlayer1());
-                    }
-                }
-                String discardAnswer = getUserResponse_yesNo("\nAre you ready to discard?");
-                if(discardAnswer == null) {
-                    throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
-                } else {
-                    if(discardAnswer.equalsIgnoreCase("yes") || discardAnswer.equalsIgnoreCase("y")) {
-                        out("\nOK, discarding a card (not really, just pretend).");
-                        cardDiscarded = true;
-                    }
-                }
-            }
-
-//            int handSize = game.getPlayer1().getHand().getSize();
-//            String answer = getUserResponse_integer("Please enter an integer between 0 and 5: ", 0, 5);
-//            out("Your answer: " + answer);
+            playerOnesTurn(game, testName);
         } else {
             out("\n" + testName + ", you were forbidden from discarding.");
             game.setPlayerOnesTurn(false);
             playedCard = game.playerTwosTurn();
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
         }
+    }
+
+    private static void playerOnesTurn(Game game, String p1Name) {
+        int p1HandSize;
+        String drawAnswer;
+        String discardAnswer;
+        String discardNumber;
+        List<Card> hand;
+        out("\nIt's your turn, " + p1Name + "\n");
+        game.printHand(game.getPlayer1());
+        out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
+
+        boolean cardDiscarded = false;
+        while(!cardDiscarded) {
+            drawAnswer = getUserResponse_yesNo("\nWould you like to draw a card?");
+            if(drawAnswer == null) {
+                throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
+            } else {
+                if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
+                    out("\nOK, drawing a card from the deck...");
+                    game.draw(game.getPlayer1());
+                    out("");
+                    game.printHand(game.getPlayer1());
+                }
+            }
+            discardAnswer = getUserResponse_yesNo("\nAre you ready to discard?");
+            if(discardAnswer == null) {
+                throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
+            } else {
+                if(discardAnswer.equalsIgnoreCase("yes") || discardAnswer.equalsIgnoreCase("y")) {
+                    p1HandSize = game.getPlayer1().getHand().getSize();
+                    boolean validDiscard = false;
+                    while(!validDiscard) {
+                        discardNumber = getUserResponse_integer("\nWhich card would you like to discard?", 0, p1HandSize -1 );
+                        if(discardNumber == null) {
+                            throw new IllegalStateException("getUserResponse_integer returned null.");
+                        }
+                        try {
+                            int discardNumberInt = Integer.parseInt(discardNumber);
+                            hand = game.getPlayer1().getHand().getAllCards();
+                            Card cardToDiscard = hand.get(discardNumberInt);
+                            out("\nYou have elected to discard the card " + cardToDiscard.getPrintString());
+                        } catch (NumberFormatException e) {
+                            throw new IllegalStateException("getUserResponse_integer returned a string that cannot be " +
+                                    "parsed into an int.");
+                        }
+                        validDiscard = true;
+                    }
+                    cardDiscarded = true;
+                }
+            }
+        }
+
     }
 
     /**
@@ -208,7 +232,7 @@ public class Main {
                 return null;
             } else {
                 while(!validAnswerReceived) {
-                    outNoReturn(question);
+                    outNoReturn(question + " ");
                     response = System.console().readLine();
                     int responseInt = -1;
                     try {
