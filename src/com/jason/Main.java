@@ -84,7 +84,7 @@ public class Main {
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
         }
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 15; i++) {
             pause(2);
             if (game.getDeck().getSize() < 2) {
                 out("\nThere is 1 card left in the deck.");
@@ -109,6 +109,13 @@ public class Main {
                     pause(2);
                     out("\n" + game.getPlayer1().getName() + " did not have to skip a turn.");
                     playerOnesTurn(game, game.getPlayer1().getName());
+                    if(game.getPlayer1().getHand().getSize() == 0) {
+                        pause(2);
+                        out("\nPlayer one has discarded the last card!");
+                        pause(2);
+                        out("\nSetting innerWinnerExists to true...");
+                        innerWinnerExists = true;
+                    }
                     pause(2);
                     out("\nDone with Player One's turn. Now setting p1 turn to false...");
                     game.setPlayerOnesTurn(false);
@@ -126,6 +133,13 @@ public class Main {
                     playedCard = game.playerTwosTurn();
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+                    if(game.getPlayer2().getHand().getSize() == 0) {
+                        pause(2);
+                        out("\nPlayer two has discarded the last card!");
+                        pause(2);
+                        out("\nSetting innerWinnerExists to true...");
+                        innerWinnerExists = true;
+                    }
                     pause(2);
                     out("\nDone with Player Two's turn. Now setting p1 turn to true...");
                     game.setPlayerOnesTurn(true);
@@ -134,6 +148,13 @@ public class Main {
                     out("\nPlayer two was forced to skip a turn. Now setting p1 turn to true...");
                     game.setPlayerOnesTurn(true);
                 }
+            }
+            if(innerWinnerExists) {
+                pause(2);
+                out("\nAn inner winner exists! Starting a new game...");
+                game = new Game(testName, true);
+                game.startGame(null, true);
+                innerWinnerExists = false;
             }
             pause(2);
             out("\nAbout to return to the top of the while loop.");
@@ -165,7 +186,8 @@ public class Main {
         boolean cardDiscarded = false;
         while(!cardDiscarded) {
             pause(2);
-            if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD)) {
+            if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD)
+                    || game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                 discardAnswer = getUserResponse_yesNo("\nThe current played card is "
                         + game.getCurrentPlayedCard().getPrintString() + " and the current color is "
                         + game.getCurrentColor().toLowerCase() + ".\nAre you ready to discard?");

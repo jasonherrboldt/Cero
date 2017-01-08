@@ -397,6 +397,12 @@ public class Game {
             p.setHand(cards);
         }
         // Main.out("oh hai from Game.dealHands. Deck size after dealing is " + deck.getSize());
+        if(deck.getSize() != 94) {
+            Main.out("Game.dealHands did not deal 7 cards to each player!");
+            printHand(player1);
+            printHand(player2);
+            throw new IllegalStateException("Game.dealHands did not deal 7 cards to each player.");
+        }
     }
 
     /**
