@@ -125,27 +125,28 @@ public class Game {
                     Main.pause(2);
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
-                    Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
+                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                     isFirstMove = false;
                 } else {
                     returnCard = playerTwosTurn();
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
-                    Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
+                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             } else { // player one's turn
                 if (skipFirstTurn(player1)) {
                     Main.pause(2);
-                    Main.out("\n" + player1.getName() + ", you were forbidden from discarding. " +
-                            "The first move switches to " + player2.getName() + ".");
+                    Main.out("\n" + player1.getName() + ", you were forbidden from discarding.");
+                    Main.pause(2);
+                    Main.out("\nThe first move switches to " + player2.getName() + ".");
                     isPlayerOnesTurn = false;
-                    Main.out("isPlayerOnesTurn was just set to false in Game.playFirstHand.");
+                    // Main.out("isPlayerOnesTurn was just set to false in Game.playFirstHand.");
                     isFirstMove = false;
                     returnCard = playerTwosTurn();
                 } else {
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
-                    Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
+                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             }
             return returnCard;
@@ -201,7 +202,6 @@ public class Game {
             // skipFirstTurn guarantees this will never happen
             throw new IllegalStateException("Player's last played card is null in Game.skipTurn.");
         }
-        Main.pause(2);
         if(currentPlayedCard.isNumeric()) {
             return false;
         }
@@ -252,8 +252,8 @@ public class Game {
             discardPile.add(returnCard);
             player2.setLastPlayedCard(returnCard);
             currentPlayedCard = returnCard;
-            setPlayerOnesTurn(true);
-            Main.out("setPlayerOnesTurn was just set to (true) in Game.playerTwosTurn.");
+            // setPlayerOnesTurn(true);
+            // Main.out("setPlayerOnesTurn was just set to (true) in Game.playerTwosTurn.");
         }
         return returnCard;
     }
@@ -385,6 +385,7 @@ public class Game {
      * Deal 7 cards each from the top of the deck to each player.
      */
     public void dealHands() { // tested
+        // Main.out("oh hai from Game.dealHands. Deck size before dealing is " + deck.getSize());
         List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
@@ -395,6 +396,7 @@ public class Game {
             }
             p.setHand(cards);
         }
+        // Main.out("oh hai from Game.dealHands. Deck size after dealing is " + deck.getSize());
     }
 
     /**
@@ -534,8 +536,6 @@ public class Game {
     }
 
     public void setPlayerOnesTurn(boolean playerOnesTurn) {
-        Main.pause(2);
-        Main.out("\nNow setting Game.isPlayerOnesTurn to " + playerOnesTurn);
         isPlayerOnesTurn = playerOnesTurn;
     }
 

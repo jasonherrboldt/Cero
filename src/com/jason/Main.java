@@ -70,10 +70,11 @@ public class Main {
         game.printHand(game.getPlayer2());
         pause(2);
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
-        pause(2);
         if(game.isPlayerOnesTurn()) {
+            pause(2);
             out("\nYou have the first move, " + testName + ".");
         } else {
+            pause(2);
             out("\n" + playerTwoName + " has the first move.");
         }
         Card playedCard;
@@ -99,30 +100,49 @@ public class Main {
             out("\nThe current color is " + game.getCurrentColor() + ".");
             pause(2);
             out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
-            pause(2);
-            out("game.isPlayerOnesTurn() currently evaluates to " + game.isPlayerOnesTurn() + ". About to enter the if / else.");
+            // pause(2);
+            // out("game.isPlayerOnesTurn() currently evaluates to " + game.isPlayerOnesTurn() + ". About to enter the if / else.");
             if(game.isPlayerOnesTurn()) {
                 pause(2);
                 out("\nIt is player one's turn.");
                 if (!game.skipTurn(game.getPlayer1())) {
                     pause(2);
-                    out("\n" + game.getPlayer1().getName() + " did not have to skip a turn. Now entering playerOnesTurn().");
+                    out("\n" + game.getPlayer1().getName() + " did not have to skip a turn.");
                     playerOnesTurn(game, game.getPlayer1().getName());
+                    pause(2);
+                    out("\nDone with Player One's turn. Now setting p1 turn to false...");
+                    game.setPlayerOnesTurn(false);
                 } else {
-                    out("Player one was forced to skip a turn.");
+                    pause(2);
+                    out("\nPlayer one was forced to skip a turn. Now setting p1 turn to false...");
+                    game.setPlayerOnesTurn(false);
                 }
             } else {
                 pause(2);
                 out("\nIt is player two's turn.");
                 if(!game.skipTurn(game.getPlayer2())) {
                     pause(2);
-                    out("\n" + game.getPlayer1().getName() + " did not have to skip a turn. Now entering playerTwosTurn().");
+                    out("\n" + game.getPlayer2().getName() + " did not have to skip a turn.");
                     playedCard = game.playerTwosTurn();
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+                    pause(2);
+                    out("\nDone with Player Two's turn. Now setting p1 turn to true...");
+                    game.setPlayerOnesTurn(true);
                 } else {
-                    out("Player two was forced to skip a turn.");
+                    pause(2);
+                    out("\nPlayer two was forced to skip a turn. Now setting p1 turn to true...");
+                    game.setPlayerOnesTurn(true);
                 }
+            }
+            pause(2);
+            out("\nAbout to return to the top of the while loop.");
+            if(game.isPlayerOnesTurn()) {
+                pause(2);
+                out("\nIt is player one's turn.");
+            } else {
+                pause(2);
+                out("\nIt is player two's turn.");
             }
         }
     }
@@ -167,31 +187,31 @@ public class Main {
                         discardNumberInt--;
                         hand = game.getPlayer1().getHand().getAllCards();
                         Card cardToDiscard = hand.get(discardNumberInt);
-                        pause(2);
+                        // pause(2);
                         out("\nYou have elected to discard the card " + cardToDiscard.getPrintString());
+                        p1_chosenColor = "";
+                        if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
+                                || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                            p1_chosenColor = getUserResponse_chosenColor();
+                        }
+                        if(p1_chosenColor.equals("")) {
+                            game.setCurrentColor(cardToDiscard.getColor());
+                        } else {
+                            game.setCurrentColor(p1_chosenColor);
+                        }
                         currentPlayedCard = game.getCurrentPlayedCard();
                         currentColor = game.getCurrentColor();
                         if(game.getPlayer1().isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
                             game.getPlayer1().getHand().discard(cardToDiscard);
-                            p1_chosenColor = "";
-                            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
-                                    || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                                p1_chosenColor = getUserResponse_chosenColor();
-                            }
-                            if(p1_chosenColor.equals("")) {
-                                game.setCurrentColor(cardToDiscard.getColor());
-                            } else {
-                                game.setCurrentColor(p1_chosenColor);
-                            }
-                            pause(2);
                             out("\nYou have successfully discarded the card " + cardToDiscard.getPrintString() + ".\n");
                             pause(2);
                             game.printHand(game.getPlayer1());
                             game.setCurrentPlayedCard(cardToDiscard);
+                            game.getPlayer1().setLastPlayedCard(cardToDiscard);
                             game.getDiscardPile().add(cardToDiscard);
                             cardDiscarded = true;
-                            game.setPlayerOnesTurn(false);
-                            out("game.setPlayerOnesTurn was just set to (false) in Main.playerOnesTurn.");
+                            // game.setPlayerOnesTurn(false);
+                            // out("game.setPlayerOnesTurn was just set to (false) in Main.playerOnesTurn.");
                         } else {
                             pause(2);
                             out("\nI'm sorry " + p1Name + ", but that is not a valid card choice. Please try again.");
@@ -218,6 +238,7 @@ public class Main {
                         out("\nOK, drawing a card from the deck...");
                         game.draw(game.getPlayer1());
                         out("");
+                        pause(2);
                         game.printHand(game.getPlayer1());
                     }
                 }
