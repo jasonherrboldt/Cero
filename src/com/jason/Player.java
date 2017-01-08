@@ -112,19 +112,22 @@ public class Player {
 
             // if the other player discarded a wild, then cardToDiscard must match the currentColor
             // (the other player's chosen color)
-            if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
-                // Main.out("oh hai from conditional if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)).");
-//                Main.out("Player.isLegalDiscard has decided that the cpc is wild, and to return true if " +
-//                        "cardToDiscard.getColor().equalsIgnoreCase(currentColor), which evaluates to "
-//                        + cardToDiscard.getColor().equalsIgnoreCase(currentColor));
-                return cardToDiscard.getColor().equalsIgnoreCase(currentColor);
+//            if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+//                // Main.out("oh hai from conditional if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)).");
+////                Main.out("Player.isLegalDiscard has decided that the cpc is wild, and to return true if " +
+////                        "cardToDiscard.getColor().equalsIgnoreCase(currentColor), which evaluates to "
+////                        + cardToDiscard.getColor().equalsIgnoreCase(currentColor));
+//                return cardToDiscard.getColor().equalsIgnoreCase(currentColor);
+//
+//            // if this player discarded a WD4 last time, this player only has to match its own chosen color
+//            } else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+//                // Main.out("oh hai from conditional else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)).");
+//                return cardToDiscard.getColor().equalsIgnoreCase(chosenColor);
 
-            // if this player discarded a WD4 last time, this player only has to match its own chosen color
-            } else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                // Main.out("oh hai from conditional else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)).");
-                return cardToDiscard.getColor().equalsIgnoreCase(chosenColor);
-
-            } else {
+//            if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
+//                    || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+//                return true;
+//            } else {
 
 //                Main.out("oh hai from conditional } else {.");
 //
@@ -154,7 +157,7 @@ public class Player {
                         || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)
                         || cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())
                         || cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace());
-            }
+            // }
         }
         // throw new IllegalStateException("Logic fell through all conditionals.");
     }

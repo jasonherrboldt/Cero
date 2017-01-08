@@ -111,38 +111,39 @@ public class Game {
     /**
      * Play the first hand.
      */
-    public Card playFirstHand() { // tested
+    public Card playFirstHand(boolean printOuts) { // tested
         if (!isFirstMove) {
             // tested
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
         } else {
             Card returnCard = null;
             if (!isPlayerOnesTurn) {
-                if(showPlayerTwoActions) {
-                    // printHand(player2);
-                }
-                if(skipFirstTurn(player2)) {
-                    Main.pause(2);
-                    Main.out("\n" + player2.getName() + " was forbidden from discarding.");
+                if(skipFirstTurn(player2, printOuts)) {
+                    if(printOuts) {
+                        Main.pause(2);
+                        Main.out("\n" + player2.getName() + " was forbidden from discarding.");
+                    }
                     isPlayerOnesTurn = true;
                     // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                     isFirstMove = false;
                 } else {
-                    returnCard = playerTwosTurn();
+                    returnCard = playerTwosTurn(printOuts);
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
                     // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             } else { // player one's turn
-                if (skipFirstTurn(player1)) {
-                    Main.pause(2);
-                    Main.out("\n" + player1.getName() + ", you were forbidden from discarding.");
-                    Main.pause(2);
-                    Main.out("\nThe first move switches to " + player2.getName() + ".");
+                if (skipFirstTurn(player1, printOuts)) {
+                    if(printOuts) {
+                        Main.pause(2);
+                        Main.out("\n" + player1.getName() + ", you were forbidden from discarding.");
+                        Main.pause(2);
+                        Main.out("\nThe first move switches to " + player2.getName() + ".");
+                    }
                     isPlayerOnesTurn = false;
                     // Main.out("isPlayerOnesTurn was just set to false in Game.playFirstHand.");
                     isFirstMove = false;
-                    returnCard = playerTwosTurn();
+                    returnCard = playerTwosTurn(printOuts);
                 } else {
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
@@ -159,7 +160,7 @@ public class Game {
      * @param player the player who has the current move
      * @return       true if the player's move should be skipped, false otherwise
      */
-    public boolean skipFirstTurn(Player player) { // tested
+    public boolean skipFirstTurn(Player player, boolean printOuts) { // tested
         if (!isFirstMove) {
             throw new IllegalStateException("skipFirstTurn was called when isFirstMove == false."); // tested
         } else {
@@ -176,8 +177,8 @@ public class Game {
                             "wild draw four card - not allowed for first turn."); // tested for wild and WD4
                 }
                 if (currentPlayedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-                    draw(player);
-                    draw(player);
+                    draw(player, printOuts);
+                    draw(player, printOuts);
                 }
                 // return true if skip, reverse, or draw two.
                 return true;
@@ -194,7 +195,7 @@ public class Game {
      * @param player the player
      * @return       true if the player's turn should be skipped, false otherwise.
      */
-    public boolean skipTurn(Player player) { // tested
+    public boolean skipTurn(Player player, boolean printOuts) { // tested
         if(isFirstMove()) {
             throw new IllegalStateException("Method called when isFirstTurn == true. Must be false.");
         }
@@ -215,13 +216,13 @@ public class Game {
                 if(cpcFace.equalsIgnoreCase(Card.WILD_DRAW_FOUR) || cpcFace.equalsIgnoreCase(Card.SKIP)
                         || cpcFace.equalsIgnoreCase(Card.DRAW_TWO) || cpcFace.equalsIgnoreCase(Card.REVERSE)){
                     if (cpcFace.equalsIgnoreCase(Card.DRAW_TWO)) {
-                        draw(player);
-                        draw(player);
+                        draw(player, printOuts);
+                        draw(player, printOuts);
                     } else if (cpcFace.equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                        draw(player);
-                        draw(player);
-                        draw(player);
-                        draw(player);
+                        draw(player, printOuts);
+                        draw(player, printOuts);
+                        draw(player, printOuts);
+                        draw(player, printOuts);
                     }
                     return true; // skip player's turn for all non-numeric / non-wild cpcs
                 }
@@ -241,11 +242,11 @@ public class Game {
     /**
      * Player two's turn.
      */
-    public Card playerTwosTurn() { // *** NEEDS TO BE TESTED ***
+    public Card playerTwosTurn(boolean printOuts) { // *** NEEDS TO BE TESTED ***
         if(isPlayerOnesTurn) {
             throw new IllegalStateException("Called while isPlayerOnesTurn == true");
         }
-        Card returnCard = playerTwoMove();
+        Card returnCard = playerTwoMove(printOuts);
         if(returnCard == null) {
             throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
         } else {
@@ -263,7 +264,7 @@ public class Game {
      *
      * @return the card player two has chosen to discard
      */
-    public Card playerTwoMove() { // *** MORE TESTING NEEDED - possibly functional only ***
+    public Card playerTwoMove(boolean printOuts) { // *** MORE TESTING NEEDED - possibly functional only ***
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
             Main.out("WARN: Game.playerTwoMove: both deck and discard pile are empty.");
         }
@@ -285,7 +286,7 @@ public class Game {
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
                 Main.out("\nPlayer two is drawing ");
-                draw(player2);
+                draw(player2, printOuts);
             } else {
                 playerTwoHasDiscarded = true;
             }
@@ -298,7 +299,7 @@ public class Game {
             }
         }
         if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
-            Main.pause(2);
+            // Main.pause(2);
             Main.out("Player two attempted an illegal move. cardToDiscard: " + cardToDiscard.getPrintString()
                     + ", currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
             printHand(player2);
@@ -342,7 +343,7 @@ public class Game {
      *
      * @param player the player to draw
      */
-    public void draw(Player player) { // tested (just needs exception testing as well)
+    public void draw(Player player, boolean printOuts) { // tested (just needs exception testing as well)
         if(deck == null || discardPile == null) {
             throw new IllegalStateException("Game.draw called with a null deck or a null discard pile, or both. " +
                     "No action taken."); // *** NEEDS TESTING ***
@@ -351,8 +352,10 @@ public class Game {
                 refreshDeck();
             }
             Card card = deck.popCard();
-            Main.pause(2);
-            Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+            if(printOuts) {
+                Main.pause(2);
+                Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+            }
             player.getHand().addCard(card);
         }
     }

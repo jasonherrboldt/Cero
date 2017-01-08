@@ -217,7 +217,7 @@ public class TestPlayer {
         }
         assertTrue(game.getPlayer1().getHand().getSize() < 4);
         game.setPlayerOnesTurn(false);
-        game.playerTwosTurn();
+        game.playerTwosTurn(false);
         assertEquals(game.getPlayer2().getStrategy(), Player.STRATEGY_CAUTIOUS);
     }
 

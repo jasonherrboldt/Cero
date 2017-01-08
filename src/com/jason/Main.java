@@ -78,7 +78,8 @@ public class Main {
             out("\n" + playerTwoName + " has the first move.");
         }
         Card playedCard;
-        playedCard = game.playFirstHand();
+        // playedCard = game.playFirstHand();
+        playedCard = game.playFirstHand(true);
         if(playedCard != null) {
             pause(2);
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
@@ -105,7 +106,7 @@ public class Main {
             if(game.isPlayerOnesTurn()) {
                 pause(2);
                 out("\nIt is player one's turn.");
-                if (!game.skipTurn(game.getPlayer1())) {
+                if (!game.skipTurn(game.getPlayer1(), true)) {
                     pause(2);
                     out("\n" + game.getPlayer1().getName() + " did not have to skip a turn.");
                     playerOnesTurn(game, game.getPlayer1().getName());
@@ -127,10 +128,10 @@ public class Main {
             } else {
                 pause(2);
                 out("\nIt is player two's turn.");
-                if(!game.skipTurn(game.getPlayer2())) {
+                if(!game.skipTurn(game.getPlayer2(), true)) {
                     pause(2);
                     out("\n" + game.getPlayer2().getName() + " did not have to skip a turn.");
-                    playedCard = game.playerTwosTurn();
+                    playedCard = game.playerTwosTurn(true);
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
                     if(game.getPlayer2().getHand().getSize() == 0) {
@@ -258,7 +259,7 @@ public class Main {
                     if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
                         pause(2);
                         out("\nOK, drawing a card from the deck...");
-                        game.draw(game.getPlayer1());
+                        game.draw(game.getPlayer1(), true);
                         out("");
                         pause(2);
                         game.printHand(game.getPlayer1());
@@ -267,6 +268,61 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Play the first hand.
+     */
+//    public static Card playFirstHand(Game game) { // tested
+//        // if (!isFirstMove) {
+//        if(!game.isFirstMove()) {
+//            // tested
+//            throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
+//        } else {
+//            Card returnCard = null;
+//            // if (!isPlayerOnesTurn) {
+//            if (!game.isPlayerOnesTurn()) {
+//                // if(skipFirstTurn(player2)) {
+//                if(game.skipFirstTurn(game.getPlayer2())) {
+//                    Main.pause(2);
+//                    Main.out("\n" + game.getPlayer2().getName() + " was forbidden from discarding.");
+//                    // isPlayerOnesTurn = true;
+//                    game.setPlayerOnesTurn(true);
+//                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
+//                    // isFirstMove = false;
+//                    game.setIsFirstMove(false);
+//                } else {
+//                    // returnCard = playerTwosTurn();
+//                    returnCard = game.playerTwosTurn();
+//                    // isFirstMove = false;
+//                    game.setIsFirstMove(false);
+//                    // isPlayerOnesTurn = true;
+//                    game.setPlayerOnesTurn(true);
+//                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
+//                }
+//            } else { // player one's turn
+//                // if (skipFirstTurn(player1)) {
+//                if (game.skipFirstTurn(game.getPlayer2())) {
+//                    Main.pause(2);
+//                    Main.out("\n" + game.getPlayer1().getName() + ", you were forbidden from discarding.");
+//                    Main.pause(2);
+//                    Main.out("\nThe first move switches to " + game.getPlayer2().getName() + ".");
+//                    // isPlayerOnesTurn = false;
+//                    game.setPlayerOnesTurn(false);
+//                    // Main.out("isPlayerOnesTurn was just set to false in Game.playFirstHand.");
+//                    // isFirstMove = false;
+//                    game.setIsFirstMove(false);
+//                    returnCard = game.playerTwosTurn();
+//                } else {
+//                    // isFirstMove = false;
+//                    game.setIsFirstMove(false);
+//                    // isPlayerOnesTurn = true;
+//                    game.setPlayerOnesTurn(true);
+//                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
+//                }
+//            }
+//            return returnCard;
+//        }
+//    }
 
     public static void pause(long seconds) {
         try {
