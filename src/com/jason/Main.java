@@ -65,7 +65,7 @@ public class Main {
         out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
         if(game.isPlayerOnesTurn()) {
-            out("\n" + testName + " has the first move.\n");
+            out("\nYou have the first move, " + testName + ".\n");
         } else {
             out("\n" + playerTwoName + " has the first move.\n");
         }
@@ -75,18 +75,30 @@ public class Main {
         if(playedCard != null) {
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
         }
-
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
-        out("\nThere are " + game.getDeck().getSize() + " cards left in the deck and " + game.getDiscardPile().size()
-                + " cards in the discard pile.");
-        out("\nThe current color is " + game.getCurrentColor() + ".");
-        if(!game.skipTurn(game.getPlayer1())) {
-            playerOnesTurn(game, testName);
-        } else {
-            out("\n" + testName + ", you were forbidden from discarding.");
-            game.setPlayerOnesTurn(false);
-            playedCard = game.playerTwosTurn();
-            out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+        for(int i = 0; i < 5; i++) {
+            if (game.getDeck().getSize() < 2) {
+                out("\nThere is 1 card left in the deck.");
+            } else {
+                outNoReturn("\nThere are " + game.getDeck().getSize() + " cards left in the deck");
+            }
+            if (game.getDiscardPile().size() < 2) {
+                out(" and 1 card in the discard pile.");
+            } else {
+                out(" and " + game.getDiscardPile().size() + " cards in the discard pile.");
+            }
+
+            out("\nThe current color is " + game.getCurrentColor() + ".");
+            if(game.isPlayerOnesTurn()) {
+                if (!game.skipTurn(game.getPlayer1())) {
+                    playerOnesTurn(game, testName);
+                }
+            } else {
+                out("\nIt is " + game.getPlayer2().getName() + "'s turn.");
+                game.setPlayerOnesTurn(false);
+                playedCard = game.playerTwosTurn();
+                out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+            }
         }
     }
 
@@ -96,6 +108,10 @@ public class Main {
         String discardAnswer;
         String discardNumber;
         List<Card> hand;
+        Card currentPlayedCard;
+        String currentColor;
+        String p1_chosenColor;
+
         out("\nIt's your turn, " + p1Name + "\n");
         game.printHand(game.getPlayer1());
         out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
@@ -119,24 +135,46 @@ public class Main {
             } else {
                 if(discardAnswer.equalsIgnoreCase("yes") || discardAnswer.equalsIgnoreCase("y")) {
                     p1HandSize = game.getPlayer1().getHand().getSize();
-                    boolean validDiscard = false;
-                    while(!validDiscard) {
-                        discardNumber = getUserResponse_integer("\nWhich card would you like to discard?", 0, p1HandSize -1 );
-                        if(discardNumber == null) {
-                            throw new IllegalStateException("getUserResponse_integer returned null.");
-                        }
-                        try {
-                            int discardNumberInt = Integer.parseInt(discardNumber);
-                            hand = game.getPlayer1().getHand().getAllCards();
-                            Card cardToDiscard = hand.get(discardNumberInt);
-                            out("\nYou have elected to discard the card " + cardToDiscard.getPrintString());
-                        } catch (NumberFormatException e) {
-                            throw new IllegalStateException("getUserResponse_integer returned a string that cannot be " +
-                                    "parsed into an int.");
-                        }
-                        validDiscard = true;
+                    discardNumber = getUserResponse_integer("\nWhich card would you like to discard?", 0, p1HandSize -1 );
+                    if(discardNumber == null) {
+                        throw new IllegalStateException("getUserResponse_integer returned null.");
                     }
-                    cardDiscarded = true;
+                    try {
+                        int discardNumberInt = Integer.parseInt(discardNumber);
+                        hand = game.getPlayer1().getHand().getAllCards();
+                        Card cardToDiscard = hand.get(discardNumberInt);
+                        out("\nYou have elected to discard the card " + cardToDiscard.getPrintString());
+                        currentPlayedCard = game.getCurrentPlayedCard();
+                        currentColor = game.getCurrentColor();
+                        if(game.getPlayer1().isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
+                            game.getPlayer1().getHand().discard(cardToDiscard);
+                            p1_chosenColor = "";
+                            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                                p1_chosenColor = getUserResponse_chosenColor();
+                            }
+                            if(p1_chosenColor.equals("")) {
+                                game.setCurrentColor(cardToDiscard.getColor());
+                            } else {
+                                game.setCurrentColor(p1_chosenColor);
+                            }
+                            out("\nYou have successfully discarded the card " + cardToDiscard.getPrintString() + ".\n");
+                            game.printHand(game.getPlayer1());
+                            game.setCurrentPlayedCard(cardToDiscard);
+                            game.getDiscardPile().add(cardToDiscard);
+                            cardDiscarded = true;
+                            game.setPlayerOnesTurn(false);
+                        } else {
+                            out("\nI'm sorry " + p1Name + ", but that is not a valid card choice. Please try again.");
+                            out("\nThe current played card is " + currentPlayedCard.getPrintString()
+                                    + ", and the current color is " + currentColor.toLowerCase()
+                                    + ". Here is your hand:\n");
+                            game.printHand(game.getPlayer1());
+                        }
+
+                    } catch (NumberFormatException e) {
+                        throw new IllegalStateException("getUserResponse_integer returned a string that cannot be " +
+                                "parsed into an int.");
+                    }
                 }
             }
         }
@@ -294,12 +332,12 @@ public class Main {
         validColorChoices.add(Card.YELLOW.toLowerCase());
 
         while(!validAnswerReceived) {
-            outNoReturn("What is your chosen color for the next move? ");
+            outNoReturn("\nWhat is your chosen color for the next move? ");
             response = System.console().readLine();
             if(validColorChoices.contains(response.toLowerCase().trim())) {
                 validAnswerReceived = true;
             } else {
-                out(userCorrectionMessage + " Acceptable answers are " + validColorChoices + ", (case insensitive).");
+                out(userCorrectionMessage + " Acceptable answers are red, blue, yellow, and green (case insensitive).");
             }
         }
         return response;

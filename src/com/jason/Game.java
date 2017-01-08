@@ -243,6 +243,9 @@ public class Game {
             discardPile.add(returnCard);
             player2.setLastPlayedCard(returnCard);
             currentPlayedCard = returnCard;
+            if(currentPlayedCard.isNumeric() || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+                setPlayerOnesTurn(true);
+            }
         }
         return returnCard;
     }
