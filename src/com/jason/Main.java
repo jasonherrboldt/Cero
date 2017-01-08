@@ -78,11 +78,14 @@ public class Main {
             out("\n" + playerTwoName + " has the first move.");
         }
         Card playedCard;
-        // playedCard = game.playFirstHand();
         playedCard = game.playFirstHand(true);
         if(playedCard != null) {
             pause(2);
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+            if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                pause(2);
+                out("\nplayerTwoName set the current color to " + game.getCurrentColor() + ".");
+            }
         }
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
         for(int i = 0; i < 15; i++) {
@@ -93,9 +96,10 @@ public class Main {
                 outNoReturn("\nThere are " + game.getDeck().getSize() + " cards left in the deck");
             }
             if (game.getDiscardPile().size() < 2) {
-                out(" and 1 card in the discard pile.");
+                out(" and 1 card in the discard pile.\n\n(game.isPlayerOnesTurn() = " + game.isPlayerOnesTurn() + ").");
             } else {
-                out(" and " + game.getDiscardPile().size() + " cards in the discard pile.");
+                out(" and " + game.getDiscardPile().size() + " cards in the discard pile.\n\n(game.isPlayerOnesTurn() = "
+                        + game.isPlayerOnesTurn() + ").");
             }
 //            pause(2);
 //            out("\nThe current color is " + game.getCurrentColor() + ".");
@@ -121,8 +125,8 @@ public class Main {
 //                    out("\nDone with Player One's turn. Now setting p1 turn to false...");
                     game.setPlayerOnesTurn(false);
                 } else {
-//                    pause(2);
-//                    out("\nPlayer one was forced to skip a turn. Now setting p1 turn to false...");
+                    pause(2);
+                    out("\n" + testName + ", you were forbidden from discarding.");
                     game.setPlayerOnesTurn(false);
                 }
             } else {
@@ -136,6 +140,10 @@ public class Main {
                     playedCard = game.playerTwosTurn(true);
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+                    if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                        pause(2);
+                        out("\nplayerTwoName set the current color to " + game.getCurrentColor() + ".");
+                    }
                     if(game.getPlayer2().getHand().getSize() == 0) {
                         pause(2);
                         out("\nPlayer two has discarded the last card!");
@@ -214,7 +222,7 @@ public class Main {
                         hand = game.getPlayer1().getHand().getAllCards();
                         Card cardToDiscard = hand.get(discardNumberInt);
                         pause(2);
-                        out("\nYou have elected to discard the card " + cardToDiscard.getPrintString());
+                        out("\nYou have chosen to discard the card " + cardToDiscard.getPrintString() + ".");
                         p1_chosenColor = "";
                         if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
                                 || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
@@ -245,7 +253,7 @@ public class Main {
                             pause(2);
                             out("\nThe current played card is " + currentPlayedCard.getPrintString()
                                     + ", and the current color is " + currentColor.toLowerCase()
-                                    + ". Here is your hand:\n");
+                                    + ". \n\nHere is your hand:\n");
                             game.printHand(game.getPlayer1());
                         }
 

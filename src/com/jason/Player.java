@@ -103,63 +103,29 @@ public class Player {
      * @return                  True if the discarded card was deemed legal, false otherwise.
      */
     public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard, String currentColor) { // *** NEEDS RE-TESTING ***
-        // Main.out("oh hai from Player.isLegalDiscard.");
-        // Main.out("cardToDiscard: " + cardToDiscard.getPrintString() + ", currentPlayedCard: " + currentPlayedCard.getPrintString()
-               //  + ", currentColor:" + currentColor);
         if(cardToDiscard == null || currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or more args was null.");
         } else {
 
-            // if the other player discarded a wild, then cardToDiscard must match the currentColor
-            // (the other player's chosen color)
-//            if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
-//                // Main.out("oh hai from conditional if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)).");
-////                Main.out("Player.isLegalDiscard has decided that the cpc is wild, and to return true if " +
-////                        "cardToDiscard.getColor().equalsIgnoreCase(currentColor), which evaluates to "
-////                        + cardToDiscard.getColor().equalsIgnoreCase(currentColor));
-//                return cardToDiscard.getColor().equalsIgnoreCase(currentColor);
-//
-//            // if this player discarded a WD4 last time, this player only has to match its own chosen color
-//            } else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-//                // Main.out("oh hai from conditional else if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)).");
-//                return cardToDiscard.getColor().equalsIgnoreCase(chosenColor);
+            // always allow player to discard a wild or a wild draw four card.
+            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
+                    || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                return true;
+            }
 
-//            if (currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
-//                    || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-//                return true;
-//            } else {
+            // if the LAST played card is a wild or a wild draw four, only need to match current color.
+            // (current color can be set by either player, depending on which wild card was last played.)
+            if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
+                    || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                return cardToDiscard.getColor().equalsIgnoreCase(currentColor);
+            } else {
 
-//                Main.out("oh hai from conditional } else {.");
-//
-//                String cardToDiscardColor = cardToDiscard.getColor();
-//                String currentPlayedCardColor = currentPlayedCard.getColor();
-//                String cardToDiscardFace = cardToDiscard.getFace();
-//                String currentPlayedCardFace = currentPlayedCard.getFace();
-//
-//                Main.out("cardToDiscardColor: " + cardToDiscardColor);
-//                Main.out("cardToDiscardFace: " + cardToDiscardFace);
-//                Main.out("currentPlayedCardColor: " + currentPlayedCardColor);
-//                Main.out("currentPlayedCardFace: " + currentPlayedCardFace);
-//
-//                Main.out("cardToDiscard.getFace().equalsIgnoreCase(Card.WILD) = "
-//                        + cardToDiscard.getFace().equalsIgnoreCase(Card.WILD));
-//                Main.out("cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR) = "
-//                        + cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR));
-//                Main.out("cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor() = "
-//                        + cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor()));
-//                Main.out("cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace() = "
-//                        + cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace()));
-
-
-                // currentPlayedCard will be any card other than a wild or a wd4
-                // any of the below will be legal
-                return cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
-                        || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)
-                        || cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor())
-                        || cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace());
-            // }
+                // the last card played was numeric or non-numeric color - card to discard must match
+                // either color or face of last played card.
+                return cardToDiscard.getFace().equalsIgnoreCase(currentPlayedCard.getFace())
+                        || cardToDiscard.getColor().equalsIgnoreCase(currentPlayedCard.getColor());
+            }
         }
-        // throw new IllegalStateException("Logic fell through all conditionals.");
     }
 
     /**

@@ -277,11 +277,26 @@ public class Hand {
         if(listOfListOfCards.size() > 0) {
             // Hand is already sorted ascending by color group.
             if(listOfListOfCards.get(0).size() > 0) {
-                return listOfListOfCards.get(0).get(0).getColor();
+                if(!listOfListOfCards.get(0).get(0).getColor().equalsIgnoreCase(Card.COLORLESS)) {
+                    return listOfListOfCards.get(0).get(0).getColor();
+                }
             }
+
+            // pick a random color if the only color group the player has left is colorless.
+            return getRandomColor();
         }
         Main.out("WARN: getHighestColor did not find a card. Returning null.");
         return null;
+    }
+
+    public String getRandomColor() {
+        List<String>colors = new ArrayList<>();
+        colors.add(Card.BLUE);
+        colors.add(Card.RED);
+        colors.add(Card.YELLOW);
+        colors.add(Card.GREEN);
+        Collections.shuffle(colors);
+        return colors.get(0);
     }
 
     /**
