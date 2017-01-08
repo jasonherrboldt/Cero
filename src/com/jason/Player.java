@@ -308,6 +308,8 @@ public class Player {
 //                    + currentPlayedCard.getColor());
             currentPlayedCardColor = currentColor;
             Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
+        } else {
+            currentPlayedCardColor = currentPlayedCard.getColor();
         }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
@@ -407,7 +409,10 @@ public class Player {
 //                    + currentPlayedCard.getColor());
             currentPlayedCardColor = currentColor;
             Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
+        } else {
+            currentPlayedCardColor = currentPlayedCard.getColor();
         }
+
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest non-numeric face of currentColor
             // Card returnCard = hand.getHighestFace(currentColor, false);
