@@ -62,8 +62,8 @@ public class Main {
         Game game = new Game(testName, true);
         game.startGame(null, true);
         String playerTwoName = game.getPlayer2().getName();
-        pause(2);
-        out("\nPlayer Two's name is " + playerTwoName + ".");
+//        pause(2);
+//        out("\nPlayer Two's name is " + playerTwoName + ".");
         pause(2);
         out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.\n");
         pause(2);
@@ -99,18 +99,29 @@ public class Main {
             out("\nThe current color is " + game.getCurrentColor() + ".");
             pause(2);
             out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
+            pause(2);
+            out("game.isPlayerOnesTurn() currently evaluates to " + game.isPlayerOnesTurn() + ". About to enter the if / else.");
             if(game.isPlayerOnesTurn()) {
+                pause(2);
+                out("\nIt is player one's turn.");
                 if (!game.skipTurn(game.getPlayer1())) {
-                    playerOnesTurn(game, testName);
+                    pause(2);
+                    out("\n" + game.getPlayer1().getName() + " did not have to skip a turn. Now entering playerOnesTurn().");
+                    playerOnesTurn(game, game.getPlayer1().getName());
+                } else {
+                    out("Player one was forced to skip a turn.");
                 }
             } else {
+                pause(2);
+                out("\nIt is player two's turn.");
                 if(!game.skipTurn(game.getPlayer2())) {
                     pause(2);
-                    out("\nIt is " + game.getPlayer2().getName() + "'s turn.");
-                    game.setPlayerOnesTurn(false);
+                    out("\n" + game.getPlayer1().getName() + " did not have to skip a turn. Now entering playerTwosTurn().");
                     playedCard = game.playerTwosTurn();
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+                } else {
+                    out("Player two was forced to skip a turn.");
                 }
             }
         }
@@ -119,7 +130,7 @@ public class Main {
     private static void playerOnesTurn(Game game, String p1Name) {
         int p1HandSize;
         String drawAnswer;
-        String discardAnswer;
+        String discardAnswer = "";
         String discardNumber;
         List<Card> hand;
         Card currentPlayedCard;
@@ -134,9 +145,14 @@ public class Main {
         boolean cardDiscarded = false;
         while(!cardDiscarded) {
             pause(2);
-            discardAnswer = getUserResponse_yesNo("\nThe current played card is "
-                    + game.getCurrentPlayedCard().getPrintString() + " and the current color is "
-                    + game.getCurrentColor().toLowerCase() + ".\nAre you ready to discard?");
+            if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD)) {
+                discardAnswer = getUserResponse_yesNo("\nThe current played card is "
+                        + game.getCurrentPlayedCard().getPrintString() + " and the current color is "
+                        + game.getCurrentColor().toLowerCase() + ".\nAre you ready to discard?");
+            } else {
+                discardAnswer = getUserResponse_yesNo("\nThe current played card is "
+                        + game.getCurrentPlayedCard().getPrintString() + ". Are you ready to discard?");
+            }
             if(discardAnswer == null) {
                 throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
             } else {
@@ -158,7 +174,8 @@ public class Main {
                         if(game.getPlayer1().isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
                             game.getPlayer1().getHand().discard(cardToDiscard);
                             p1_chosenColor = "";
-                            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                            if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
+                                    || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                                 p1_chosenColor = getUserResponse_chosenColor();
                             }
                             if(p1_chosenColor.equals("")) {
@@ -174,6 +191,7 @@ public class Main {
                             game.getDiscardPile().add(cardToDiscard);
                             cardDiscarded = true;
                             game.setPlayerOnesTurn(false);
+                            out("game.setPlayerOnesTurn was just set to (false) in Main.playerOnesTurn.");
                         } else {
                             pause(2);
                             out("\nI'm sorry " + p1Name + ", but that is not a valid card choice. Please try again.");

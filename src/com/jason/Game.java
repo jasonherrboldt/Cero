@@ -94,6 +94,7 @@ public class Game {
                 currentPlayedCard = firstPlayedCard;
                 // Main.out("oh hai from Game.startGame. cpc has just been changed to " + currentPlayedCard.getPrintString());
                 setPlayerOnesTurn(_isPlayerOnesTurn);
+                Main.out("isPlayerOnesTurn was just set to " + _isPlayerOnesTurn + " in Game.startGame.");
             }
 
             // Main.out("\nThe current played card is " + currentPlayedCard.getPrintString());
@@ -124,11 +125,13 @@ public class Game {
                     Main.pause(2);
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
+                    Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                     isFirstMove = false;
                 } else {
                     returnCard = playerTwosTurn();
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
+                    Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             } else { // player one's turn
                 if (skipFirstTurn(player1)) {
@@ -136,11 +139,13 @@ public class Game {
                     Main.out("\n" + player1.getName() + ", you were forbidden from discarding. " +
                             "The first move switches to " + player2.getName() + ".");
                     isPlayerOnesTurn = false;
+                    Main.out("isPlayerOnesTurn was just set to false in Game.playFirstHand.");
                     isFirstMove = false;
                     returnCard = playerTwosTurn();
                 } else {
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
+                    Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             }
             return returnCard;
@@ -196,6 +201,7 @@ public class Game {
             // skipFirstTurn guarantees this will never happen
             throw new IllegalStateException("Player's last played card is null in Game.skipTurn.");
         }
+        Main.pause(2);
         if(currentPlayedCard.isNumeric()) {
             return false;
         }
@@ -217,7 +223,6 @@ public class Game {
                         draw(player);
                         draw(player);
                     }
-                    isPlayerOnesTurn = !isPlayerOnesTurn;
                     return true; // skip player's turn for all non-numeric / non-wild cpcs
                 }
             }
@@ -248,6 +253,7 @@ public class Game {
             player2.setLastPlayedCard(returnCard);
             currentPlayedCard = returnCard;
             setPlayerOnesTurn(true);
+            Main.out("setPlayerOnesTurn was just set to (true) in Game.playerTwosTurn.");
         }
         return returnCard;
     }
@@ -528,6 +534,8 @@ public class Game {
     }
 
     public void setPlayerOnesTurn(boolean playerOnesTurn) {
+        Main.pause(2);
+        Main.out("\nNow setting Game.isPlayerOnesTurn to " + playerOnesTurn);
         isPlayerOnesTurn = playerOnesTurn;
     }
 
