@@ -36,7 +36,7 @@ public class Deck {
      * 
      * @return  The size of the deck.
      */
-    public int getDeckSize() { // tested
+    public int getSize() { // tested
         return deckStack.size();
     }
     

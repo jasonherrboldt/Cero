@@ -104,15 +104,15 @@ public class TestGame {
         game = new Game("Player One", true);
 
         Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
-        assertEquals(game.getDeck().getDeckSize(), Deck.DECK_SIZE);
+        assertEquals(game.getDeck().getSize(), Deck.DECK_SIZE);
 
         Card notWild = game.verifyFirstCard(wild);
         assertFalse(wild.equals(notWild));
-        assertEquals(game.getDeck().getDeckSize(), Deck.DECK_SIZE - 1);
+        assertEquals(game.getDeck().getSize(), Deck.DECK_SIZE - 1);
 
         Card notWildDrawFour = game.verifyFirstCard(wildDrawFour);
         assertFalse(wildDrawFour.equals(notWildDrawFour));
-        assertEquals(game.getDeck().getDeckSize(), Deck.DECK_SIZE - 1);
+        assertEquals(game.getDeck().getSize(), Deck.DECK_SIZE - 1);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class TestGame {
         Deck emptyDeck = new Deck();
         emptyDeck.clearDeck();
         game.setDeck(emptyDeck);
-        assertEquals(game.getDeck().getDeckSize(), 0);
+        assertEquals(game.getDeck().getSize(), 0);
 
         // Try to draw from an empty deck.
         game.draw(game.getPlayer1());
@@ -163,7 +163,7 @@ public class TestGame {
         assertEquals(game.getPlayer1().getHand().getSize(), 2);
 
         // Deck should now have 2 cards (3 from the discard pile minus one for the draw).
-        assertEquals(game.getDeck().getDeckSize(), 2);
+        assertEquals(game.getDeck().getSize(), 2);
 
         // Replace original deck for other methods.
         game.setDeck(new Deck());

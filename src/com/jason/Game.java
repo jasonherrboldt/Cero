@@ -332,11 +332,11 @@ public class Game {
             throw new IllegalStateException("Game.draw called with a null deck or a null discard pile, or both. " +
                     "No action taken."); // *** NEEDS TESTING ***
         } else {
-            if(deck.getDeckSize() == 0 && discardPile.size() > 0) {
+            if(deck.getSize() == 0 && discardPile.size() > 0) {
                 refreshDeck();
             }
             Card card = deck.popCard();
-            Main.out("\nAutomatically adding to " + player.getName()+ "'s hand: " + card.getPrintString());
+            Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
             player.getHand().addCard(card);
         }
     }
@@ -345,7 +345,7 @@ public class Game {
      * Transfer the discard pile to the deck and shuffle.
      */
     private void refreshDeck() { // tested by testGame_draw_emptyDeck
-        if(deck.getDeckSize() == 0) {
+        if(deck.getSize() == 0) {
             replaceDeckWithDiscardPile();
             deck.shuffle();
             discardPile.clear();

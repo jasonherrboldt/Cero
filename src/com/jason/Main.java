@@ -75,14 +75,42 @@ public class Main {
         if(playedCard != null) {
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
         }
-        out("\nBack to main.");
 
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
+        out("\nThere are " + game.getDeck().getSize() + " cards left in the deck and " + game.getDiscardPile().size()
+                + " cards in the discard pile.");
+        out("\nThe current color is " + game.getCurrentColor() + ".");
         if(!game.skipTurn(game.getPlayer1())) {
-            out("\nIt's your turn, " + testName);
-            out("\nThe current color is " + game.getCurrentColor() + ".\n");
+            out("\nIt's your turn, " + testName + "\n");
             game.printHand(game.getPlayer1());
             out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
+
+            boolean cardDiscarded = false;
+            while(!cardDiscarded) {
+                String drawAnswer = getUserResponse_yesNo("\nWould you like to draw a card?");
+                if(drawAnswer == null) {
+                    throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
+                } else {
+                    if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
+                        out("\nOK, drawing a card from the deck...");
+                        game.draw(game.getPlayer1());
+                        game.printHand(game.getPlayer1());
+                    }
+                }
+                String discardAnswer = getUserResponse_yesNo("\nAre you ready to discard?");
+                if(discardAnswer == null) {
+                    throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
+                } else {
+                    if(discardAnswer.equalsIgnoreCase("yes") || discardAnswer.equalsIgnoreCase("y")) {
+                        out("\nOK, discarding a card (not really, just pretend).");
+                        cardDiscarded = true;
+                    }
+                }
+            }
+
+//            int handSize = game.getPlayer1().getHand().getSize();
+//            String answer = getUserResponse_integer("Please enter an integer between 0 and 5: ", 0, 5);
+//            out("Your answer: " + answer);
         } else {
             out("\n" + testName + ", you were forbidden from discarding.");
             game.setPlayerOnesTurn(false);

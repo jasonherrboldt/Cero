@@ -18,22 +18,22 @@ public class TestDeck {
 
     @Test
     public void testDeck_deckSize() {
-        assertEquals(this.deck.getDeckSize(), Deck.DECK_SIZE);
+        assertEquals(this.deck.getSize(), Deck.DECK_SIZE);
     }
 
     @Test
     public void testDeck_popCard() {
-        int sizeBeforePop = deck.getDeckSize();
+        int sizeBeforePop = deck.getSize();
         deck.popCard();
-        int sizeAfterPop = deck.getDeckSize();
+        int sizeAfterPop = deck.getSize();
         assertEquals(sizeBeforePop - 1, sizeAfterPop);
     }
 
     @Test
     public void testDeck_peekAtTopCard() {
-        int sizeBeforePeek = deck.getDeckSize();
+        int sizeBeforePeek = deck.getSize();
         deck.peekAtTopCard();
-        int sizeAfterPeek = deck.getDeckSize();
+        int sizeAfterPeek = deck.getSize();
         assertEquals(sizeBeforePeek, sizeAfterPeek);
     }
 
@@ -59,16 +59,16 @@ public class TestDeck {
     @Test
     public void testDeck_replaceWithAnotherDeck() {
         Deck cleanDeck = new Deck();
-        assertEquals(cleanDeck.getDeckSize(), Deck.DECK_SIZE);
+        assertEquals(cleanDeck.getSize(), Deck.DECK_SIZE);
 
         Deck replacementDeck = new Deck();
         replacementDeck.popCard();
         replacementDeck.popCard();
         replacementDeck.popCard();
         replacementDeck.popCard();
-        assertEquals(replacementDeck.getDeckSize(), (Deck.DECK_SIZE - 4));
+        assertEquals(replacementDeck.getSize(), (Deck.DECK_SIZE - 4));
 
         cleanDeck.replaceWithAnotherDeck(replacementDeck.getDeckStack());
-        assertEquals(cleanDeck.getDeckSize(), replacementDeck.getDeckSize());
+        assertEquals(cleanDeck.getSize(), replacementDeck.getSize());
     }
 }
