@@ -203,10 +203,6 @@ public class TestPlayer {
 
         player2.setStrategy(Player.STRATEGY_CAUTIOUS);
         assertEquals(player2.pickStrategyColor(), Card.YELLOW);
-
-        // Test the unhappy path.
-        Player player1 = new Player("", false);
-        assertEquals(player1.pickStrategyColor(), null);
     }
 
     @Test

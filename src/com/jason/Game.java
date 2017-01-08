@@ -19,8 +19,6 @@ public class Game {
      *
      *    MUST-HAVES:
      *
-     *    Consider altering or deleting all test methods with an '@Ignore' annotation.
-     *
      *    Go through all test classes and see if any repeating code blocks can be moved up to the class level and shared.
      *
      *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
@@ -63,7 +61,7 @@ public class Game {
         deck = new Deck();
         player1 = new Player(playerOneName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
-        player2 = new Player("WOPR", true);
+        player2 = new Player("Tron", true);
         player2.setRandomStrategy();
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
@@ -81,7 +79,7 @@ public class Game {
      */
     public void startGame(Card firstPlayedCard, boolean _isPlayerOnesTurn) { // *** NEEDS TESTING ***
         if (!isFirstMove) {
-            Main.out("ERROR: Game.startGame called after first move has already been played. No action taken.");
+            throw new IllegalStateException("Game.startGame called after first move has already been played.");
         } else {
             deck.shuffle();
             dealHands();
@@ -96,7 +94,7 @@ public class Game {
                 setPlayerOnesTurn(_isPlayerOnesTurn);
             }
 
-            Main.out("\nThe current played card is " + currentPlayedCard.getPrintString());
+            // Main.out("\nThe current played card is " + currentPlayedCard.getPrintString());
 
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
@@ -110,22 +108,23 @@ public class Game {
     /**
      * Play the first hand.
      */
-    public void playFirstHand() { // tested
+    public Card playFirstHand() { // tested
         if (!isFirstMove) {
             // tested
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
         } else {
+            Card returnCard = null;
             if (!isPlayerOnesTurn) {
-                Main.out("\n" + player2.getName() + " had the first move.\n");
+                // Main.out("\n" + player2.getName() + " had the first move.");
                 if(showPlayerTwoActions) {
-                    printHand(player2);
+                    // printHand(player2);
                 }
                 if(skipFirstTurn(player2)) {
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
                     isFirstMove = false;
                 } else {
-                    playerTwosTurn();
+                    returnCard = playerTwosTurn();
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
                 }
@@ -135,12 +134,13 @@ public class Game {
                             "The first move switches to " + player2.getName() + ".");
                     isPlayerOnesTurn = false;
                     isFirstMove = false;
-                    playerTwosTurn();
+                    returnCard = playerTwosTurn();
                 } else {
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
                 }
             }
+            return returnCard;
         }
     }
 
@@ -232,39 +232,19 @@ public class Game {
     /**
      * Player two's turn.
      */
-    public void playerTwosTurn() { // *** NEEDS TO BE TESTED ***
+    public Card playerTwosTurn() { // *** NEEDS TO BE TESTED ***
         if(isPlayerOnesTurn) {
             throw new IllegalStateException("Called while isPlayerOnesTurn == true");
         }
-        if(showPlayerTwoActions) {
-            Main.out("\n");
-            printHand(player2);
-        }
-        currentPlayedCard = playerTwoMove();
-        // Main.out("oh hai from Game.playerTwosTurn. cpc has just been set to " + currentPlayedCard.getPrintString());
-        player2.setLastPlayedCard(currentPlayedCard);
-        if(currentPlayedCard == null) {
-            // turn this back on later:
-            // throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
-            Main.out("WARN: Game.playerTwosTurn received null from a call to Game.playerTwosMove.");
+        Card returnCard = playerTwoMove();
+        if(returnCard == null) {
+            throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
         } else {
-
-            // was returning a colorless choice when player two discards a wild card on the first move.
-//            if(!isFirstMove) {
-//                currentColor = player2.getChosenColor(); // could be a wild or wd4 if not first move
-//            } else {
-//                currentColor = currentPlayedCard.getColor();
-//            }
-
-            // currentColor = currentPlayedCard.getColor(); // no - set in playerTwoMove
-            discardPile.add(currentPlayedCard);
-            Main.out("\n" + player2.getName() + " discarded a " + currentPlayedCard.getPrintString());
-            Main.out("\nThe current chosen color is " + currentColor);
-            if(showPlayerTwoActions) {
-                Main.out("\n");
-                printHand(player2);
-            }
+            discardPile.add(returnCard);
+            player2.setLastPlayedCard(returnCard);
+            currentPlayedCard = returnCard;
         }
+        return returnCard;
     }
 
     /**
@@ -274,37 +254,20 @@ public class Game {
      */
     public Card playerTwoMove() { // *** MORE TESTING NEEDED - possibly functional only ***
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
-            Main.out("ERROR: Game.playerTwoMove - both deck and discard pile are empty. " +
-                    "No action taken, returned null.");
-            return null;
+            Main.out("WARN: Game.playerTwoMove: both deck and discard pile are empty.");
         }
         if (isPlayerOnesTurn) {
-            Main.out("ERROR: Game.playerTwoMove called during player one's turn. No action taken, returned null.");
-            return null;
+            throw new IllegalStateException("ERROR: Game.playerTwoMove called during player one's turn.");
         }
 
         // switch from bold to cautious strategy if needed
         if(player2.getStrategy().equalsIgnoreCase(Player.STRATEGY_BOLD) && player1.getHand().getSize() < 4) {
             player2.setStrategy(Player.STRATEGY_CAUTIOUS); // tested in TestPlayer
         }
-
-        // just discard the first card in the hand for debug.
-//        Card cardToDiscard = player2.getHand().getFirstCard(); // debug
-//        if(player2.isLegalDiscard(cardToDiscard, currentPlayedCard)) {
-//            player2.getHand().discard(cardToDiscard);
-//        } else {
-//            // throw new IllegalStateException("Player two attempted to discard an illegal card.");
-//            Main.out("WARN: Game.playerTwoMove attempted to discard an illegal card. (Will soon be an illegal state exception.)");
-//        }
-//        return cardToDiscard; // debug
-
-        // ******************** UNDER CONSTRUCTION *********************
-        // Currently under construction (will cause tests to fail):
-        // *************************************************************
         Card cardToDiscard = null;
         boolean playerTwoHasDiscarded = false;
         int i = 0;
-        Main.out("\nPlayer Two is playing with a " + player2.getStrategy() + " strategy.");
+        // Main.out("\nPlayer Two is playing with a " + player2.getStrategy() + " strategy.");
         // discard or draw until a legal card is found
         // Main.out("oh hai from Game.playerTwoMove. cpc: " + currentPlayedCard.getPrintString());
         while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping while debug
@@ -323,25 +286,7 @@ public class Game {
                 return null;
             }
         }
-
-        /*
-         * some serious fuckery is going on here - player two is attempting to discard a non-numeric color
-         * for any other non-numeric color, e.g. discarding a red skip when the cpc is green draw two.
-         * literally no idea why this is happening. It's also breaking some tests, but not always.
-         *
-         * This is an unnecessary step anyway, since decidePlayerTwoDiscard hits isLegalDiscard over
-         * and over again until it finds a legal card. So why check it again here? I think the root cause
-         * is that currentPlayedCard is getting set to the other player's cpc for reasons I don't quite grasp.
-         * Possibly to help p2 remember when it sees a non-numeric non-wild that it's not supposed to skip a turn.
-         *
-         * In any event, the conditional below  causing a bunch of tests to fail - but it's never getting hit when
-         * running from main.
-         *
-         */
         if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
-            Main.out("ERROR: p2 attempted to discard an illegal card. " + "\ncurrentPlayedCard: " + currentPlayedCard.getPrintString() + ", hand: " +
-                    player2.getHand().getHandPrintStringList());
-            Main.out("cardToDiscard: " + cardToDiscard.getPrintString());
             throw new IllegalStateException("Player two attempted an illegal move.");
         } else {
             // Main.out("oh hai from Player.getDumbStrategyCard. isLegalDiscard just returned true.");
@@ -391,7 +336,7 @@ public class Game {
                 refreshDeck();
             }
             Card card = deck.popCard();
-            Main.out("\nGame.draw just added the card " + card.getPrintString() + " to " + player.getName()+ "'s hand.");
+            Main.out("\nAutomatically adding to " + player.getName()+ "'s hand: " + card.getPrintString());
             player.getHand().addCard(card);
         }
     }
@@ -412,8 +357,7 @@ public class Game {
      */
     private void replaceDeckWithDiscardPile() { // tested by testGame_draw_emptyDeck
         if(discardPile == null || discardPile.isEmpty()) {
-            Main.out("WARN: Game.replaceDeckWithDiscardPile received a null or empty discard pile. " +
-                    "Deck not replaced.");
+            throw new IllegalStateException("Game.replaceDeckWithDiscardPile received a null or empty discard pile.");
         } else {
             deck.clearDeck();
             Stack<Card> discardStack = discardPile;

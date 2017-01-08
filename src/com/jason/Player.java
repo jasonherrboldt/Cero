@@ -255,8 +255,7 @@ public class Player {
      */
     public String pickStrategyColor() { // tested
         if (!isPlayer2()) {
-            Main.out("WARN: Player.pickStrategyColor called for player 1. No action taken, returned null.");
-            return null;
+            throw new IllegalStateException("Player.pickStrategyColor called for player 1.");
         } else {
             if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
                 // return a random color
@@ -307,7 +306,7 @@ public class Player {
 //            Main.out("oh hai from Player.getBoldStrategyCard. currentPlayedCard.getColor() = "
 //                    + currentPlayedCard.getColor());
             currentPlayedCardColor = currentColor;
-            Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
+            // Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
         } else {
             currentPlayedCardColor = currentPlayedCard.getColor();
         }
@@ -341,7 +340,7 @@ public class Player {
             // compare the two, return the one with the highest card group
             if(numberMatch != null && colorMatch != null) {
                 if(hand.getColorGroupSize(numberMatch.getColor()) > hand.getColorGroupSize(colorMatch.getColor())) {
-                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1):" + numberMatch.getPrintString());
+                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1):" + numberMatch.getPrintString());
                     return numberMatch; // tested for non-zero
                 } else {
                     // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): " + colorMatch.getPrintString());
@@ -408,7 +407,7 @@ public class Player {
 //            Main.out("oh hai from Player.getCautiousStrategyCard. currentPlayedCard.getColor() = "
 //                    + currentPlayedCard.getColor());
             currentPlayedCardColor = currentColor;
-            Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
+            // Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
         } else {
             currentPlayedCardColor = currentPlayedCard.getColor();
         }
@@ -455,8 +454,8 @@ public class Player {
             // compare the two, return the one with the higher value
             if(numberMatch != null && colorMatch != null) {
                 if(numberMatch.getValue() > colorMatch.getValue()) {
-                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): "
-                            + numberMatch.getPrintString());
+                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): "
+                           // + numberMatch.getPrintString());
                     return numberMatch; // tested
                 } else {
 //                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): "
@@ -547,19 +546,3 @@ public class Player {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

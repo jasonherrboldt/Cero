@@ -57,21 +57,37 @@ public class Main {
         int maxTestTurns = 10;
         int winningScore = 500;
 
+        out("\nStarting a new game...");
         Game game = new Game(testName, true);
-        out("\nStarting game, playing the first hand...");
         game.startGame(null, true);
-        game.playFirstHand();
+        String playerTwoName = game.getPlayer2().getName();
+        out("\nPlayer Two's name is " + playerTwoName + ".");
+        out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
+        out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
+        if(game.isPlayerOnesTurn()) {
+            out("\n" + testName + " has the first move.\n");
+        } else {
+            out("\n" + playerTwoName + " has the first move.\n");
+        }
+        game.printHand(game.getPlayer2());
+        Card playedCard;
+        playedCard = game.playFirstHand();
+        if(playedCard != null) {
+            out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+        }
         out("\nBack to main.");
 
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
         if(!game.skipTurn(game.getPlayer1())) {
-            out("\nIt's your turn, " + testName + "\n");
+            out("\nIt's your turn, " + testName);
+            out("\nThe current color is " + game.getCurrentColor() + ".\n");
             game.printHand(game.getPlayer1());
             out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
         } else {
             out("\n" + testName + ", you were forbidden from discarding.");
             game.setPlayerOnesTurn(false);
-            game.playerTwosTurn();
+            playedCard = game.playerTwosTurn();
+            out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
         }
     }
 

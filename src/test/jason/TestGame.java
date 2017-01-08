@@ -940,14 +940,6 @@ public class TestGame {
 
         // Make sure the happy path returns a card.
         assertTrue(game.playerTwoMove() != null);
-
-        // Make sure it returns null when it's supposed to.
-        game.clearDeck();
-        Stack<Card> emptyStack = new Stack<>();
-        game.setDiscardPile(emptyStack);
-        assertEquals(game.playerTwoMove(), null);
-        game.setPlayerOnesTurn(true);
-        assertEquals(game.playerTwoMove(), null);
     }
 
     @Test
