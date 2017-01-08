@@ -300,12 +300,21 @@ public class Player {
         if(currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or both args were null.");
         }
+//        Main.out("oh hai from Player.getBoldStrategyCard. currentPlayedCard is "
+//                + currentPlayedCard.getPrintString() + ", and currentColor is "+ currentColor);
+        String currentPlayedCardColor = "";
+        if(currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
+//            Main.out("oh hai from Player.getBoldStrategyCard. currentPlayedCard.getColor() = "
+//                    + currentPlayedCard.getColor());
+            currentPlayedCardColor = currentColor;
+            Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
+        }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
-            Card returnCard = hand.getHighestFace(currentColor, true);
+            // Card returnCard = hand.getHighestFace(currentColor, true);
             // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card " +
                     // "hand.getHighestFace(currentColor, true): " + returnCard.getPrintString());
-            return returnCard; // tested
+            return hand.getHighestFace(currentColor, true); // tested
         } else {
 
             // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
@@ -325,7 +334,7 @@ public class Player {
             Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue(), currentPlayedCard);
 
             // try to match the color
-            Card colorMatch = hand.getHighestFace(currentPlayedCard.getColor(), true);
+            Card colorMatch = hand.getHighestFace(currentPlayedCardColor, true);
 
             // compare the two, return the one with the highest card group
             if(numberMatch != null && colorMatch != null) {
@@ -353,7 +362,7 @@ public class Player {
             // 2nd approach is non-numeric color cards (draw two, rev, skip)
 
             // try to return a non-numeric card from the cpc color group
-            Card highestNonNumericColorFace = hand.getHighestNonNumericFace(currentPlayedCard.getColor());
+            Card highestNonNumericColorFace = hand.getHighestNonNumericFace(currentPlayedCardColor);
             if(highestNonNumericColorFace != null) {
                 // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card highestNonNumericColorFace: "
                         // + highestNonNumericColorFace.getPrintString());
@@ -390,12 +399,21 @@ public class Player {
         if(currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or both args were null.");
         }
+//        Main.out("oh hai from Player.getCautiousStrategyCard. currentPlayedCard is "
+//                + currentPlayedCard.getPrintString() + ", and currentColor is "+ currentColor);
+        String currentPlayedCardColor = "";
+        if(currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
+//            Main.out("oh hai from Player.getCautiousStrategyCard. currentPlayedCard.getColor() = "
+//                    + currentPlayedCard.getColor());
+            currentPlayedCardColor = currentColor;
+            Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
+        }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest non-numeric face of currentColor
-            Card returnCard = hand.getHighestFace(currentColor, false);
+            // Card returnCard = hand.getHighestFace(currentColor, false);
             // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card hand.getHighestFace(currentColor, false): "
                     // + returnCard.getPrintString());
-            return returnCard; // tested
+            return hand.getHighestFace(currentColor, false); // tested
         } else {
 
             // highest-value cards go first
@@ -414,7 +432,7 @@ public class Player {
 
             // 2nd highest-value cards go next - draw two, skip, reverse
 
-            Card highestNonNumericFace = hand.getHighestNonNumericFace(currentPlayedCard.getColor());
+            Card highestNonNumericFace = hand.getHighestNonNumericFace(currentPlayedCardColor);
             if(highestNonNumericFace != null) {
 //                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card highestNonNumericColorFace: "
 //                        + highestNonNumericFace.getPrintString());
@@ -427,7 +445,7 @@ public class Player {
             Card numberMatch = hand.getNumberFromLargestColorGroup(currentPlayedCard.getValue(), currentPlayedCard);
 
             // try to match the color
-            Card colorMatch = hand.getHighestFace(currentPlayedCard.getColor(), true);
+            Card colorMatch = hand.getHighestFace(currentPlayedCardColor, true);
 
             // compare the two, return the one with the higher value
             if(numberMatch != null && colorMatch != null) {

@@ -276,6 +276,31 @@ public class TestGame {
         }
     }
 
+    /**
+     * There are no assertions in this test -- it simply makes sure the game can handle the scenario
+     * where p2 discards a wd4, p1 skips another turn, and p2 is able to identify its own chosen color
+     * to find a legal card to discard
+     */
+    @Test
+    public void testGame_skipFirstTurn_p2_wd4() {
+        game = new Game("Player One", true);
+        List<Card> hand = new ArrayList<>();
+        hand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+        hand.add(new Card(Card.BLUE, Card.SIX, cvm));
+        hand.add(new Card(Card.BLUE, Card.EIGHT, cvm));
+        hand.add(new Card(Card.YELLOW, Card.NINE, cvm));
+        hand.add(new Card(Card.RED, Card.ZERO, cvm));
+        try {
+            game.startGame(new Card(Card.GREEN, Card.DRAW_TWO, cvm), true);
+            game.getPlayer2().setHand(hand);
+            game.getPlayer2().setStrategy(Player.STRATEGY_DUMB);
+            game.playFirstHand();
+            game.playerTwosTurn();
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
     @Test
     public void testGame_playFirstHand_correctTurn_p1() {
         game = new Game("Player One", true);
