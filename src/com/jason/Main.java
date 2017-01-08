@@ -3,6 +3,7 @@ package com.jason;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main class. Create a new game and run it.
@@ -61,22 +62,29 @@ public class Main {
         Game game = new Game(testName, true);
         game.startGame(null, true);
         String playerTwoName = game.getPlayer2().getName();
+        pause(2);
         out("\nPlayer Two's name is " + playerTwoName + ".");
-        out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
-        out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
-        if(game.isPlayerOnesTurn()) {
-            out("\nYou have the first move, " + testName + ".\n");
-        } else {
-            out("\n" + playerTwoName + " has the first move.\n");
-        }
+        pause(2);
+        out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.\n");
+        pause(2);
         game.printHand(game.getPlayer2());
+        pause(2);
+        out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
+        pause(2);
+        if(game.isPlayerOnesTurn()) {
+            out("\nYou have the first move, " + testName + ".");
+        } else {
+            out("\n" + playerTwoName + " has the first move.");
+        }
         Card playedCard;
         playedCard = game.playFirstHand();
         if(playedCard != null) {
+            pause(2);
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
         }
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 10; i++) {
+            pause(2);
             if (game.getDeck().getSize() < 2) {
                 out("\nThere is 1 card left in the deck.");
             } else {
@@ -87,17 +95,23 @@ public class Main {
             } else {
                 out(" and " + game.getDiscardPile().size() + " cards in the discard pile.");
             }
-
+            pause(2);
             out("\nThe current color is " + game.getCurrentColor() + ".");
+            pause(2);
+            out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
             if(game.isPlayerOnesTurn()) {
                 if (!game.skipTurn(game.getPlayer1())) {
                     playerOnesTurn(game, testName);
                 }
             } else {
-                out("\nIt is " + game.getPlayer2().getName() + "'s turn.");
-                game.setPlayerOnesTurn(false);
-                playedCard = game.playerTwosTurn();
-                out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+                if(!game.skipTurn(game.getPlayer2())) {
+                    pause(2);
+                    out("\nIt is " + game.getPlayer2().getName() + "'s turn.");
+                    game.setPlayerOnesTurn(false);
+                    playedCard = game.playerTwosTurn();
+                    pause(2);
+                    out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+                }
             }
         }
     }
@@ -111,38 +125,33 @@ public class Main {
         Card currentPlayedCard;
         String currentColor;
         String p1_chosenColor;
-
+        
+        pause(2);
         out("\nIt's your turn, " + p1Name + "\n");
+        pause(2);
         game.printHand(game.getPlayer1());
-        out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
 
         boolean cardDiscarded = false;
         while(!cardDiscarded) {
-            drawAnswer = getUserResponse_yesNo("\nWould you like to draw a card?");
-            if(drawAnswer == null) {
-                throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
-            } else {
-                if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
-                    out("\nOK, drawing a card from the deck...");
-                    game.draw(game.getPlayer1());
-                    out("");
-                    game.printHand(game.getPlayer1());
-                }
-            }
-            discardAnswer = getUserResponse_yesNo("\nAre you ready to discard?");
+            pause(2);
+            discardAnswer = getUserResponse_yesNo("\nThe current played card is "
+                    + game.getCurrentPlayedCard().getPrintString() + " and the current color is "
+                    + game.getCurrentColor().toLowerCase() + ".\nAre you ready to discard?");
             if(discardAnswer == null) {
                 throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
             } else {
                 if(discardAnswer.equalsIgnoreCase("yes") || discardAnswer.equalsIgnoreCase("y")) {
                     p1HandSize = game.getPlayer1().getHand().getSize();
-                    discardNumber = getUserResponse_integer("\nWhich card would you like to discard?", 0, p1HandSize -1 );
+                    discardNumber = getUserResponse_integer("\nWhich card would you like to discard?", 1, p1HandSize);
                     if(discardNumber == null) {
                         throw new IllegalStateException("getUserResponse_integer returned null.");
                     }
                     try {
                         int discardNumberInt = Integer.parseInt(discardNumber);
+                        discardNumberInt--;
                         hand = game.getPlayer1().getHand().getAllCards();
                         Card cardToDiscard = hand.get(discardNumberInt);
+                        pause(2);
                         out("\nYou have elected to discard the card " + cardToDiscard.getPrintString());
                         currentPlayedCard = game.getCurrentPlayedCard();
                         currentColor = game.getCurrentColor();
@@ -157,14 +166,18 @@ public class Main {
                             } else {
                                 game.setCurrentColor(p1_chosenColor);
                             }
+                            pause(2);
                             out("\nYou have successfully discarded the card " + cardToDiscard.getPrintString() + ".\n");
+                            pause(2);
                             game.printHand(game.getPlayer1());
                             game.setCurrentPlayedCard(cardToDiscard);
                             game.getDiscardPile().add(cardToDiscard);
                             cardDiscarded = true;
                             game.setPlayerOnesTurn(false);
                         } else {
+                            pause(2);
                             out("\nI'm sorry " + p1Name + ", but that is not a valid card choice. Please try again.");
+                            pause(2);
                             out("\nThe current played card is " + currentPlayedCard.getPrintString()
                                     + ", and the current color is " + currentColor.toLowerCase()
                                     + ". Here is your hand:\n");
@@ -177,8 +190,29 @@ public class Main {
                     }
                 }
             }
+            if(!cardDiscarded) {
+                drawAnswer = getUserResponse_yesNo("\nWould you like to draw a card?");
+                if(drawAnswer == null) {
+                    throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
+                } else {
+                    if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
+                        pause(2);
+                        out("\nOK, drawing a card from the deck...");
+                        game.draw(game.getPlayer1());
+                        out("");
+                        game.printHand(game.getPlayer1());
+                    }
+                }
+            }
         }
+    }
 
+    public static void pause(long seconds) {
+        try {
+            TimeUnit.SECONDS.sleep(seconds);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException("TimeUnit.SECONDS.sleep threw an interrupted exception.");
+        }
     }
 
     /**

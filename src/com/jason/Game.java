@@ -19,6 +19,8 @@ public class Game {
      *
      *    MUST-HAVES:
      *
+     *    I need logging at this point.
+     *
      *    Go through all test classes and see if any repeating code blocks can be moved up to the class level and shared.
      *
      *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
@@ -115,11 +117,11 @@ public class Game {
         } else {
             Card returnCard = null;
             if (!isPlayerOnesTurn) {
-                // Main.out("\n" + player2.getName() + " had the first move.");
                 if(showPlayerTwoActions) {
                     // printHand(player2);
                 }
                 if(skipFirstTurn(player2)) {
+                    Main.pause(2);
                     Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     isPlayerOnesTurn = true;
                     isFirstMove = false;
@@ -130,6 +132,7 @@ public class Game {
                 }
             } else { // player one's turn
                 if (skipFirstTurn(player1)) {
+                    Main.pause(2);
                     Main.out("\n" + player1.getName() + ", you were forbidden from discarding. " +
                             "The first move switches to " + player2.getName() + ".");
                     isPlayerOnesTurn = false;
@@ -214,6 +217,7 @@ public class Game {
                         draw(player);
                         draw(player);
                     }
+                    isPlayerOnesTurn = !isPlayerOnesTurn;
                     return true; // skip player's turn for all non-numeric / non-wild cpcs
                 }
             }
@@ -243,9 +247,7 @@ public class Game {
             discardPile.add(returnCard);
             player2.setLastPlayedCard(returnCard);
             currentPlayedCard = returnCard;
-            if(currentPlayedCard.isNumeric() || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
-                setPlayerOnesTurn(true);
-            }
+            setPlayerOnesTurn(true);
         }
         return returnCard;
     }
@@ -290,6 +292,10 @@ public class Game {
             }
         }
         if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
+            Main.pause(2);
+            Main.out("Player two attempted an illegal move. cardToDiscard: " + cardToDiscard.getPrintString()
+                    + ", currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
+            printHand(player2);
             throw new IllegalStateException("Player two attempted an illegal move.");
         } else {
             // Main.out("oh hai from Player.getDumbStrategyCard. isLegalDiscard just returned true.");
@@ -339,6 +345,7 @@ public class Game {
                 refreshDeck();
             }
             Card card = deck.popCard();
+            Main.pause(2);
             Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
             player.getHand().addCard(card);
         }
@@ -470,7 +477,7 @@ public class Game {
         if(player.getHand() == null) {
             Main.out("WARN: Game.printHand called with a null hand. No action taken.");
         } else {
-            int count = 0;
+            int count = 1;
             Main.out(player.getName() + "'s hand:");
             List<String> allCards = player.getHand().getHandPrintStringList();
             for(String s : allCards) {
