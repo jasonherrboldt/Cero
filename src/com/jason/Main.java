@@ -48,15 +48,7 @@ public class Main {
         pause(2);
         out("\nStarting a new game...");
         Game game = new Game(userName, true);
-
-
-
-        // game.startGame(null, true);
-        CardValueMap cvm = new CardValueMap();
-        game.startGame(new Card(Card.GREEN, Card.REVERSE, cvm), true);
-
-
-
+        game.startGame(null, true);
         String playerTwoName = game.getPlayer2().getName();
 
         // un-comment out the block below to display player two's name to the user.
@@ -73,9 +65,9 @@ public class Main {
             out("\nBy toss of a coin, " + playerTwoName + " has the first move.");
         }
         Card playedCard;
-        pause(2);
-        out("");
-        game.printHand(game.getPlayer2());
+//        pause(2);
+//        out("");
+//        game.printHand(game.getPlayer2());
         playedCard = game.playFirstHand(true);
         if(playedCard != null) { // handle card player two just discarded
             game.setPlayerOnesTurn(true);

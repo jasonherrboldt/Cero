@@ -59,15 +59,7 @@ public class Game {
         player1 = new Player(playerOneName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
         player2 = new Player("WOPR", true);
-
-
-
-        // player2.setRandomStrategy();
-        player2.setStrategy(Player.STRATEGY_CAUTIOUS); // debug
-
-
-
-
+        player2.setRandomStrategy();
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
         currentColor = "";
@@ -87,14 +79,6 @@ public class Game {
         } else {
             deck.shuffle();
             dealHands();
-
-
-
-            // debug:
-            player2.getHand().addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-
-
-
 
             // for testing:
             if (firstPlayedCard == null) {
