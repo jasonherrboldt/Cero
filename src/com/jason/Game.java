@@ -113,7 +113,7 @@ public class Game {
             if (!isPlayerOnesTurn) {
                 if(skipFirstTurn(player2, printOuts)) {
                     if(printOuts) {
-                        Main.pause(2);
+                        Main.pause();
                         Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     }
                     isPlayerOnesTurn = true;
@@ -128,9 +128,9 @@ public class Game {
             } else { // player one's turn
                 if (skipFirstTurn(player1, printOuts)) {
                     if(printOuts) {
-                        Main.pause(2);
+                        Main.pause();
                         Main.out("\n" + player1.getName() + ", you were forbidden from discarding.");
-                        Main.pause(2);
+                        Main.pause();
                         Main.out("\nThe first move switches to " + player2.getName() + ".");
                     }
                     isPlayerOnesTurn = false;
@@ -297,7 +297,7 @@ public class Game {
             }
         }
         if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
-            // Main.pause(2);
+            // Main.pause();
             Main.out("Player two attempted an illegal move. cardToDiscard: " + cardToDiscard.getPrintString()
                     + ", currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
             printHand(player2);
@@ -354,10 +354,10 @@ public class Game {
             Card card = deck.popCard();
             if(printOuts) {
                 if(isPlayerOnesTurn) {
-                    Main.pause(2);
+                    Main.pause();
                     Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 } else {
-                    Main.pause(2);
+                    Main.pause();
                     Main.out("\n" + player.getName()+ " is drawing a card.");
                 }
             }
