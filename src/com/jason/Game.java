@@ -10,7 +10,7 @@ import java.util.Stack;
  * and declare a winner. Allows user to remote-control Player 1.
  * (Player 2 is computer.)
  *
- * Created by jasonherrboldt on 12/24/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class Game {
 
@@ -19,25 +19,19 @@ public class Game {
      *
      *    MUST-HAVES:
      *
-     *    Go through all test classes and see if any repeating code blocks can be moved up to the class level and shared.
-     *
-     *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
-     *
-     *    Go through every method and make sure the javadoc comments still make sense.
-     *
-     *    Make sure every single method is tested. If not, leave a comment as to why.
+     *      (all caught up)
      *
      *    NICE-TO-HAVES:
      *
-     *    Let the computer pick a phrase at random when it wins a game. Something like, "[player_two_name] has
-     *    a message for you: I win again. WAH WAH WAAAAAAAAAH..."
+     *      Let the computer pick a phrase at random when it wins a game. Something like, "[player_two_name] has
+     *      a message for you: I win again. WAH WAH WAAAAAAAAAH..."
      *
-     *    Once the user can play the computer, set up another game so that the computer
-     *    can play itself. Let each player pick a random strategy each time, and let them
-     *    play like 10k games. Each time a game is won, the game.play method will return
-     *    an object containing the winning player and the strategy it used to win. Whatever
-     *    class calls game.play will take that information, collate it, and display it to the
-     *    user after the 10k games have finished.
+     *      Once the user can play the computer, set up another game so that the computer
+     *      can play itself. Let each player pick a random strategy each time, and let them
+     *      play like 10k games. Each time a game is won, the game.play method will return
+     *      an object containing the winning player and the strategy it used to win. Whatever
+     *      class calls game.play will take that information, collate it, and display it to the
+     *      user after the 10k games have finished.
      *
      */
 
@@ -53,7 +47,7 @@ public class Game {
     private static final int MAX_P2_DRAW_LOOP = 100;
     private Card numeric; // generic starter card
 
-    public Game(String playerOneName, boolean showPlayerTwoActions) {
+    public Game(String playerOneName) {
         cvm = new CardValueMap();
         deck = new Deck();
         player1 = new Player(playerOneName, false);
@@ -68,29 +62,31 @@ public class Game {
     }
 
     /**
-     * Start the game. (Can only be called once.)
+     * Start the game.
      *
      * @param firstPlayedCard   for testing
      * @param _isPlayerOnesTurn for testing
      */
-    public void startGame(Card firstPlayedCard, boolean _isPlayerOnesTurn) { // *** NEEDS TESTING ***
+    public void startGame(Card firstPlayedCard, boolean _isPlayerOnesTurn) {
         if (!isFirstMove) {
             throw new IllegalStateException("Game.startGame called after first move has already been played.");
         } else {
             deck.shuffle();
             dealHands();
+
+            // for debug: inject a custom hand for one of the players
+//            List<Card> testHand = new ArrayList<>();
+//            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
+//            player2.setHand(testHand);
+//            player2.setScore(99);
+
             // for testing:
             if (firstPlayedCard == null) {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
-                // Main.out("oh hai from Game.startGame. cpc has just been changed to " + currentPlayedCard.getPrintString());
             } else {
                 currentPlayedCard = firstPlayedCard;
-                // Main.out("oh hai from Game.startGame. cpc has just been changed to " + currentPlayedCard.getPrintString());
                 setPlayerOnesTurn(_isPlayerOnesTurn);
-                // Main.out("isPlayerOnesTurn was just set to " + _isPlayerOnesTurn + " in Game.startGame.");
             }
-
-            // Main.out("\nThe current played card is " + currentPlayedCard.getPrintString());
 
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
@@ -103,6 +99,9 @@ public class Game {
 
     /**
      * Play the first hand.
+     *
+     * @param printOuts whether or not to mute the console output.
+     * @return          the last card discarded by the opening hand
      */
     public Card playFirstHand(boolean printOuts) { // tested
         if (!isFirstMove) {
@@ -117,13 +116,11 @@ public class Game {
                         Main.out("\n" + player2.getName() + " was forbidden from discarding.");
                     }
                     isPlayerOnesTurn = true;
-                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                     isFirstMove = false;
                 } else {
                     returnCard = playerTwosTurn(printOuts);
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
-                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             } else { // player one's turn
                 if (skipFirstTurn(player1, printOuts)) {
@@ -134,13 +131,11 @@ public class Game {
                         Main.out("\nThe first move switches to " + player2.getName() + ".");
                     }
                     isPlayerOnesTurn = false;
-                    // Main.out("isPlayerOnesTurn was just set to false in Game.playFirstHand.");
                     isFirstMove = false;
                     returnCard = playerTwosTurn(printOuts);
                 } else {
                     isFirstMove = false;
                     isPlayerOnesTurn = true;
-                    // Main.out("isPlayerOnesTurn was just set to true in Game.playFirstHand.");
                 }
             }
             return returnCard;
@@ -150,18 +145,15 @@ public class Game {
     /**
      * Determine whether or not the first move should be automatically skipped. Auto-draws cards as needed.
      *
-     * @param player the player who has the current move
-     * @return       true if the player's move should be skipped, false otherwise
+     * @param player    the player who has the current move
+     * @param printOuts whether or not to mute the console output.
+     * @return          true if the player's move should be skipped, false otherwise
      */
     public boolean skipFirstTurn(Player player, boolean printOuts) { // tested
         if (!isFirstMove) {
             throw new IllegalStateException("skipFirstTurn was called when isFirstMove == false."); // tested
         } else {
-            // necessary to prevent null pointer exception in skipSubsequentTurn:
-            // Main.out("oh hai from Game.skipFirstTurn. About to set the other player's lpc:");
-            // Main.out("Other player's lpc is " + getOtherPlayer(player).getLastPlayedCard());
             getOtherPlayer(player).setLastPlayedCard(currentPlayedCard);
-            // Main.out("Switch done. Other player's lpc is now " + getOtherPlayer(player).getLastPlayedCard().getPrintString());
             player.setLastPlayedCard(numeric);
             if (!currentPlayedCard.isNumeric()) {
                 if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD) ||
@@ -185,8 +177,9 @@ public class Game {
     /**
      * Decide if a player's turn should be skipped. Also handles auto-drawing for draw two and wild draw four.
      *
-     * @param player the player
-     * @return       true if the player's turn should be skipped, false otherwise.
+     * @param player    the player
+     * @param printOuts whether or not to mute the console output.
+     * @return          true if the player's turn should be skipped, false otherwise.
      */
     public boolean skipTurn(Player player, boolean printOuts) { // tested
         if(isFirstMove()) {
@@ -236,8 +229,10 @@ public class Game {
 
     /**
      * Player two's turn.
+     *
+     * @param printOuts whether or not to mute the console output.
      */
-    public Card playerTwosTurn(boolean printOuts) { // *** NEEDS TO BE TESTED ***
+    public Card playerTwosTurn(boolean printOuts) {
         if(isPlayerOnesTurn) {
             throw new IllegalStateException("Called while isPlayerOnesTurn == true");
         }
@@ -250,8 +245,6 @@ public class Game {
             discardPile.add(returnCard);
             player2.setLastPlayedCard(returnCard);
             currentPlayedCard = returnCard;
-            // setPlayerOnesTurn(true);
-            // Main.out("setPlayerOnesTurn was just set to (true) in Game.playerTwosTurn.");
         }
         return returnCard;
     }
@@ -259,7 +252,8 @@ public class Game {
     /**
      * A player's chance to move.
      *
-     * @return the card player two has chosen to discard
+     * @param printOuts whether or not to mute the console output.
+     * @return          the card player two has chosen to discard
      */
     public Card playerTwoMove(boolean printOuts) { // *** MORE TESTING NEEDED - possibly functional only ***
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
@@ -276,14 +270,9 @@ public class Game {
         Card cardToDiscard = null;
         boolean playerTwoHasDiscarded = false;
         int i = 0;
-        // Main.out("\nPlayer Two is playing with a " + player2.getStrategy() + " strategy.");
-        // discard or draw until a legal card is found
-        // Main.out("oh hai from Game.playerTwoMove. cpc: " + currentPlayedCard.getPrintString());
-        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping while debug
+        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
-                if(printOuts) {
-                }
                 draw(player2, printOuts);
             } else {
                 playerTwoHasDiscarded = true;
@@ -297,7 +286,6 @@ public class Game {
             }
         }
         if(!player2.isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
-            // Main.pause();
             Main.out("Player two attempted an illegal move. cardToDiscard: " + cardToDiscard.getPrintString()
                     + ", currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
             printHand(player2);
@@ -343,10 +331,10 @@ public class Game {
      *
      * @param player the player to draw
      */
-    public void draw(Player player, boolean printOuts) { // tested (just needs exception testing as well)
+    public void draw(Player player, boolean printOuts) { // tested
         if(deck == null || discardPile == null) {
             throw new IllegalStateException("Game.draw called with a null deck or a null discard pile, or both. " +
-                    "No action taken."); // *** NEEDS TESTING ***
+                    "No action taken.");
         } else {
             if(deck.getSize() == 0 && discardPile.size() > 0) {
                 refreshDeck();
@@ -393,7 +381,6 @@ public class Game {
      * Deal 7 cards each from the top of the deck to each player.
      */
     public void dealHands() { // tested
-        // Main.out("oh hai from Game.dealHands. Deck size before dealing is " + deck.getSize());
         List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
@@ -403,13 +390,6 @@ public class Game {
                 cards.add(deck.popCard());
             }
             p.setHand(cards);
-        }
-        // Main.out("oh hai from Game.dealHands. Deck size after dealing is " + deck.getSize());
-        if(deck.getSize() != 94) {
-            Main.out("Game.dealHands did not deal 7 cards to each player!");
-            printHand(player1);
-            printHand(player2);
-            throw new IllegalStateException("Game.dealHands did not deal 7 cards to each player.");
         }
     }
 
@@ -503,14 +483,12 @@ public class Game {
             Main.out(player.getName() + "'s hand:");
             List<String> allCards = player.getHand().getHandPrintStringList();
             for(String s : allCards) {
-                if(count < 15) { // debug
-                    if(count < 10) {
-                        Main.out(" " + count + ": " + s);
-                        count++;
-                    } else {
-                        Main.out(count + ": " + s);
-                        count++;
-                    }
+                if(count < 10) {
+                    Main.out(" " + count + ": " + s);
+                    count++;
+                } else {
+                    Main.out(count + ": " + s);
+                    count++;
                 }
             }
         }

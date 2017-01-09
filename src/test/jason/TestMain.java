@@ -5,9 +5,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
- * Test the Main class methods.
- *
- * Created by jasonherrboldt on 12/28/2016.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class TestMain {
 

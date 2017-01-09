@@ -2,12 +2,15 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 import static org.junit.Assert.*;
+
+/**
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
+ */
 
 public class TestGame {
 
@@ -41,7 +44,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_gameObject() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(null, true);
 
         // Make sure the current played card is correctly reflected everywhere.
@@ -61,7 +64,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_currentPlayedCard_1() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         assertEquals(game.getCurrentPlayedCard(), null);
         game.startGame(null, true);
         assertNotEquals(game.getCurrentPlayedCard(), null);
@@ -69,7 +72,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_currentPlayedCard_2() {
-        Game game = new Game("Player One", true);
+        Game game = new Game("Player One");
         assertEquals(game.getCurrentPlayedCard(), null);
         game.startGame(numeric, true);
         assertNotEquals(game.getCurrentPlayedCard(), null);
@@ -77,7 +80,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_discardPile() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         assertEquals(game.getDiscardPile().size(), 0);
         game.startGame(numeric, false);
         assertEquals(game.getDiscardPile().size(), 1);
@@ -85,7 +88,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_currentColor_1() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         assertEquals(game.getCurrentColor(), "");
         game.startGame(numeric, true);
         assertNotEquals(game.getCurrentColor(), "");
@@ -93,7 +96,7 @@ public class TestGame {
 
     @Test
     public void testGame_startGame_currentColor_2() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         assertEquals(game.getCurrentColor(), "");
         game.startGame(null, true);
         assertNotEquals(game.getCurrentColor(), "");
@@ -101,7 +104,7 @@ public class TestGame {
 
     @Test
     public void testGame_verifyFirstCard() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         Card wild = new Card(Card.COLORLESS, Card.WILD, cvm);
         assertEquals(game.getDeck().getSize(), Deck.DECK_SIZE);
@@ -117,7 +120,7 @@ public class TestGame {
 
     @Test
     public void testGame_draw_nonEmptyDeck() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         hand = new ArrayList<>();
         hand.add(new Card(Card.GREEN, Card.ZERO, cvm));
         game.getPlayer1().setHand(hand);
@@ -133,7 +136,7 @@ public class TestGame {
 
     @Test
     public void testGame_draw_emptyDeck() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Give the game a player with a hand of one card.
         hand = new ArrayList<>();
@@ -171,7 +174,7 @@ public class TestGame {
 
     @Test
     public void testGame_dealHands() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         List<Player> players = game.getPlayers();
         for(Player p : players) {
             assertEquals(p.getHand(), null);
@@ -185,7 +188,7 @@ public class TestGame {
     @Test
     public void testGame_skipFirstTurn_numeric() {
         List<Card> cards = new ArrayList<>();
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.getPlayer1().setHand(cards);
         game.setPlayer1(game.getPlayer1());
         game.setIsFirstMove(true);
@@ -200,7 +203,7 @@ public class TestGame {
     @Test
     public void testGame_skipFirstTurn_drawTwo() {
         List<Card> cards = new ArrayList<>();
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.getPlayer1().setHand(cards);
         game.setPlayer1(game.getPlayer1());
         game.startGame(drawTwo, true);
@@ -213,7 +216,7 @@ public class TestGame {
 
     @Test
     public void testGame_skipFirstTurn_skip() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         List<Card> cards = new ArrayList<>();
         game.getPlayer1().setHand(cards);
         game.setPlayer1(game.getPlayer1());
@@ -227,7 +230,7 @@ public class TestGame {
 
     @Test
     public void testGame_skipFirstTurn_reverse() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(reverse, true);
         // should skip player's first turn, hand size should not go up.
         playerHandSizeBefore = game.getPlayer1().getHand().getSize();
@@ -238,7 +241,7 @@ public class TestGame {
 
     @Test
     public void testGame_skipFirstTurn_exception_notFirstTurn() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(reverse, true);
         game.setIsFirstMove(false);
         try {
@@ -252,7 +255,7 @@ public class TestGame {
     @Test
     public void testGame_skipFirstTurn_exception_wildOrWD4() {
         // wild card
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(wild, true);
         game.setIsFirstMove(true);
         try {
@@ -264,7 +267,7 @@ public class TestGame {
         }
 
         // wild draw four card
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(wildDrawFour, true);
         game.setIsFirstMove(true);
         try {
@@ -283,7 +286,7 @@ public class TestGame {
      */
     @Test
     public void testGame_skipFirstTurn_p2_wd4() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         List<Card> hand = new ArrayList<>();
         hand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
         hand.add(new Card(Card.BLUE, Card.SIX, cvm));
@@ -303,7 +306,7 @@ public class TestGame {
 
     @Test
     public void testGame_playFirstHand_correctTurn_p1() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
         assertTrue(game.isPlayerOnesTurn());
         game.playFirstHand(false);
@@ -312,7 +315,7 @@ public class TestGame {
 
     @Test
     public void testGame_playFirstHand_correctTurn_p2() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
         assertFalse(game.isPlayerOnesTurn());
         game.playFirstHand(false);
@@ -321,7 +324,7 @@ public class TestGame {
 
     @Test
     public void testGame_playFirstHand_exception() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
         game.setIsFirstMove(false);
         try {
@@ -335,7 +338,7 @@ public class TestGame {
     @Test
     public void testGame_playFirstHand_switchP1Move_drawTwo() {
         // Create a new game object
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Start a new game, let player one have the first move
         game.startGame(drawTwo, true);
@@ -354,7 +357,7 @@ public class TestGame {
     @Test
     public void testGame_playFirstHand_switchP1Move_skip() {
         // Create a new game object
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Start a new game, let player one have the first move
         game.startGame(skip, true);
@@ -371,7 +374,7 @@ public class TestGame {
     public void testGame_playFirstHand_switchP1Move_reverse() {
 
         // Create a new game object
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Start a new game, let player one have the first move
         game.startGame(reverse, true);
@@ -387,7 +390,7 @@ public class TestGame {
     @Test
     public void testGame_playFirstHand_switchP2Move_drawTwo() {
         // Create a new game object
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Start a new game, let player two have the first move.
         game.startGame(drawTwo, false);
@@ -406,7 +409,7 @@ public class TestGame {
     @Test
     public void testGame_playFirstHand_switchP2Move_skip() {
         // Create a new game object
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Start a new game, let player two have the first move.
         game.startGame(skip, false);
@@ -422,7 +425,7 @@ public class TestGame {
     @Test
     public void testGame_playFirstHand_switchP2Move_reverse() {
         // Create a new game object
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         // Start a new game, let player two have the first move.
         game.startGame(reverse, false);
@@ -437,7 +440,7 @@ public class TestGame {
 
     @Test
     public void testGame_skipTurn_exception1() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
         // still first turn
         try {
@@ -450,7 +453,7 @@ public class TestGame {
 
     @Test
     public void testGame_skipTurn_exception2() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
         game.playFirstHand(false);
         game.getPlayer2().setLastPlayedCard(null);
@@ -465,7 +468,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNumeric_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -487,7 +490,7 @@ public class TestGame {
     public void testGame_skipTurn_lpcNumeric_cpcNumeric_p2() {
 
         // Start the game with a numeric first card. Player two has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player one should not draw or skip the 2nd move.
@@ -506,7 +509,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNumeric_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -523,7 +526,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNumeric_p2() {
         // Start the game with a numeric first card. Player two has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -541,7 +544,7 @@ public class TestGame {
         // Only need to test p1 against p2 -- the same is true wlog going the other way around.
 
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(nonNumericAndNonWild, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -559,7 +562,7 @@ public class TestGame {
         // Only need to test p1 against p2 -- the same is true wlog going the other way around.
 
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(nonNumericAndNonWild, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -575,7 +578,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcWild_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -591,7 +594,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcWild_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -607,7 +610,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcWild_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -630,7 +633,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcWild_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -646,7 +649,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_drawTwo_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -664,7 +667,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_drawTwo_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -682,7 +685,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_skip_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -700,7 +703,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_skip_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -718,7 +721,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_reverse_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -736,7 +739,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_reverse_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -754,7 +757,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_draw4_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -772,7 +775,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcNumeric_cpcNnnw_draw4_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -790,7 +793,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_drawTwo_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -808,7 +811,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_drawTwo_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -826,7 +829,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_skip_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -844,7 +847,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_skip_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -862,7 +865,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_reverse_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -880,7 +883,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_reverse_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -898,7 +901,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_draw4_p1() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, true);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -916,7 +919,7 @@ public class TestGame {
     @Test
     public void testGame_skipTurn_lpcWild_cpcNnnw_draw4_p2() {
         // Start the game with a numeric first card. Player one has the first turn.
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(numeric, false);
 
         // Assert player two should not draw or skip the 2nd move.
@@ -933,7 +936,7 @@ public class TestGame {
 
     @Test
     public void testGame_playerTwoMove() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
 
         game.startGame(null, false);
         game.setPlayerOnesTurn(false);
@@ -944,10 +947,10 @@ public class TestGame {
 
     @Test
     public void testGame_getOtherPlayersChosenColor() {
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.getPlayer1().setLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
         game.getPlayer2().setLastPlayedCard(new Card(Card.GREEN, Card.ZERO, cvm));
-        game = new Game("Player One", true);
+        game = new Game("Player One");
         game.startGame(null, false);
         List<Player> players = game.getPlayers();
         if(players.size() == 2) {

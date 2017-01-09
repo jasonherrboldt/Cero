@@ -7,6 +7,10 @@ import com.jason.*;
 
 import java.util.Iterator;
 
+/**
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
+ */
+
 public class TestDeck {
 
     private Deck deck = new Deck();

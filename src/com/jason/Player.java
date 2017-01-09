@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Created by jasonherrboldt on 12/24/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  *
  * A player. Has a hand, can manipulate that hand. Has a randomly-selected strategy.
  * Can play a card from its hand and react to previously played hand.
@@ -55,6 +55,12 @@ public class Player {
     private Card wild;
     private Card wildDrawFour;
 
+    /**
+     * Public constructor.
+     *
+     * @param name       the player's name
+     * @param isComputer if the player is the computer
+     */
     public Player(String name, boolean isComputer) {
         this.name = name;
         this.isPlayer2 = isComputer;
@@ -102,7 +108,7 @@ public class Player {
      * @param currentPlayedCard The current played card.
      * @return                  True if the discarded card was deemed legal, false otherwise.
      */
-    public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard, String currentColor) { // *** NEEDS RE-TESTING ***
+    public boolean isLegalDiscard(Card cardToDiscard, Card currentPlayedCard, String currentColor) {
         if(cardToDiscard == null || currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or more args was null.");
         } else {
@@ -159,22 +165,6 @@ public class Player {
     }
 
     /**
-     * Display the current hand, allowing user to remote-control player 1.
-     */
-    public void showCards() { // no test needed
-        hand.showCards();
-    }
-
-    /**
-     * Update the player's score
-     *
-     * @param score The score to update.
-     */
-    void updateScore(int score) { // no test needed
-        this.score += score;
-    }
-
-    /**
      * @return the player's score
      */
     int getScore() { // no test needed
@@ -182,7 +172,7 @@ public class Player {
     }
 
     /**
-     * Update the value of the other player's hand cound.
+     * Update the value of the other player's hand count.
      *
      * @param count the count to update.
      */
@@ -198,6 +188,8 @@ public class Player {
     }
 
     /**
+     * Set a player's random strategy.
+     *
      * @return true if a random strategy has been selected, false otherwise.
      */
     public boolean setRandomStrategy() { // tested
@@ -258,7 +250,7 @@ public class Player {
     }
 
     /**
-     * Pick a card from hand based on the bold strategy.
+     * Pick a card from the hand based on the bold strategy.
      *
      * @param currentPlayedCard the current played card
      * @param currentColor      the current chosen color
@@ -268,25 +260,16 @@ public class Player {
         if(currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or both args were null.");
         }
-//        Main.out("oh hai from Player.getBoldStrategyCard. currentPlayedCard is "
-//                + currentPlayedCard.getPrintString() + ", and currentColor is "+ currentColor);
         String currentPlayedCardColor = "";
         if(currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
-//            Main.out("oh hai from Player.getBoldStrategyCard. currentPlayedCard.getColor() = "
-//                    + currentPlayedCard.getColor());
             currentPlayedCardColor = currentColor;
-            // Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
         } else {
             currentPlayedCardColor = currentPlayedCard.getColor();
         }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest numeric face of currentColor
-            // Card returnCard = hand.getHighestFace(currentColor, true);
-            // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card " +
-                    // "hand.getHighestFace(currentColor, true): " + returnCard.getPrintString());
             return hand.getHighestFace(currentColor, true); // tested
         } else {
-
             // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
             int matchingColorGroupSize = hand.getColorGroupSize(currentColor);
             if(matchingColorGroupSize > 2) {
@@ -309,10 +292,8 @@ public class Player {
             // compare the two, return the one with the highest card group
             if(numberMatch != null && colorMatch != null) {
                 if(hand.getColorGroupSize(numberMatch.getColor()) > hand.getColorGroupSize(colorMatch.getColor())) {
-                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1):" + numberMatch.getPrintString());
                     return numberMatch; // tested for non-zero
                 } else {
-                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): " + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
@@ -321,10 +302,8 @@ public class Player {
             if(numberMatch != null || colorMatch != null) {
                 if(numberMatch != null) {
                     // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
-                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): " + numberMatch.getPrintString());
                     return numberMatch; // tested for non-zero
                 } else {
-                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): " + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
@@ -334,8 +313,6 @@ public class Player {
             // try to return a non-numeric card from the cpc color group
             Card highestNonNumericColorFace = hand.getHighestNonNumericFace(currentPlayedCardColor);
             if(highestNonNumericColorFace != null) {
-                // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card highestNonNumericColorFace: "
-                        // + highestNonNumericColorFace.getPrintString());
                 return highestNonNumericColorFace; // tested
             }
 
@@ -343,18 +320,15 @@ public class Player {
 
             // return a wild card if present
             if(hand.hasCard(wild)) {
-                // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wild: " + wild.getPrintString());
                 return wild; // tested
             }
             // return a wild draw four card if present
             if(hand.hasCard(wildDrawFour)) {
-                // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wildDrawFour: " + wildDrawFour.getPrintString());
                 return wildDrawFour; // tested
             }
         }
 
         // found nothing - return null and let Game.playerTwoMove draw a card from the deck
-        // Main.out("oh hai from Player.getCautiousStrategyCard. About to return null.");
         return null; // tested
     }
 
@@ -369,37 +343,25 @@ public class Player {
         if(currentPlayedCard == null || currentColor == null) {
             throw new IllegalArgumentException("One or both args were null.");
         }
-//        Main.out("oh hai from Player.getCautiousStrategyCard. currentPlayedCard is "
-//                + currentPlayedCard.getPrintString() + ", and currentColor is "+ currentColor);
         String currentPlayedCardColor = "";
         if(currentPlayedCard.getColor().equalsIgnoreCase(Card.COLORLESS)) {
-//            Main.out("oh hai from Player.getCautiousStrategyCard. currentPlayedCard.getColor() = "
-//                    + currentPlayedCard.getColor());
             currentPlayedCardColor = currentColor;
-            // Main.out("currentPlayedCardColor is now " + currentPlayedCardColor);
         } else {
             currentPlayedCardColor = currentPlayedCard.getColor();
         }
 
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
             // return the highest non-numeric face of currentColor
-            // Card returnCard = hand.getHighestFace(currentColor, false);
-            // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card hand.getHighestFace(currentColor, false): "
-                    // + returnCard.getPrintString());
             return hand.getHighestFace(currentColor, false); // tested
         } else {
 
             // highest-value cards go first
 
             if(hand.hasCard(wild)) {
-//                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wild: "
-//                        + wild.getPrintString());
                 return wild; // tested
             }
 
             if(hand.hasCard(wildDrawFour)) {
-//                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card wildDrawFour: "
-//                        + wildDrawFour.getPrintString());
                 return wildDrawFour; // tested
             }
 
@@ -407,8 +369,6 @@ public class Player {
 
             Card highestNonNumericFace = hand.getHighestNonNumericFace(currentPlayedCardColor);
             if(highestNonNumericFace != null) {
-//                Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card highestNonNumericColorFace: "
-//                        + highestNonNumericFace.getPrintString());
                 return highestNonNumericFace; // tested
             }
 
@@ -423,12 +383,8 @@ public class Player {
             // compare the two, return the one with the higher value
             if(numberMatch != null && colorMatch != null) {
                 if(numberMatch.getValue() > colorMatch.getValue()) {
-                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (1): "
-                           // + numberMatch.getPrintString());
                     return numberMatch; // tested
                 } else {
-//                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (1): "
-//                            + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
@@ -436,19 +392,14 @@ public class Player {
             // if only one is non-null, return it.
             if(numberMatch != null || colorMatch != null) {
                 if(numberMatch != null) {
-//                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card numberMatch (2): "
-//                            + numberMatch.getPrintString());
                     return numberMatch; // tested
                 } else {
-//                    Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card colorMatch (2): "
-//                            + colorMatch.getPrintString());
                     return colorMatch; // tested
                 }
             }
         }
 
         // found nothing - return null and let Game.playerTwoMove draw a card from the deck
-        // Main.out("oh hai from Player.getCautiousStrategyCard. About to return null.");
         return null; // tested
     }
 
@@ -471,7 +422,6 @@ public class Player {
         // step through shuffled hand one card at a time and return the first legal card found
         for(Card c : shuffledHand) {
             if(isLegalDiscard(c, currentPlayedCard, currentColor)) {
-                // Main.out("oh hai from Player.getDumbStrategyCard. isLegalDiscard just returned true.");
                 return c; // tested
             }
         }
@@ -498,20 +448,44 @@ public class Player {
         }
     }
 
+    /**
+     * @return the player's last played card
+     */
     public Card getLastPlayedCard() {
         return lastPlayedCard;
     }
 
+    /**
+     * Set the player's last played card.
+     *
+     * @param lastPlayedCard the last played card
+     */
     public void setLastPlayedCard(Card lastPlayedCard) {
         this.lastPlayedCard = lastPlayedCard;
     }
 
+    /**
+     * @return the player's chosen color
+     */
     public String getChosenColor() {
         return chosenColor;
     }
 
+    /**
+     * Set the player's chosen color
+     *
+     * @param chosenColor the chosen color
+     */
     public void setChosenColor(String chosenColor) {
         this.chosenColor = chosenColor;
     }
 
+    /**
+     * Set the player's score (for testing)
+     *
+     * @param score the score
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
 }

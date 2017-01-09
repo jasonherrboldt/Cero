@@ -2,8 +2,11 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-
 import static org.junit.Assert.*;
+
+/**
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
+ */
 
 public class TestCard {
 
@@ -74,29 +77,4 @@ public class TestCard {
         assertTrue(reverse.isNonNumericNonWild());
         assertTrue(skip.isNonNumericNonWild());
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,14 +4,13 @@ import java.util.*;
 import static com.jason.Card.*;
 
 /**
- * A stack of cards.
+ * A deck of cards.
  *
- * Created by jasonherrboldt on 12/24/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class Deck {
 
     public static final int DECK_SIZE = 108;
-
     private Stack<Card> deckStack;
     private CardValueMap cvm;
 
@@ -43,13 +42,12 @@ public class Deck {
     /**
      * Pop a card off the top of the deck.
      * 
-     * @return the card on the top of the deck. 
+     * @return the card on the top of the deck or null if one not found.
      */
     public Card popCard() { // tested
         if(!deckStack.empty()) {
             return deckStack.pop();
         }
-        // Main.out("WARN: Deck.popCard called on an empty deck. No action taken. Returned null.");
         return null;
     }
     
@@ -62,17 +60,11 @@ public class Deck {
         return deckStack.peek();
     }
 
+    /**
+     * @return the raw deck stack object.
+     */
     public Stack<Card> getDeckStack() { // no test necessary
         return deckStack;
-    }
-
-    // for debug
-    public void printDeck() { // no test necessary
-        Iterator<Card> iter = getDeckStack().iterator();
-        while(iter.hasNext()) {
-            Card card = iter.next();
-            Main.out(card.getColor() + " " + card.getFace());
-        }
     }
 
     /**

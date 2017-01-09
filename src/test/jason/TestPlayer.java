@@ -5,12 +5,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static junit.framework.TestCase.fail;
 
+/**
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
+ */
 public class TestPlayer {
 
     private Card blueNine;
@@ -161,8 +162,6 @@ public class TestPlayer {
         assertEquals(player2.getHand().getSize(), (handSize - cardsDiscarded));
     }
 
-    // need more isLegalDiscard tests here for when cpc is non-numeric! ****************************************
-
     @Test
     public void testPlayer_setRandomStrategy_1() {
         player2 = new Player("", true);
@@ -207,7 +206,7 @@ public class TestPlayer {
 
     @Test
     public void testPlayer_changeStrategy() {
-        Game game = new Game("Player One", true);
+        Game game = new Game("Player One");
         game.getPlayer2().setStrategy(Player.STRATEGY_BOLD);
         game.startGame(null, true);
         // game.playFirstHand();
@@ -349,19 +348,6 @@ public class TestPlayer {
         player2.getHand().addCard(wildDrawFour);
         assertTrue(player2.getBoldStrategyCard(yellowThree, yellowThree.getColor()).equals(wildDrawFour));
     }
-
-    /*
-        strategyHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
-        strategyHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
-        strategyHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
-        strategyHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
-        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
-        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-     */
 
     @Test
     public void testPlayer_getBoldStrategyCard_zeroColor() {
@@ -566,19 +552,6 @@ public class TestPlayer {
         }
     }
 
-    /*
-        strategyHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
-        strategyHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
-        strategyHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
-        strategyHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
-        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
-        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-     */
-
     @Test
     public void testPlayer_getDumbStrategyCard_oneWinner_color() {
         // verify that the dumb strategy returns the one winning card in its hand.
@@ -669,27 +642,3 @@ public class TestPlayer {
         assertEquals(player2.selectNewColor(), Card.YELLOW);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

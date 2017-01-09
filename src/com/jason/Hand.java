@@ -6,7 +6,7 @@ import java.util.*;
  * Hand class. A list of a list of cards, sorted descending by color group.
  * Allows player many insights into cards, allowing it to decide a move.
  *
- * Created by jasonherrboldt on 12/24/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class Hand {
 
@@ -61,7 +61,7 @@ public class Hand {
      * Get a list of cards of a specified color.
      *
      * @param color The specified color.
-     * @return      The list of cards of the specified color.
+     * @return      The list of cards of the specified color, or null if none found.
      */
     public List<Card> getColorList(String color) { // tested
         for(List<Card> list : listOfListOfCards) {
@@ -211,7 +211,6 @@ public class Hand {
      * @return          The card of the highest color group, or null if no card found.
      */
     public Card getNumberFromLargestColorGroup(int number, Card currentPlayedCard) { // tested
-        // Main.out("oh hai from Hand.getNumberFromLargestColorGroup. number = " + number);
         // Hand is already sorted ascending by color group size.
         for(List<Card> list : listOfListOfCards) {
             for(Card c : list) {
@@ -235,7 +234,6 @@ public class Hand {
      * @return the color group size.
      */
     public int getColorGroupSize(String color) { // tested
-
         for(List<Card> list : listOfListOfCards) {
             if(list.size() > 0) {
                 if(list.get(0).getColor().equalsIgnoreCase(color)) {
@@ -289,6 +287,9 @@ public class Hand {
         return null;
     }
 
+    /**
+     * @return a random color
+     */
     public String getRandomColor() {
         List<String>colors = new ArrayList<>();
         colors.add(Card.BLUE);
@@ -311,7 +312,7 @@ public class Hand {
     }
 
     /**
-     * @return the first card of the hand (for debug).
+     * @return the first card of the hand (for testing).
      */
     public Card getFirstCard() { // no test needed
         if(getSize() > 0) {

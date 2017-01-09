@@ -4,13 +4,10 @@ import com.jason.Card;
 import com.jason.CardValueMap;
 import org.junit.*;
 import static org.junit.Assert.*;
-
 import static junit.framework.TestCase.fail;
 
 /**
- * Tests the CardValueMap class.
- *
- * Created by jasonherrboldt on 12/25/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class TestCardValueMap {
 

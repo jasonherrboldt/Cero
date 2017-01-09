@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * A map that connects card face values with numeric values.
  *
- * Created by jasonherrboldt on 12/25/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class CardValueMap {
 

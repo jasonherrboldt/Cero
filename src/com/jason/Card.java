@@ -2,18 +2,10 @@ package com.jason;
 
 /**
  * A card.
+ *
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class Card {
-
-    /*
-
-        From unorules.com:
-
-        All number cards are the same value as the number on the card (e.g. a 9 is 9 points).
-        Draw Two – 20 Points, Reverse – 20 Points, Skip – 20 Points, Wild – 50 Points,
-        and Wild Draw Four – 50 Points. The first player to attain 500 points wins the game.
-
-     */
     
     private String color;
     private String face;
@@ -89,6 +81,9 @@ public class Card {
         return this.face;
     }
 
+    /**
+     * @return the value of the card.
+     */
     int getValue() {
         return this.value;
     }
@@ -110,9 +105,7 @@ public class Card {
     }
 
     /**
-     * Determines if this card has a numeric face value.
-     *
-     * @return      True if this card has a numeric face value, false otherwise.
+     * @return true if this card has a numeric face value, false otherwise.
      */
     public boolean isNumeric() { // tested
         int faceVal = cvm.getValue(face);
@@ -120,16 +113,14 @@ public class Card {
     }
 
     /**
-     * @return true if the card is colorless (e.g. wild), false otherwise.
+     * @return true if the card is colorless (i.e wild or wild draw four), false otherwise.
      */
     public boolean isColorlessCard() { // tested
         return face.equalsIgnoreCase(WILD) || face.equalsIgnoreCase(WILD_DRAW_FOUR);
     }
 
     /**
-     * Get the string needed to print card properties to the console.
-     *
-     * @return The string to print.
+     * @return the string needed to print card properties.
      */
     public String getPrintString() { // tested
         if(isColorlessCard()) {
@@ -146,6 +137,9 @@ public class Card {
         return isColorlessCard() || !isNumeric();
     }
 
+    /**
+     * @return true if the card is non-numeric and non-wild, e.g. skip, rev, draw two.
+     */
     public boolean isNonNumericNonWild() {
         return isNonNumeric() && !this.face.equalsIgnoreCase(WILD);
     }

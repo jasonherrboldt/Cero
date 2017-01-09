@@ -3,15 +3,13 @@ package test.jason;
 import com.jason.*;
 import org.junit.*;
 import java.util.*;
-
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.*;
 
 /**
- * Tests the Hand class methods.
- *
- * Created by jasonherrboldt on 12/24/16.
+ * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
+
 public class TestHand {
 
     private List<List<Card>> mockHand;
@@ -162,17 +160,6 @@ public class TestHand {
         assertEquals(getHighestFaceHand.getHighestFace(Card.GREEN, true), null);
     }
 
-
-
-    /*
-        getHighestFaceHand.addCard(new Card(Card.RED, Card.THREE, cvm));
-        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.TWO, cvm));
-        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
-        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.NINE, cvm));
-        getHighestFaceHand.addCard(new Card(Card.BLUE, Card.REVERSE, cvm));
-        getHighestFaceHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-     */
-
     @Test
     public void testHand_getHighestNonNumericFace_happy() {
         // ditch the wd4
@@ -188,9 +175,6 @@ public class TestHand {
         // assert it returns null when no suitable card is found
         assertEquals(getHighestFaceHand.getHighestNonNumericFace(Card.YELLOW), null);
     }
-
-
-
 
     @Test
     public void testHand_getNumber() {
@@ -250,11 +234,8 @@ public class TestHand {
         assertEquals(getNumberOfMostColorsHand.getColorGroupSize(Card.GREEN), 1);
     }
 
-
-
-
     /*
-     * Private helper methods:
+     * Private helper method
      */
     private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws IllegalArgumentException {
         boolean mismatchFound = false;
@@ -271,6 +252,9 @@ public class TestHand {
         return mismatchFound;
     }
 
+    /*
+     * Private helper method
+     */
     private List<Card> getAllCardsFromMockHand(List<List<Card>> hand) {
         List<Card> cards = new ArrayList<>();
         for(List<Card> list : hand) {
