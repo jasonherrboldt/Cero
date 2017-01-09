@@ -29,10 +29,8 @@ public class Game {
      *
      *    NICE-TO-HAVES:
      *
-     *    Space out the console output for computer steps; make it look like the
-     *    computer is thinking about what its doing, instead of just showing a dump
-     *    of steps to the user. Might be fun to have it complain if it has to draw more
-     *    than three cards.
+     *    Let the computer pick a phrase at random when it wins a game. Something like, "[player_two_name] has
+     *    a message for you: I win again. WAH WAH WAAAAAAAAAH..."
      *
      *    Once the user can play the computer, set up another game so that the computer
      *    can play itself. Let each player pick a random strategy each time, and let them
@@ -52,7 +50,6 @@ public class Game {
     private Stack<Card> discardPile;
     private String currentColor;
     private boolean isFirstMove;
-    private boolean showPlayerTwoActions;
     private static final int MAX_P2_DRAW_LOOP = 100;
     private Card numeric; // generic starter card
 
@@ -62,13 +59,20 @@ public class Game {
         player1 = new Player(playerOneName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
         player2 = new Player("WOPR", true);
-        player2.setRandomStrategy();
+
+
+
+        // player2.setRandomStrategy();
+        player2.setStrategy(Player.STRATEGY_CAUTIOUS); // debug
+
+
+
+
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
         currentColor = "";
         isFirstMove = true;
         numeric = new Card(Card.RED, Card.NINE, cvm);
-        this.showPlayerTwoActions = showPlayerTwoActions;
     }
 
     /**
@@ -84,6 +88,14 @@ public class Game {
             deck.shuffle();
             dealHands();
 
+
+
+            // debug:
+            player2.getHand().addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+
+
+
+
             // for testing:
             if (firstPlayedCard == null) {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
@@ -92,7 +104,7 @@ public class Game {
                 currentPlayedCard = firstPlayedCard;
                 // Main.out("oh hai from Game.startGame. cpc has just been changed to " + currentPlayedCard.getPrintString());
                 setPlayerOnesTurn(_isPlayerOnesTurn);
-                Main.out("isPlayerOnesTurn was just set to " + _isPlayerOnesTurn + " in Game.startGame.");
+                // Main.out("isPlayerOnesTurn was just set to " + _isPlayerOnesTurn + " in Game.startGame.");
             }
 
             // Main.out("\nThe current played card is " + currentPlayedCard.getPrintString());
@@ -288,8 +300,6 @@ public class Game {
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
                 if(printOuts) {
-                    Main.pause(2);
-                    Main.out("\nPlayer two is drawing ");
                 }
                 draw(player2, printOuts);
             } else {
@@ -365,7 +375,7 @@ public class Game {
                     Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 } else {
                     Main.pause(2);
-                    Main.out("\nAdding a card to " + player.getName()+ "'s hand.");
+                    Main.out("\n" + player.getName()+ " is drawing a card.");
                 }
             }
             player.getHand().addCard(card);
