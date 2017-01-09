@@ -27,52 +27,40 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // un-comment out the block below to get the user's name.
 //        outNoReturn("Please enter your name (no special characters): ");
-//        String name = System.console().readLine();
+//        String userName = System.console().readLine();
 //        while(!isValid(name)) {
 //            outNoReturn("Please try again. ");
 //            out("Allowed characters are a-z, A-Z, and space: ");
-//            name = System.console().readLine();
+//            userName = System.console().readLine();
 //        }
 //        System.out.println("Welcome, " + name + "! Let's begin.");
 
-
-
-        // test Q&A:
-//        String answer = getUserResponse_yesNo("Do you believe in love?");
-//        out("Your answer: " + answer);
-//
-//        answer = getUserResponse_integer("Please enter an integer between 0 and 5: ", 0, 5);
-//        out("Your answer: " + answer);
-//
-//        answer = getUserResponse_string("Enter any string: ");
-//        out("Your answer: " + answer);
-//
-//        answer = getUserResponse_chosenColor();
-//        out("Your answer: " + answer);
-
-        String testName = "David Lightman";
+        String userName = "David Lightman";
         boolean innerWinnerExists = false;
+        boolean winnerIsPlayerOne = false;
         int playerOneScore = 0;
         int playerTwoScore = 0;
         int maxTestTurns = 10;
         int winningScore = 500;
 
         out("\nStarting a new game...");
-        Game game = new Game(testName, true);
+        Game game = new Game(userName, true);
         game.startGame(null, true);
         String playerTwoName = game.getPlayer2().getName();
+
+        // un-comment out the block below to display player two's name to the user.
 //        pause(2);
 //        out("\nPlayer Two's name is " + playerTwoName + ".");
+
         pause(2);
         out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
-//        pause(2);
-//        game.printHand(game.getPlayer2());
         pause(2);
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
         if(game.isPlayerOnesTurn()) {
             pause(2);
-            out("\nYou have the first move, " + testName + ".");
+            out("\nYou have the first move, " + userName + ".");
         } else {
             pause(2);
             out("\n" + playerTwoName + " has the first move.");
@@ -88,55 +76,45 @@ public class Main {
             }
         }
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
-        for(int i = 0; i < 15; i++) {
-            pause(2);
-            if (game.getDeck().getSize() < 2) {
-                out("\nThere is 1 card left in the deck.");
-            } else {
-                outNoReturn("\nThere are " + game.getDeck().getSize() + " cards left in the deck");
-            }
-            if (game.getDiscardPile().size() < 2) {
-                out(" and 1 card in the discard pile.\n\n(game.isPlayerOnesTurn() = " + game.isPlayerOnesTurn() + ").");
-            } else {
-                out(" and " + game.getDiscardPile().size() + " cards in the discard pile.\n\n(game.isPlayerOnesTurn() = "
-                        + game.isPlayerOnesTurn() + ").");
-            }
-//            pause(2);
-//            out("\nThe current color is " + game.getCurrentColor() + ".");
-            pause(2);
-            out("\n" + game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
-            // pause(2);
-            // out("game.isPlayerOnesTurn() currently evaluates to " + game.isPlayerOnesTurn() + ". About to enter the if / else.");
+        // for(int i = 0; i < 15; i++) {
+        while(!innerWinnerExists) {
             if(game.isPlayerOnesTurn()) {
-//                pause(2);
-//                out("\nIt is player one's turn.");
                 if (!game.skipTurn(game.getPlayer1(), true)) {
-//                    pause(2);
-//                    out("\n" + game.getPlayer1().getName() + " did not have to skip a turn.");
+                    pause(2);
+                    out("\n      *** game status update ***\n");
+                    if (game.getDeck().getSize() < 2) {
+                        out("There is 1 card left in the deck.");
+                    } else {
+                        outNoReturn("There are " + game.getDeck().getSize() + " cards left in the deck");
+                    }
+                    if (game.getDiscardPile().size() < 2) {
+                        out(" and 1 card in the discard pile.");
+                    } else {
+                        out(" and " + game.getDiscardPile().size() + " cards in the discard pile.");
+                    }
+                    out(game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
+                    out("\n      *** game status update *** ");
                     playerOnesTurn(game, game.getPlayer1().getName());
                     if(game.getPlayer1().getHand().getSize() == 0) {
                         pause(2);
-                        out("\nPlayer one has discarded the last card!");
+                        out("\n" + game.getPlayer1().getName() + " has discarded the last card!");
                         pause(2);
                         out("\nSetting innerWinnerExists to true...");
                         innerWinnerExists = true;
+                        winnerIsPlayerOne = true;
                     }
-//                    pause(2);
-//                    out("\nDone with Player One's turn. Now setting p1 turn to false...");
                     game.setPlayerOnesTurn(false);
                 } else {
                     pause(2);
-                    out("\n" + testName + ", you were forbidden from discarding.");
+                    out("\n" + userName + ", you were forbidden from discarding.");
                     game.setPlayerOnesTurn(false);
                 }
             } else {
                 pause(2);
-                out("\nIt is player two's turn.\n");
+                out("\nIt is " + game.getPlayer2().getName() + "'s turn.\n");
                 pause(2);
                 game.printHand(game.getPlayer2());
                 if(!game.skipTurn(game.getPlayer2(), true)) {
-//                    pause(2);
-//                    out("\n" + game.getPlayer2().getName() + " did not have to skip a turn.");
                     playedCard = game.playerTwosTurn(true);
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
@@ -146,36 +124,57 @@ public class Main {
                     }
                     if(game.getPlayer2().getHand().getSize() == 0) {
                         pause(2);
-                        out("\nPlayer two has discarded the last card!");
+                        out("\n" + game.getPlayer2().getName() + " has discarded the last card!");
                         pause(2);
                         out("\nSetting innerWinnerExists to true...");
                         innerWinnerExists = true;
+                        winnerIsPlayerOne = false;
                     }
-//                    pause(2);
-//                    out("\nDone with Player Two's turn. Now setting p1 turn to true...");
                     game.setPlayerOnesTurn(true);
                 } else {
-//                    pause(2);
-//                    out("\nPlayer two was forced to skip a turn. Now setting p1 turn to true...");
+                    pause(2);
+                    out("\n" + game.getPlayer2().getName() + " was forbidden from discarding.");
                     game.setPlayerOnesTurn(true);
                 }
             }
             if(innerWinnerExists) {
+//                pause(2);
+//                out("\nAn inner winner exists! Starting a new game...");
+//                game = new Game(userName, true);
+//                game.startGame(null, true);
+//                innerWinnerExists = false;
                 pause(2);
-                out("\nAn inner winner exists! Starting a new game...");
-                game = new Game(testName, true);
-                game.startGame(null, true);
-                innerWinnerExists = false;
+                out("\nWe have a winner!");
+                String winnerName = "";
+                if(winnerIsPlayerOne) {
+                    winnerName = game.getPlayer1().getName();
+                } else {
+                    winnerName = game.getPlayer2().getName();
+                }
+                pause(2);
+                out("\nCongratulations, " + winnerName + "! You've won this round. Tallying your score...");
+                if(winnerIsPlayerOne) {
+                    if(game.getPlayer2().getHand().getSize() < 1) {
+                        pause(2);
+                        out("WARN: Can't tally score; player two has no cards!");
+                    }
+                    for(Card c : game.getPlayer2().getHand().getAllCards()) {
+                        playerOneScore += c.getValue();
+                    }
+                    pause(2);
+                    out("\nYour score is " + playerOneScore);
+                } else {
+                    if(game.getPlayer1().getHand().getSize() < 1) {
+                        pause(2);
+                        out("WARN: Can't tally score; player one has no cards!");
+                    }
+                    for(Card c : game.getPlayer1().getHand().getAllCards()) {
+                        playerTwoScore += c.getValue();
+                    }
+                    pause(2);
+                    out("\nYour score is " + playerTwoScore);
+                }
             }
-//            pause(2);
-//            out("\nAbout to return to the top of the while loop.");
-//            if(game.isPlayerOnesTurn()) {
-//                pause(2);
-//                out("\nIt is player one's turn.");
-//            } else {
-//                pause(2);
-//                out("\nIt is player two's turn.");
-//            }
         }
     }
 
@@ -245,8 +244,6 @@ public class Main {
                             game.getPlayer1().setLastPlayedCard(cardToDiscard);
                             game.getDiscardPile().add(cardToDiscard);
                             cardDiscarded = true;
-                            // game.setPlayerOnesTurn(false);
-                            // out("game.setPlayerOnesTurn was just set to (false) in Main.playerOnesTurn.");
                         } else {
                             pause(2);
                             out("\nI'm sorry " + p1Name + ", but that is not a valid card choice. Please try again.");
@@ -440,6 +437,7 @@ public class Main {
         validColorChoices.add(Card.YELLOW.toLowerCase());
 
         while(!validAnswerReceived) {
+            pause(2);
             outNoReturn("\nWhat is your chosen color for the next move? ");
             response = System.console().readLine();
             if(validColorChoices.contains(response.toLowerCase().trim())) {

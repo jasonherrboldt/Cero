@@ -19,8 +19,6 @@ public class Game {
      *
      *    MUST-HAVES:
      *
-     *    I need logging at this point.
-     *
      *    Go through all test classes and see if any repeating code blocks can be moved up to the class level and shared.
      *
      *    Change user main out warnings to illegal state exceptions -- let showstoppers stop the show.
