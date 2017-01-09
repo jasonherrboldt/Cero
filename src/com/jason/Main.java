@@ -69,10 +69,10 @@ public class Main {
         playedCard = game.playFirstHand(true);
         if(playedCard != null) {
             pause(2);
-            out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
+            out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString() + ".");
             if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                 pause(2);
-                out("\nplayerTwoName set the current color to " + game.getCurrentColor() + ".");
+                out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
             }
         }
         // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
@@ -81,7 +81,7 @@ public class Main {
             if(game.isPlayerOnesTurn()) {
                 if (!game.skipTurn(game.getPlayer1(), true)) {
                     pause(2);
-                    out("\n      *** game status update ***\n");
+                    out("\n\n      *** game status update ***\n");
                     if (game.getDeck().getSize() < 2) {
                         out("There is 1 card left in the deck.");
                     } else {
@@ -93,7 +93,7 @@ public class Main {
                         out(" and " + game.getDiscardPile().size() + " cards in the discard pile.");
                     }
                     out(game.getPlayer2().getName() + " has " + game.getPlayer2().getHand().getSize() + " cards left.");
-                    out("\n      *** game status update *** ");
+                    out("\n      *** game status update *** \n");
                     playerOnesTurn(game, game.getPlayer1().getName());
                     if(game.getPlayer1().getHand().getSize() == 0) {
                         pause(2);
@@ -113,14 +113,14 @@ public class Main {
                 pause(2);
                 out("\nIt is " + game.getPlayer2().getName() + "'s turn.\n");
                 pause(2);
-                game.printHand(game.getPlayer2());
+                // game.printHand(game.getPlayer2());
                 if(!game.skipTurn(game.getPlayer2(), true)) {
                     playedCard = game.playerTwosTurn(true);
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
                     if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                         pause(2);
-                        out("\nplayerTwoName set the current color to " + game.getCurrentColor() + ".");
+                        out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
                     }
                     if(game.getPlayer2().getHand().getSize() == 0) {
                         pause(2);
@@ -220,8 +220,6 @@ public class Main {
                         discardNumberInt--;
                         hand = game.getPlayer1().getHand().getAllCards();
                         Card cardToDiscard = hand.get(discardNumberInt);
-                        pause(2);
-                        out("\nYou have chosen to discard the card " + cardToDiscard.getPrintString() + ".");
                         p1_chosenColor = "";
                         if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
                                 || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
@@ -237,9 +235,7 @@ public class Main {
                         if(game.getPlayer1().isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
                             game.getPlayer1().getHand().discard(cardToDiscard);
                             pause(2);
-                            out("\nYou have successfully discarded the card " + cardToDiscard.getPrintString() + ".\n");
-                            pause(2);
-                            game.printHand(game.getPlayer1());
+                            out("\nYou have successfully discarded the card " + cardToDiscard.getPrintString() + ".");
                             game.setCurrentPlayedCard(cardToDiscard);
                             game.getPlayer1().setLastPlayedCard(cardToDiscard);
                             game.getDiscardPile().add(cardToDiscard);

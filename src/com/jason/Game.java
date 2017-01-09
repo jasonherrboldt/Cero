@@ -234,6 +234,8 @@ public class Game {
             Lpc nn-nw, Cpc n: (should never happen - other user should have skipped a turn)
             Lpc nn-nw, Cpc w: (should never happen - other user should have skipped a turn)
          */
+        Main.out("currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
+        printHand(player2);
         throw new IllegalStateException("Logic fell through all conditionals.");
     }
 
@@ -246,6 +248,8 @@ public class Game {
         }
         Card returnCard = playerTwoMove(printOuts);
         if(returnCard == null) {
+            Main.out("currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
+            printHand(player2);
             throw new IllegalStateException("Game.playerTwoMove returned a null card to Game.playerTwosFirstMove.");
         } else {
             discardPile.add(returnCard);
@@ -303,12 +307,14 @@ public class Game {
             printHand(player2);
             throw new IllegalStateException("Player two attempted an illegal move.");
         } else {
-            // Main.out("oh hai from Player.getDumbStrategyCard. isLegalDiscard just returned true.");
             player2.setLastPlayedCard(cardToDiscard);
             player2.getHand().discard(cardToDiscard);
             if(cardToDiscard.isColorlessCard()) { // wild or wd4
                 String playerTwosChosenColor = player2.selectNewColor();
                 if(playerTwosChosenColor == null) {
+                    Main.out("Player two attempted an illegal move. cardToDiscard: " + cardToDiscard.getPrintString()
+                            + ", currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
+                    printHand(player2);
                     throw new IllegalStateException("playerTwosChosenColor may not be null here.");
                 } else {
                     player2.setChosenColor(playerTwosChosenColor);
@@ -351,8 +357,13 @@ public class Game {
             }
             Card card = deck.popCard();
             if(printOuts) {
-                Main.pause(2);
-                Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+                if(isPlayerOnesTurn) {
+                    Main.pause(2);
+                    Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+                } else {
+                    Main.pause(2);
+                    Main.out("\nAdding a card to " + player.getName()+ "'s hand.");
+                }
             }
             player.getHand().addCard(card);
         }
