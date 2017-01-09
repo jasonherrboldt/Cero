@@ -79,7 +79,6 @@ public class Game {
         } else {
             deck.shuffle();
             dealHands();
-
             // for testing:
             if (firstPlayedCard == null) {
                 currentPlayedCard = verifyFirstCard(deck.popCard());
@@ -506,7 +505,7 @@ public class Game {
             for(String s : allCards) {
                 if(count < 15) { // debug
                     if(count < 10) {
-                        Main.out("0" + count + ": " + s);
+                        Main.out(" " + count + ": " + s);
                         count++;
                     } else {
                         Main.out(count + ": " + s);

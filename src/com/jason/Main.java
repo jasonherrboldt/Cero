@@ -28,16 +28,14 @@ public class Main {
     public static void main(String[] args) {
 
         // un-comment out the block below to get the user's name.
-//        outNoReturn("Please enter your name (no special characters): ");
-//        String userName = System.console().readLine();
-//        while(!isValid(name)) {
-//            outNoReturn("Please try again. ");
-//            out("Allowed characters are a-z, A-Z, and space: ");
-//            userName = System.console().readLine();
-//        }
-//        System.out.println("Welcome, " + name + "! Let's begin.");
+//        pause(2);
+//        String userName = getUserResponse_string("\nPlease enter your name:");
+//        pause(2);
+//        System.out.println("\nWelcome, " + userName + "! Let's begin.");
 
         String userName = "David Lightman";
+
+        // String userName = "David Lightman";
         boolean innerWinnerExists = false;
         boolean winnerIsPlayerOne = false;
         int playerOneScore = 0;
@@ -50,11 +48,6 @@ public class Main {
         Game game = new Game(userName, true);
         game.startGame(null, true);
         String playerTwoName = game.getPlayer2().getName();
-
-        // un-comment out the block below to display player two's name to the user.
-//        pause(2);
-//        out("\nPlayer Two's name is " + playerTwoName + ".");
-
         pause(2);
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
         if(game.isPlayerOnesTurn()) {
@@ -65,35 +58,24 @@ public class Main {
             out("\nBy toss of a coin, " + playerTwoName + " has the first move.");
         }
         Card playedCard;
-//        pause(2);
-//        out("");
-//        game.printHand(game.getPlayer2());
         playedCard = game.playFirstHand(true);
         if(playedCard != null) { // handle card player two just discarded
             game.setPlayerOnesTurn(true);
             pause(2);
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString() + ".");
-//            if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-//                pause(2);
-//                out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
-//                game.draw(game.getPlayer1(), true);
-//                game.draw(game.getPlayer1(), true);
-//                game.draw(game.getPlayer1(), true);
-//                game.draw(game.getPlayer1(), true);
-//            } else if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-//                pause(2);
-//                out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
-//            } else if(playedCard.getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
-//                game.draw(game.getPlayer1(), true);
-//                game.draw(game.getPlayer1(), true);
-//            }
+            if(playedCard.getFace().equalsIgnoreCase(Card.WILD)
+                    || playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                pause(2);
+                out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
+            }
         }
-        // while (playerOneScore < winningScore && playerTwoScore < winningScore) {
-        while(!innerWinnerExists) {
+
+        while (playerOneScore < winningScore && playerTwoScore < winningScore) {
+        // while(!innerWinnerExists) {
             if(game.isPlayerOnesTurn()) {
                 if (!game.skipTurn(game.getPlayer1(), true)) {
                     pause(2);
-                    out("\n\n      *** game status update ***\n");
+                    out("\n\n      === game status update ===\n");
                     if (game.getDeck().getSize() < 2) {
                         out("There is 1 card left in the deck.");
                     } else {
@@ -109,13 +91,11 @@ public class Main {
                     } else {
                         out(game.getPlayer2().getName() + " has 1 card left.");
                     }
-                    out("\n      *** game status update *** \n");
+                    out("\n      === game status update === \n");
                     playerOnesTurn(game);
                     if(game.getPlayer1().getHand().getSize() == 0) {
                         pause(2);
                         out("\n" + game.getPlayer1().getName() + " has discarded the last card!");
-                        pause(2);
-                        out("\nSetting innerWinnerExists to true...");
                         innerWinnerExists = true;
                         winnerIsPlayerOne = true;
                     }
@@ -133,7 +113,8 @@ public class Main {
                     playedCard = game.playerTwosTurn(true);
                     pause(2);
                     out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString());
-                    if(playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                    if(playedCard.getFace().equalsIgnoreCase(Card.WILD)
+                            || playedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                         pause(2);
                         out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
                     }
@@ -165,7 +146,9 @@ public class Main {
                     winnerName = game.getPlayer2().getName();
                 }
                 pause(2);
-                out("\nCongratulations, " + winnerName + "! You've won this round. Tallying your score...");
+                out("\nCongratulations, " + winnerName + "! You've won this round.");
+                pause(2);
+                out("\nTallying your score...");
                 if(winnerIsPlayerOne) {
                     if(game.getPlayer2().getHand().getSize() < 1) {
                         pause(2);
@@ -175,7 +158,7 @@ public class Main {
                         playerOneScore += c.getValue();
                     }
                     pause(2);
-                    out("\nYour score is " + playerOneScore);
+                    out("\nYour score is " + playerOneScore + ".");
                 } else {
                     if(game.getPlayer1().getHand().getSize() < 1) {
                         pause(2);
@@ -185,7 +168,12 @@ public class Main {
                         playerTwoScore += c.getValue();
                     }
                     pause(2);
-                    out("\nYour score is " + playerTwoScore + ".\n");
+                    out("\nYour score is " + playerTwoScore + ".");
+                }
+                if(playerOneScore < 500 && playerTwoScore < 500) {
+                    pause(2);
+                    out("\nStarting a new game...\n");
+                    innerWinnerExists = false;
                 }
             }
         }
@@ -203,29 +191,30 @@ public class Main {
         String p1Name = game.getPlayer1().getName();
         
         pause(2);
-        out("\nIt's your turn, " + p1Name + "\n");
+        out("\nIt's your turn, " + p1Name + ".\n");
         pause(2);
         game.printHand(game.getPlayer1());
 
         boolean cardDiscarded = false;
         while(!cardDiscarded) {
-            pause(2);
             if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD)
                     || game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                pause(2);
                 discardAnswer = getUserResponse_yesNo("\nThe current played card is "
                         + game.getCurrentPlayedCard().getPrintString() + " and the current color is "
                         + game.getCurrentColor().toLowerCase() + ".\n\nAre you ready to discard?");
             } else {
+                pause(2);
                 discardAnswer = getUserResponse_yesNo("\nThe current played card is "
                         + game.getCurrentPlayedCard().getPrintString() + ". Are you ready to discard?");
             }
             if(discardAnswer == null) {
                 throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
             } else {
-                // pause(2);
                 if(discardAnswer.equalsIgnoreCase("yes") || discardAnswer.equalsIgnoreCase("y")) {
                     p1HandSize = game.getPlayer1().getHand().getSize();
-                    discardNumber = getUserResponse_integer("\nWhich card would you like to discard?", 1, p1HandSize);
+                    discardNumber = getUserResponse_integer("\nWhich card would you like to discard? " +
+                            "\n\nEnter the number to the left of the card:", 1, p1HandSize);
                     if(discardNumber == null) {
                         throw new IllegalStateException("getUserResponse_integer returned null.");
                     }
@@ -256,7 +245,7 @@ public class Main {
                             cardDiscarded = true;
                         } else {
                             pause(2);
-                            out("\nI'm sorry " + p1Name + ", but that is not a valid card choice. Please try again.");
+                            out("\nI'm sorry " + p1Name + ", but that is not a legal card choice.\n\nPlease try again.");
                             pause(2);
                             out("\nThe current played card is " + currentPlayedCard.getPrintString()
                                     + ", and the current color is " + currentColor.toLowerCase()
@@ -276,8 +265,6 @@ public class Main {
                     throw new IllegalStateException("getUserResponse_yesNo returned a null answer to main.");
                 } else {
                     if(drawAnswer.equalsIgnoreCase("yes") || drawAnswer.equalsIgnoreCase("y")) {
-                        pause(2);
-                        out("\nOK, drawing a card from the deck...");
                         game.draw(game.getPlayer1(), true);
                         out("");
                         pause(2);
@@ -379,7 +366,7 @@ public class Main {
                         + ", maxInt = " + maxIntInclusive + ". Both must be >= 0. No action taken, returned null.");
                 return null;
             }
-            if(minIntInclusive >= maxIntInclusive - 1) { // minimum range of two ints to pick from
+            if(minIntInclusive > maxIntInclusive) { // minimum range of two ints to pick from
                 out("Main.getUserResponse received invalid minInt and maxInt values: minInt = " + minIntInclusive
                         + ", maxInt = " + maxIntInclusive + ". minInt must be < maxInt. " +
                         "No action taken, returned null.");
@@ -392,13 +379,15 @@ public class Main {
                     try {
                         responseInt = Integer.parseInt(response);
                     } catch (NumberFormatException e) {
-                        out("Your response " + response + " could not be converted to an integer.");
+                        pause(2);
+                        out("\nYour response " + response + " could not be converted to a number.");
                     }
                     if(responseInt >= minIntInclusive && responseInt <= maxIntInclusive) {
                         validAnswerReceived = true;
                     } else {
                         pause(2);
                         out(userCorrectionMessage);
+                        pause(2);
                     }
                 }
             }
@@ -419,13 +408,13 @@ public class Main {
             boolean validAnswerReceived = false;
             String response = "";
             while(!validAnswerReceived) {
-                outNoReturn(question);
+                outNoReturn(question + " ");
                 response = System.console().readLine();
                 if(isValid(response)) {
                     validAnswerReceived = true;
                 } else {
                     pause(2);
-                    out(userCorrectionMessage + " (Acceptable characters are A-Z, a-z, and space.)");
+                    out(userCorrectionMessage + "\n\n(Acceptable characters are A-Z, a-z, and space.)");
                 }
             }
             return response;
@@ -457,7 +446,7 @@ public class Main {
                 validAnswerReceived = true;
             } else {
                 pause(2);
-                out(userCorrectionMessage + " Acceptable answers are red, blue, yellow, and green (case insensitive).");
+                out(userCorrectionMessage + "\n\nAcceptable answers are red, blue, yellow, and green (case insensitive).");
             }
         }
         return response;
