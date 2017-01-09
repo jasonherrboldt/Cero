@@ -287,7 +287,10 @@ public class Game {
         while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping while debug
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
-                Main.out("\nPlayer two is drawing ");
+                if(printOuts) {
+                    Main.pause(2);
+                    Main.out("\nPlayer two is drawing ");
+                }
                 draw(player2, printOuts);
             } else {
                 playerTwoHasDiscarded = true;

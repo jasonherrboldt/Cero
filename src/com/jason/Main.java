@@ -45,6 +45,7 @@ public class Main {
         int maxTestTurns = 10;
         int winningScore = 500;
 
+        pause(2);
         out("\nStarting a new game...");
         Game game = new Game(userName, true);
         game.startGame(null, true);
@@ -60,10 +61,10 @@ public class Main {
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString());
         if(game.isPlayerOnesTurn()) {
             pause(2);
-            out("\nYou have the first move, " + userName + ".");
+            out("\nBy toss of a coin, you have the first move, " + userName + ".");
         } else {
             pause(2);
-            out("\n" + playerTwoName + " has the first move.");
+            out("\nBy toss of a coin, " + playerTwoName + " has the first move.");
         }
         Card playedCard;
         playedCard = game.playFirstHand(true);
@@ -111,8 +112,7 @@ public class Main {
                 }
             } else {
                 pause(2);
-                out("\nIt is " + game.getPlayer2().getName() + "'s turn.\n");
-                pause(2);
+                out("\nIt is " + game.getPlayer2().getName() + "'s turn.");
                 // game.printHand(game.getPlayer2());
                 if(!game.skipTurn(game.getPlayer2(), true)) {
                     playedCard = game.playerTwosTurn(true);
