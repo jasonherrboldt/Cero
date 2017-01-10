@@ -2,34 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="01d775aa-b10c-47d4-9aef-2ee6d54141d6" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/Card.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/CardValueMap.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/Deck.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/Game.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/Hand.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/Main.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/com/jason/Player.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/Card.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/CardValueMap.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/Deck.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/Game.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/Hand.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/Main.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/com/jason/Player.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestCard.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestCardValueMap.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestDeck.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestGame.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestHand.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestMain.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/out/production/Cero/test/jason/TestPlayer.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Cero.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitIgnore" afterPath="$PROJECT_DIR$/.gitIgnore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/jason/Main.java" afterPath="$PROJECT_DIR$/src/com/jason/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,8 +31,8 @@
       <file leaf-file-name=".gitIgnore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitIgnore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="8" lean-forward="false" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+            <state relative-caret-position="60">
+              <caret line="4" column="8" lean-forward="true" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -777,8 +750,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitIgnore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="8" lean-forward="false" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+        <state relative-caret-position="60">
+          <caret line="4" column="8" lean-forward="true" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
           <folding />
         </state>
       </provider>
