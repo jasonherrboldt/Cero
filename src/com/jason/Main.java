@@ -15,7 +15,7 @@ public class Main {
 
     /*
 
-        *** READ ME ***
+        *** HOW TO RUN ***
 
         This program is meant to be run from the command line.
         Running it from within an IDE will not work due to the
@@ -52,7 +52,7 @@ public class Main {
         Mac:
         cd /Users/yourname/path/to/Cero_directory
         javac src/com/jason/*.java -d /Users/yourname/path/to/out, e.g
-        javac src/com/jason/*.java -d /Users/jasonherrboldt/Documents/My Code/Projects/Cero/out
+        javac src/com/jason/*.java -d /Users/jasonherrboldt/Documents/My\ Code/Projects/Cero/out
         java -cp ./out com.jason.Main
 
         Program will run.
@@ -111,6 +111,18 @@ public class Main {
         taunts.add(TAUNT_SIX);
 
         grumbles = new ArrayList<>();
+        grumbles.add("(" + game.getPlayer2().getName() + " is not amused.)");
+        grumbles.add("(" + game.getPlayer2().getName() + "'s patience is running thin.)");
+        grumbles.add("(" + game.getPlayer2().getName() + " grows weary of your cheap theatrics.)");
+        grumbles.add("(" + game.getPlayer2().getName() + " is one step closer to bringing on the Matrix.)");
+        grumbles.add("");
+        grumbles.add("");
+        grumbles.add("");
+        grumbles.add("");
+        grumbles.add("");
+        grumbles.add("");
+        grumbles.add("");
+        grumbles.add("");
         grumbles.add("");
         grumbles.add("");
         grumbles.add("");
@@ -148,7 +160,7 @@ public class Main {
                         pause();
                         out("\n" + game.getPlayer2().getName() + " set the current color to " + game.getCurrentColor() + ".");
                     }
-                    if(game.getPlayer1().getHand().getSize() == 1) {
+                    if(game.getPlayer2().getHand().getSize() == 1) {
                         pause();
                         out("\n" + game.getPlayer2().getName() + " has only one card left!");
                     }
@@ -187,26 +199,14 @@ public class Main {
         out("\n*** We have a winner! ***");
         pause();
         if(playerOneScore > playerTwoScore) {
-            out("\n" + game.getPlayer1().getName() + " was the first to break 100 points. Congratulations, " + game.getPlayer1().getName() + "!");
+            out("\n" + game.getPlayer1().getName() + " was the first to break 100 points.\n\nCongratulations, " + game.getPlayer1().getName() + "!");
             pause();
-            out("\n(Humanity is safe -- for now...)\n");
+            out("\n(Humanity is safe. For now...)\n");
         } else {
-            out("\n" + game.getPlayer2().getName() + " was the first to break 100 points. Congratulations, " + game.getPlayer2().getName() + "!");
+            out("\n" + game.getPlayer2().getName() + " was the first to break 100 points.\n\nCongratulations, " + game.getPlayer2().getName() + "!");
             pause();
             out("\n(" + game.getPlayer2().getName() + " is not surprised.)");
         }
-    }
-
-    /**
-     * @return a grumble from player two (only returns non-empty string 25% of the time)
-     */
-    public static String getWoprGrumble() {
-        grumbles.add("(" + game.getPlayer2().getName() + " is not amused.)");
-        Collections.shuffle(grumbles);
-        if(grumbles.size() > 0) {
-            return grumbles.get(0);
-        }
-        return "";
     }
 
     /**
@@ -273,7 +273,8 @@ public class Main {
         }
         if(game.getPlayer2().getHand().getSize() == 1) {
             out(game.getPlayer2().getName() + " has 1 card left.");
-        } else {
+        }
+        if(game.getPlayer2().getHand().getSize() == 0) {
             out(game.getPlayer2().getName() + " has no cards left!");
         }
         out("\n      === game status update === \n");
@@ -286,6 +287,18 @@ public class Main {
         Collections.shuffle(taunts);
         if(taunts.size() > 0) {
             return taunts.get(0);
+        }
+        return "";
+    }
+
+
+    /**
+     * @return a grumble from player two (only returns non-empty string 25% of the time)
+     */
+    public static String getWoprGrumble() {
+        Collections.shuffle(grumbles);
+        if(grumbles.size() > 0) {
+            return grumbles.get(0);
         }
         return "";
     }
