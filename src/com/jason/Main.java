@@ -149,6 +149,18 @@ public class Main {
                     if(game.getPlayer1().getHand().getSize() == 0) {
                         pause();
                         out("\n" + game.getPlayer1().getName() + " has discarded the last card!");
+
+                        // gotta add extra cards here
+                        if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                            game.draw(game.getPlayer2(), true);
+                            game.draw(game.getPlayer2(), true);
+                        }
+                        if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                            game.draw(game.getPlayer2(), true);
+                            game.draw(game.getPlayer2(), true);
+                            game.draw(game.getPlayer2(), true);
+                            game.draw(game.getPlayer2(), true);
+                        }
                         innerWinnerExists = true;
                         winnerIsPlayerOne = true;
                     }
@@ -181,6 +193,19 @@ public class Main {
                     if(game.getPlayer2().getHand().getSize() == 0) {
                         pause();
                         out("\n" + game.getPlayer2().getName() + " has discarded the last card!");
+
+                        // gotta add extra cards here
+                        if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.DRAW_TWO)) {
+                            game.draw(game.getPlayer1(), true);
+                            game.draw(game.getPlayer1(), true);
+                        }
+                        if(game.getCurrentPlayedCard().getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
+                            game.draw(game.getPlayer1(), true);
+                            game.draw(game.getPlayer1(), true);
+                            game.draw(game.getPlayer1(), true);
+                            game.draw(game.getPlayer1(), true);
+                        }
+
                         innerWinnerExists = true;
                         winnerIsPlayerOne = false;
                     }
@@ -415,14 +440,9 @@ public class Main {
                         if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
                                 || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
                             p1_chosenColor = getUserResponse_chosenColor();
-//                            out("p1_chosenColor has just been set to " + p1_chosenColor);
                             game.setCurrentColor(p1_chosenColor);
-//                            pause();
-//                            out("\nGame's current color has just been set to " + game.getCurrentColor());
                         } else {
                             game.setCurrentColor(cardToDiscard.getColor());
-//                            pause();
-//                            out("\nPlayer one just set game's current color to the card to discard's color, which is " + cardToDiscard.getColor() + ".");
                         }
                         game.getPlayer1().getHand().discard(cardToDiscard);
                         pause();

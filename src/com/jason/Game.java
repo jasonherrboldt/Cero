@@ -78,7 +78,7 @@ public class Game {
 
             // for debug: inject a custom hand for one of the players
 //            List<Card> testHand = new ArrayList<>();
-            // testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+//            testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
 //            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
 //            player1.setHand(testHand);
 //            deck.clearDeck();
