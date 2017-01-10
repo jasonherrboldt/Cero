@@ -19,6 +19,8 @@ public class Game {
      *
      *    MUST-HAVES:
      *
+     *      Update the ReadMe.
+     *
      *      Let the user enter the first letter of a chosen color instead of the whole word
      *
      *    NICE-TO-HAVES:
