@@ -1,4 +1,7 @@
 .idea/
+
 Cero.iml
-out/
-src/com/jason/*.class
+
+out/com/
+
+out/production/

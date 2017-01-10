@@ -7,57 +7,11 @@ import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Main class. Create a new game and run it.
+ * Main class. Create a new game and run it. See README for compile / run instructions.
  *
  * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */
 public class Main {
-
-    /*
-
-        *** HOW TO RUN ***
-
-        This program is meant to be run from the command line.
-        Running it from within an IDE will not work due to the
-        user interaction required to play the game. WILL throw exceptions.
-
-        Here's how to run it from the command line.
-
-        Step 1) Download and install Java 1.8
-
-        Download the Java 1.8 SDK from
-        http://www.oracle.com/technetwork/java/javase/downloads/index.html
-
-        Windows:
-        set PATH=[path\to\jdk\bin];%PATH%, e.g.
-        set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH%
-        (must be >= java 1.8)
-
-        Mac:
-        $ vim .bash_profile
-        export JAVA_HOME=$(/usr/path/to/java_home)
-
-        Step 2) Compile and run
-
-        Create a new folder in the Cero directory. Name it 'out'.
-
-        Paste these commands into your terminal window one at a time:
-
-        Windows:
-        cd C:\path\to\Cero_directory
-        javac src/com/jason/*.java -d C:\path\to\Cero_directory\out, e.g.
-        javac src/com/jason/*.java -d C:\rad\CeroIJ\out
-        java -cp ./out com.jason.Main
-
-        Mac:
-        cd /Users/yourname/path/to/Cero_directory
-        javac src/com/jason/*.java -d /Users/yourname/path/to/out, e.g
-        javac src/com/jason/*.java -d /Users/jasonherrboldt/Documents/My\ Code/Projects/Cero/out
-        java -cp ./out com.jason.Main
-
-        Program will run.
-
-     */
 
     private static final String userCorrectionMessage = "\nThat is not a valid response. Please try again.";
     private static final String invalidQuestionWarning =
