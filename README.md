@@ -14,11 +14,12 @@ Here's how to run it from the command line.
 
 1. Download and install Java 1.8
 
- Download the Java 1.8 SDK from [Oracle] (http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+ Download the Java 1.8 SDK from [Oracle] (http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
  Windows:
   * set PATH=[path\to\jdk\bin];%PATH%, e.g.
-  * set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH% (must be >= java 1.8)
+  * set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH% 
+  * (must be >= java 1.8)
 
  Mac:
   * $ vim .bash_profile
