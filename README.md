@@ -6,12 +6,9 @@ There are two players. The user remote-controls player one, and player two is th
 
 See [the Uno Wikipedia page](https://en.wikipedia.org/wiki/Uno_(card_game)) for a full list of game rules.
 
-Take it for a spin: 
-
 __HOW TO RUN__
 
-This program is meant to be run from the command line. Running it from within an IDE will not work due to the
-user interaction required to play the game. WILL throw exceptions.
+This program is meant to be run from the command line. Running it from within an IDE will throw null pointer exceptions due to the command line-driven user I/O required to play the game. 
 
 Here's how to run it from the command line.
 
@@ -29,12 +26,12 @@ Here's how to run it from the command line.
 
 2. Compile and run
 
- Paste these commands into your terminal window one at a time:
+ Paste these commands into your terminal window:
 
  Windows:
   * cd C:\path\to\Cero_directory
   * javac src/com/jason/*.java -d C:\path\to\Cero_directory\out, e.g.
-  * javac src/com/jason/*.java -d C:\rad\CeroIJ\out
+  * javac src/com/jason/*.java -d C:\Cero\out
   * java -cp ./out com.jason.Main
 
  Mac:
