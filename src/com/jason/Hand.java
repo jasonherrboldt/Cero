@@ -342,4 +342,19 @@ public class Hand {
     public void setHand(List<List<Card>> hand) { // no test needed
         listOfListOfCards = hand;
     }
+
+    /**
+     * @return a list of all existing colors in a hand
+     */
+    public List<String> getColors() { // tested
+        List<String> colors = new ArrayList<>();
+        for(List<Card> colorList : listOfListOfCards) {
+            if(colorList.size() > 0) {
+                if(!colorList.get(0).getColor().equalsIgnoreCase(Card.COLORLESS)) {
+                    colors.add(colorList.get(0).getColor());
+                }
+            }
+        }
+        return colors;
+    }
 }

@@ -190,19 +190,19 @@ public class TestPlayer {
         assertTrue(strategyReplaced);
     }
 
-    @Test
-    public void testPlayer_pickStrategyColor() {
-        // Can't test for a dumb player -- returns a random color.
-        // Bold and cautious players always return color of highest count.
-        player2 = new Player("", true);
-        player2.setHand(classHand.getAllCards());
-
-        player2.setStrategy(Player.STRATEGY_BOLD);
-        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
-
-        player2.setStrategy(Player.STRATEGY_CAUTIOUS);
-        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
-    }
+//    @Test
+//    public void testPlayer_pickStrategyColor() {
+//        // Can't test for a dumb player -- returns a random color.
+//        // Bold and cautious players always return color of highest count.
+//        player2 = new Player("", true);
+//        player2.setHand(classHand.getAllCards());
+//
+//        player2.setStrategy(Player.STRATEGY_BOLD);
+//        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
+//
+//        player2.setStrategy(Player.STRATEGY_CAUTIOUS);
+//        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
+//    }
 
     @Test
     public void testPlayer_changeStrategy() {
@@ -604,6 +604,19 @@ public class TestPlayer {
         }
     }
 
+    /*
+        strategyHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
+        strategyHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
+        strategyHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
+        strategyHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
+        strategyHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+        strategyHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
+        strategyHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
+        strategyHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
+        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
+        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+     */
+
     /**
      * This test depends on looping many times to determine that a random selection has changed.
      * If this test fails, simply run it again - it should not fail more than once in a blue moon.
@@ -612,6 +625,7 @@ public class TestPlayer {
     public void testPlayer_selectNewColor_dumb() {
         player2 = new Player("", true);
         player2.setStrategy(Player.STRATEGY_DUMB);
+        player2.setHand(strategyHand.getAllCards());
         player2.setLastPlayedCard(wild);
         String firstRandomColor = player2.selectNewColor();
         boolean differentColorFound = false;

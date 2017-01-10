@@ -208,25 +208,25 @@ public class Player {
         return false;
     }
 
-    /**
-     * Returns a chosen color based on the player's strategy. Bold and cautious strategies pick the color
-     * with the most cards left; dumb picks a color completely at random.
-     *
-     * @return the chosen color
-     */
-    public String pickStrategyColor() { // tested
-        if (!isPlayer2()) {
-            throw new IllegalStateException("Player.pickStrategyColor called for player 1.");
-        } else {
-            if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
-                // return a random color
-                Collections.shuffle(colors);
-                return colors.get(0);
-            } else {
-                return (hand.getHighestColor());
-            }
-        }
-    }
+//    /**
+//     * Returns a chosen color based on the player's strategy. Bold and cautious strategies pick the color
+//     * with the most cards left; dumb picks a color completely at random.
+//     *
+//     * @return the chosen color
+//     */
+//    public String pickStrategyColor() { // tested
+//        if (!isPlayer2()) {
+//            throw new IllegalStateException("Player.pickStrategyColor called for player 1.");
+//        } else {
+//            if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
+//                // return a random color
+//                Collections.shuffle(colors);
+//                return colors.get(0);
+//            } else {
+//                return (hand.getHighestColor());
+//            }
+//        }
+//    }
 
     /**
      * Let the program decide the best card to discard based on its strategy.
@@ -441,8 +441,12 @@ public class Player {
 
         // pick a random color if dumb, otherwise pick the color of the largest color group
         if(strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
-            Collections.shuffle(colors);
-            return colors.get(0); // tested
+            List<String> existingColors = getHand().getColors();
+            Collections.shuffle(existingColors);
+            if(existingColors.size() == 0) {
+                throw new IllegalStateException("Hand.getColors() returned an empty list to Player.selectNewColor().");
+            }
+            return(existingColors.get(0));
         } else { // must be bold or cautious
             return hand.getHighestColor(); // tested
         }

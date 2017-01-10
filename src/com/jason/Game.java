@@ -78,12 +78,20 @@ public class Game {
 
             // for debug: inject a custom hand for one of the players
 //            List<Card> testHand = new ArrayList<>();
+            // testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
 //            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
+//            player1.setHand(testHand);
+//            deck.clearDeck();
+//            discardPile.add(new Card(Card.YELLOW, Card.THREE, cvm));
+//            discardPile.add(new Card(Card.YELLOW, Card.THREE, cvm));
+//            discardPile.add(new Card(Card.YELLOW, Card.THREE, cvm));
 //            player2.setHand(testHand);
-//            player2.setScore(99);
 
             // for testing:
             if (firstPlayedCard == null) {
+                if(deck.getSize() == 0 && discardPile.size() > 0) {
+                    refreshDeck();
+                }
                 currentPlayedCard = verifyFirstCard(deck.popCard());
             } else {
                 currentPlayedCard = firstPlayedCard;
@@ -110,6 +118,14 @@ public class Game {
             // tested
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
         } else {
+            
+            // debug
+            if(printOuts) {
+                Main.pause();
+                Main.out("");
+                printHand(player2);
+            }
+
             Card returnCard = null;
             if (!isPlayerOnesTurn) {
                 if(skipFirstTurn(player2, printOuts)) {
@@ -348,7 +364,10 @@ public class Game {
                     Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 } else {
                     Main.pause();
-                    Main.out("\n" + player.getName()+ " is drawing a card.");
+                    // Main.out("\n" + player.getName()+ " is drawing a card.");
+
+                    // debug
+                    Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 }
             }
             player.getHand().addCard(card);
@@ -389,6 +408,9 @@ public class Game {
         for(Player p : players) {
             List<Card> cards = new ArrayList<>();
             for(int i = 0; i < 7; i++) {
+                if(deck.getSize() == 0 && discardPile.size() > 0) {
+                    refreshDeck();
+                }
                 cards.add(deck.popCard());
             }
             p.setHand(cards);
@@ -410,6 +432,9 @@ public class Game {
                 deck.clearDeck();
                 deck.populate();
                 deck.shuffle();
+                if(deck.getSize() == 0 && discardPile.size() > 0) {
+                    refreshDeck();
+                }
                 card = deck.popCard();
             }
             return card;

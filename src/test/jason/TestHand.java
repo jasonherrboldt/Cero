@@ -264,4 +264,73 @@ public class TestHand {
         }
         return cards;
     }
+
+    @Test
+    public void testHand_getColors_full() {
+
+        // make a list of predicted colors in the realHand hand.
+        List<String> predictedRealHandColors = new ArrayList<>();
+        predictedRealHandColors.add(Card.BLUE);
+        predictedRealHandColors.add(Card.GREEN);
+        predictedRealHandColors.add(Card.RED);
+        predictedRealHandColors.add(Card.YELLOW);
+
+        // get the actual colors in the realHand hand.
+        List<String> actualRealHandColors = realHand.getColors();
+
+        // sort both lists
+        Collections.sort(predictedRealHandColors);
+        Collections.sort(actualRealHandColors);
+
+        // make sure it's the same list
+        // (don't check unless lists are exactly the same size)
+        if(predictedRealHandColors.size() != actualRealHandColors.size()) {
+            fail("unable to compare lists of different sizes.");
+        }
+
+        boolean mismatchFound = false;
+        for(int i = 0; i < predictedRealHandColors.size(); i++) {
+            if(!predictedRealHandColors.get(i).equalsIgnoreCase(actualRealHandColors.get(i))) {
+                mismatchFound = true;
+            }
+        }
+        assertFalse(mismatchFound);
+    }
+
+    @Test
+    public void testHand_getColors_notFull() {
+
+        // make a list of predicted colors in the realHand hand.
+        List<String> predictedRealHandColors = new ArrayList<>();
+        predictedRealHandColors.add(Card.BLUE);
+        predictedRealHandColors.add(Card.GREEN);
+
+        // make a copy of realHand and get rid of all colors other than blue and green.
+        Hand mockHand2 = new Hand();
+        mockHand2.setHand(mockHand);
+        mockHand2.discard(new Card(Card.YELLOW, Card.SIX, cvm));
+        mockHand2.discard(new Card(Card.YELLOW, Card.REVERSE, cvm));
+        mockHand2.discard(new Card(Card.RED, Card.ZERO, cvm));
+
+        // get the actual colors in the mockHand2 hand.
+        List<String> actualmockHand2Colors = mockHand2.getColors();
+
+        // sort both lists
+        Collections.sort(predictedRealHandColors);
+        Collections.sort(actualmockHand2Colors);
+
+        // make sure it's the same list
+        // (don't check unless lists are exactly the same size)
+        if(predictedRealHandColors.size() != actualmockHand2Colors.size()) {
+            fail("unable to compare lists of different sizes.");
+        }
+
+        boolean mismatchFound = false;
+        for(int i = 0; i < predictedRealHandColors.size(); i++) {
+            if(!predictedRealHandColors.get(i).equalsIgnoreCase(actualmockHand2Colors.get(i))) {
+                mismatchFound = true;
+            }
+        }
+        assertFalse(mismatchFound);
+    }
 }
