@@ -27,6 +27,8 @@ Here's how to run it from the command line.
 
 2. Compile and run
 
+ Create a new folder in the Cero directory. Name it "out". 
+
  Paste these commands into your terminal window:
 
  Windows:
