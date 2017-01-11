@@ -42,3 +42,7 @@ Here's how to run it from the command line.
   * javac src/com/jason/*.java -d /Users/yourname/path/to/out, e.g
   * javac src/com/jason/*.java -d /Users/jasonherrboldt/Documents/My\ Code/Projects/Cero/out
   * java -cp ./out com.jason.Main
+
+__RUN TESTS__
+
+The unit tests can be run locally in any IDE using junit-4.12.jar and hamcrest-core-1.3.jar dependencies. 
