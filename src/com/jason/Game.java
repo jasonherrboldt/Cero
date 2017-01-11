@@ -120,11 +120,11 @@ public class Game {
         } else {
             
             // debug
-            if(printOuts) {
-                Main.pause();
-                Main.out("");
-                printHand(player2);
-            }
+//            if(printOuts) {
+//                Main.pause();
+//                Main.out("");
+//                printHand(player2);
+//            }
 
             Card returnCard = null;
             if (!isPlayerOnesTurn) {
@@ -364,10 +364,10 @@ public class Game {
                     Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 } else {
                     Main.pause();
-                    // Main.out("\n" + player.getName()+ " is drawing a card.");
+                    Main.out("\n" + player.getName()+ " is drawing a card.");
 
                     // debug
-                    Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+                    // Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 }
             }
             player.getHand().addCard(card);

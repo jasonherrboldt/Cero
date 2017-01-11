@@ -17,7 +17,7 @@ public class Main {
     private static final String invalidQuestionWarning =
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
 
-    private static final int pauseSeconds = 1;
+    private static final int pauseSeconds = 2;
 
     // player two taunts
     private static List<String> taunts;
@@ -42,27 +42,27 @@ public class Main {
     public static void main(String[] args) {
 
         // hardcoding the user name for debug.
-        String userName = "David Lightman"; // debug
+        // String userName = "David Lightman"; // debug
 
         // un-comment out this block to get the user's name:
-//        pause();
-//        out("\nWelcome to Cero! The rules are essentially the same as Uno.");
-//        pause();
-//        out("\nThe first player to discard all cards wins the round,");
-//        pause();
-//        out("\nand the winner takes the value of the loser's cards.");
-//        pause();
-//        out("\nThe first player to reach " + winningScore + " points wins the game.");
-//        pause();
-//        out("\nTo interact with the game, simply follow the prompts");
-//        pause();
-//        out("\nand hit enter to submit.");
-//        pause();
-//        out("\nGood luck!");
-//        pause();
-//        String userName = getUserResponse_string("\nPlease enter your name:");
-//        pause();
-//        System.out.println("\nHello, " + userName + "! Let's begin.");
+        pause();
+        out("\nWelcome to Cero! The rules are essentially the same as Uno.");
+        pause();
+        out("\nThe first player to discard all cards wins the round,");
+        pause();
+        out("\nand the winner takes the value of the loser's cards.");
+        pause();
+        out("\nThe first player to reach " + winningScore + " points wins the game.");
+        pause();
+        out("\nTo interact with the game, simply follow the prompts");
+        pause();
+        out("\nand hit enter to submit.");
+        pause();
+        out("\nGood luck!");
+        pause();
+        String userName = getUserResponse_string("\nPlease enter your name:");
+        pause();
+        System.out.println("\nHello, " + userName + "! Let's begin.");
 
         boolean innerWinnerExists = false;
         boolean winnerIsPlayerOne = false;
@@ -128,9 +128,9 @@ public class Main {
                 if(!game.skipTurn(game.getPlayer2(), true)) {
 
                     // debug
-                    pause();
-                    out("");
-                    game.printHand(game.getPlayer2());
+//                    pause();
+//                    out("");
+//                    game.printHand(game.getPlayer2());
 
                     playedCard = game.playerTwosTurn(true);
                     pause();
@@ -217,8 +217,8 @@ public class Main {
 //        game.startGame(new Card(Card.YELLOW, Card.ONE, cvm), true); // debug
 
         // debug
-        pause();
-        out("\n" + game.getPlayer2().getName() + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
+//        pause();
+//        out("\n" + game.getPlayer2().getName() + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
 
         String playerTwoName = game.getPlayer2().getName();
         pause();
