@@ -190,36 +190,6 @@ public class TestPlayer {
         assertTrue(strategyReplaced);
     }
 
-//    @Test
-//    public void testPlayer_pickStrategyColor() {
-//        // Can't test for a dumb player -- returns a random color.
-//        // Bold and cautious players always return color of highest count.
-//        player2 = new Player("", true);
-//        player2.setHand(classHand.getAllCards());
-//
-//        player2.setStrategy(Player.STRATEGY_BOLD);
-//        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
-//
-//        player2.setStrategy(Player.STRATEGY_CAUTIOUS);
-//        assertEquals(player2.pickStrategyColor(), Card.YELLOW);
-//    }
-
-    @Test
-    public void testPlayer_changeStrategy() {
-        Game game = new Game("Player One");
-        game.getPlayer2().setStrategy(Player.STRATEGY_BOLD);
-        game.startGame(null, true);
-        // game.playFirstHand();
-        assertEquals(game.getPlayer2().getStrategy(), Player.STRATEGY_BOLD);
-        for(int i = 0; i < 5; i++) {
-            game.getPlayer1().getHand().discard(game.getPlayer1().getHand().getFirstCard());
-        }
-        assertTrue(game.getPlayer1().getHand().getSize() < 4);
-        game.setPlayerOnesTurn(false);
-        game.playerTwosTurn(false);
-        assertEquals(game.getPlayer2().getStrategy(), Player.STRATEGY_CAUTIOUS);
-    }
-
     @Test
     public void testPlayer_getBoldStrategy_exception() {
         player2 = new Player("", true);
@@ -603,19 +573,6 @@ public class TestPlayer {
             assertEquals(e.getMessage(), "Can only be called when player 2 discards a wild or wd4.");
         }
     }
-
-    /*
-        strategyHand.addCard(new Card(Card.GREEN, Card.THREE, cvm));
-        strategyHand.addCard(new Card(Card.BLUE, Card.FOUR, cvm));
-        strategyHand.addCard(new Card(Card.RED, Card.DRAW_TWO, cvm));
-        strategyHand.addCard(new Card(Card.RED, Card.EIGHT, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.ZERO, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.SIX, cvm));
-        strategyHand.addCard(new Card(Card.YELLOW, Card.REVERSE, cvm));
-        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
-        strategyHand.addCard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-     */
 
     /**
      * This test depends on looping many times to determine that a random selection has changed.

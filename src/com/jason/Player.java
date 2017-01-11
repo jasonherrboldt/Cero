@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
  *           If a current played card can be matched by color and number from p2's hand, p2 will play the card from
  *               the larger card group.
  *           Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
- *           Will switch to CAUTIOUS if player1 has < 4 cards. Will switch back to BOLD if player1 has > 3 cards.
  *
  *     CAUTIOUS:
  *           Discards non-numeric cards ASAP to prevent giving player one a higher score if p2 loses.
@@ -28,7 +27,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *     NEUTRAL: (for player1)
  *
  *     DUMB: will look blindly for first matching card in hand - will not try to switch the deck color to its favor.
- *             Randomly decides to play a non-numeric card if any are present.
+ *             Randomly decides to play a non-numeric card if any are present. Picks a color at random from its
+ *             hand when discarding a wild or WD4.
  *
  *    "A defensive strategy would advise playing a high card in order to reduce the point value of the hand.
  *    However, an offensive strategy would suggest playing a 0 when the player wants to continue on the current
@@ -207,26 +207,6 @@ public class Player {
         }
         return false;
     }
-
-//    /**
-//     * Returns a chosen color based on the player's strategy. Bold and cautious strategies pick the color
-//     * with the most cards left; dumb picks a color completely at random.
-//     *
-//     * @return the chosen color
-//     */
-//    public String pickStrategyColor() { // tested
-//        if (!isPlayer2()) {
-//            throw new IllegalStateException("Player.pickStrategyColor called for player 1.");
-//        } else {
-//            if (strategy.equalsIgnoreCase(Player.STRATEGY_DUMB)) {
-//                // return a random color
-//                Collections.shuffle(colors);
-//                return colors.get(0);
-//            } else {
-//                return (hand.getHighestColor());
-//            }
-//        }
-//    }
 
     /**
      * Let the program decide the best card to discard based on its strategy.
@@ -444,7 +424,10 @@ public class Player {
             List<String> existingColors = getHand().getColors();
             Collections.shuffle(existingColors);
             if(existingColors.size() == 0) {
-                throw new IllegalStateException("Hand.getColors() returned an empty list to Player.selectNewColor().");
+                // throw new IllegalStateException("Hand.getColors() returned an empty list to Player.selectNewColor().");
+                // here the player has a wild or a WD4 as the last card and is asked to pick a color
+                // any color will do, since the round is now effectively over
+                return getHand().getRandomColor();
             }
             return(existingColors.get(0));
         } else { // must be bold or cautious

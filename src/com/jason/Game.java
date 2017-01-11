@@ -14,29 +14,6 @@ import java.util.Stack;
  */
 public class Game {
 
-    /*
-     * TODO:
-     *
-     *    MUST-HAVES:
-     *
-     *      Update the ReadMe.
-     *
-     *      Let the user enter the first letter of a chosen color instead of the whole word
-     *
-     *    NICE-TO-HAVES:
-     *
-     *      Let the computer pick a phrase at random when it wins a game. Something like, "[player_two_name] has
-     *      a message for you: I win again. WAH WAH WAAAAAAAAAH..."
-     *
-     *      Once the user can play the computer, set up another game so that the computer
-     *      can play itself. Let each player pick a random strategy each time, and let them
-     *      play like 10k games. Each time a game is won, the game.play method will return
-     *      an object containing the winning player and the strategy it used to win. Whatever
-     *      class calls game.play will take that information, collate it, and display it to the
-     *      user after the 10k games have finished.
-     *
-     */
-
     private Deck deck;
     private Player player1; // the user
     private Player player2; // the computer
@@ -49,12 +26,12 @@ public class Game {
     private static final int MAX_P2_DRAW_LOOP = 100;
     private Card numeric; // generic starter card
 
-    public Game(String playerOneName) {
+    public Game(String playerOneName, String playerTwoName) {
         cvm = new CardValueMap();
         deck = new Deck();
         player1 = new Player(playerOneName, false);
         player1.setStrategy(Player.STRATEGY_NEUTRAL);
-        player2 = new Player("WOPR", true);
+        player2 = new Player(playerTwoName, true);
         player2.setRandomStrategy();
         isPlayerOnesTurn = Main.getRandomBoolean();
         discardPile = new Stack<>();
@@ -76,16 +53,18 @@ public class Game {
             deck.shuffle();
             dealHands();
 
-            // for debug: inject a custom hand for one of the players
+            // for testing:
+
+            // let p1 win first hand
 //            List<Card> testHand = new ArrayList<>();
-//            testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-//            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
+//            testHand.add(new Card(Card.YELLOW, Card.ONE, cvm));
 //            player1.setHand(testHand);
-//            deck.clearDeck();
-//            discardPile.add(new Card(Card.YELLOW, Card.THREE, cvm));
-//            discardPile.add(new Card(Card.YELLOW, Card.THREE, cvm));
-//            discardPile.add(new Card(Card.YELLOW, Card.THREE, cvm));
-//            player2.setHand(testHand);
+
+            // let p2 win first hand
+//            player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+//            List<Card> testHand2 = new ArrayList<>();
+//            testHand2.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+//            player2.setHand(testHand2);
 
             // for testing:
             if (firstPlayedCard == null) {
@@ -281,10 +260,6 @@ public class Game {
             throw new IllegalStateException("ERROR: Game.playerTwoMove called during player one's turn.");
         }
 
-        // switch from bold to cautious strategy if needed
-        if(player2.getStrategy().equalsIgnoreCase(Player.STRATEGY_BOLD) && player1.getHand().getSize() < 4) {
-            player2.setStrategy(Player.STRATEGY_CAUTIOUS); // tested in TestPlayer
-        }
         Card cardToDiscard = null;
         boolean playerTwoHasDiscarded = false;
         int i = 0;
@@ -551,7 +526,6 @@ public class Game {
 
     public void setCurrentPlayedCard(Card card) {
         this.currentPlayedCard = card;
-        // Main.out("oh hai from Game.setCurrentPlayedCard. cpc has just been changed to: " + currentPlayedCard.getPrintString());
     }
 
     public void setPlayerOnesTurn(boolean playerOnesTurn) {
