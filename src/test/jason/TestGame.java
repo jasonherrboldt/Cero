@@ -942,7 +942,7 @@ public class TestGame {
         game.setPlayerOnesTurn(false);
 
         // Make sure the happy path returns a card.
-        assertTrue(game.playerTwoMove(false) != null);
+        assertTrue(game.playerTwoDiscard(false) != null);
     }
 
     @Test

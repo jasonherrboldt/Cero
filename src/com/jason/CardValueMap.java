@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A map that connects card face values with numeric values.
+ * Maps card faces to numeric values.
  *
  * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  */

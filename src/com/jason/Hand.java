@@ -273,10 +273,14 @@ public class Hand {
      */
     public String getHighestColor() { // tested
         if(listOfListOfCards.size() > 0) {
-            // Hand is already sorted ascending by color group.
-            if(listOfListOfCards.get(0).size() > 0) {
-                if(!listOfListOfCards.get(0).get(0).getColor().equalsIgnoreCase(Card.COLORLESS)) {
-                    return listOfListOfCards.get(0).get(0).getColor();
+            List<String> colors = getColors();
+            if(colors.size() > 0) {
+                if(!colors.get(0).equalsIgnoreCase(Card.COLORLESS)) {
+                    return colors.get(0);
+                } else {
+                    if(colors.size() > 1) {
+                        return colors.get(1);
+                    }
                 }
             }
 

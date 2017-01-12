@@ -45,8 +45,7 @@ public class Main {
 
     // invalid user action warnings
     private static final String USER_CORRECTION_MESSAGE = "\nThat is not a valid response. Please try again.";
-    private static final String INVALID_QUESTION_WARNING =
-            "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
+    private static final String INVALID_QUESTION_WARNING = "Main.getUserResponse received a null or empty question.";
 
     // various global attributes
     private static final int WINNING_SCORE = 200;
@@ -61,6 +60,7 @@ public class Main {
     private static String playerOneName;
     private static String playerTwoName;
     private static int pauseSeconds;
+    // private static int pauseSeconds = 1;
 
     /**
      * Main method.
@@ -95,6 +95,9 @@ public class Main {
         announceWinner();
     }
 
+    /**
+     * Set the speed of the terminal print lines.
+     */
     private static void setOutputSpeed() {
         String speedReply = "";
         while(!speedReply.equals("1") && !speedReply.equals("2")) {
@@ -119,11 +122,11 @@ public class Main {
             }
         }
         pause();
-        out("\nThe output timing has been set.");
+        out("\nThe output speed has been set.");
     }
 
     /**
-     * Initialize class-level variables
+     * Initialize class-level variables, play first hand of game.
      *
      * @param printOuts whether or not to mute the console output.
      */
@@ -144,6 +147,12 @@ public class Main {
 
         playerOneName = game.getPlayer1().getName();
         playerTwoName = game.getPlayer2().getName();
+
+        // debug
+//        if(printOuts) {
+//            pause();
+//            out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
+//        }
 
         if(printOuts) {
             pause();
@@ -176,10 +185,6 @@ public class Main {
         out("\nand the winner takes the value of the loser's cards.");
         pause();
         out("\nThe first player to reach " + WINNING_SCORE + " points wins the game.");
-        pause();
-        out("\nTo interact with the game, simply follow the prompts");
-        pause();
-        out("\nand hit enter to submit.");
         pause();
         out("\nGood luck!");
         pause();
@@ -238,6 +243,10 @@ public class Main {
 //        CardValueMap cvm = new CardValueMap();
 //        game.startGame(new Card(Card.YELLOW, Card.ONE, cvm), true);
 
+        // debug
+//        pause();
+//        out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
+
         pause();
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString() + ".");
         if(game.isPlayerOnesTurn()) {
@@ -247,9 +256,8 @@ public class Main {
             pause();
             out("\nBy toss of a coin, " + playerTwoName + " has the first move.");
         }
-        Card playedCard;
-        playedCard = game.playFirstHand(true);
-        if(playedCard != null) { // handle card player two just discarded
+        Card playedCard = game.playFirstHand(true);
+        if(playedCard != null) { // must handle player two discard
             game.setPlayerOnesTurn(true);
             pause();
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString() + ".");
@@ -422,6 +430,9 @@ public class Main {
     }
 
     /**
+     * Dispenses a random player two comment, then removes that comment from the list.
+     * Lists are refilled when empty.
+     *
      * @return a random player two comment
      */
     public static String getRandomPlayerTwoComment(List<String> comments, String commentsName) {
@@ -431,7 +442,6 @@ public class Main {
             }
             Collections.shuffle(comments);
             String thisComment = comments.get(0);
-            // only show a comment once before refilling
             comments.remove(thisComment);
             return thisComment;
         }
@@ -640,7 +650,7 @@ public class Main {
      * @param maxIntInclusive the maximum inclusive integer the user must input
      * @return                the user's answer - guaranteed to be integer parsable
      */
-    public static String getUserResponse_integer(String question, int minIntInclusive, int maxIntInclusive) { // tested
+    private static String getUserResponse_integer(String question, int minIntInclusive, int maxIntInclusive) { // tested
         if(question == null || question.equals("")) {
             throw new IllegalArgumentException(INVALID_QUESTION_WARNING);
         } else {

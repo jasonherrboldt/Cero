@@ -246,9 +246,16 @@ public class Player {
         } else {
             currentPlayedCardColor = currentPlayedCard.getColor();
         }
-        if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+        if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
+                || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
             // return the highest numeric face of currentColor
-            return hand.getHighestFace(currentColor, true); // tested
+            return hand.getHighestFace(currentColor, false); // tested
+
+            // todo
+            // don't we need an else if here for WD4?
+            // if P2 discarded a WD4 last time, shouldn't it try to match the color that it just set?
+            // ditto cautious strategy
+
         } else {
             // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
             int matchingColorGroupSize = hand.getColorGroupSize(currentColor);
@@ -256,7 +263,6 @@ public class Player {
                 CardValueMap cvm = new CardValueMap();
                 Card zeroColorMatch = new Card(currentColor, Card.ZERO, cvm);
                 if(hand.hasCard(zeroColorMatch)) {
-                    // Main.out("oh hai from Player.getCautiousStrategyCard. About to return the card zeroColorMatch: " + zeroColorMatch.getPrintString());
                     return zeroColorMatch; // tested
                 }
             }
@@ -281,7 +287,6 @@ public class Player {
             // if only one is non-null, return it.
             if(numberMatch != null || colorMatch != null) {
                 if(numberMatch != null) {
-                    // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
                     return numberMatch; // tested for non-zero
                 } else {
                     return colorMatch; // tested
@@ -330,7 +335,8 @@ public class Player {
             currentPlayedCardColor = currentPlayedCard.getColor();
         }
 
-        if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)) {
+        if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
+                || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
             // return the highest non-numeric face of currentColor
             return hand.getHighestFace(currentColor, false); // tested
         } else {

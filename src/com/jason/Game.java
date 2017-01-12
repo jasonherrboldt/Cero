@@ -24,7 +24,8 @@ public class Game {
     private String currentColor;
     private boolean isFirstMove;
     private static final int MAX_P2_DRAW_LOOP = 100;
-    private Card numeric; // generic starter card
+    // generic last played card at first move
+    private Card numeric;
 
     public Game(String playerOneName, String playerTwoName) {
         cvm = new CardValueMap();
@@ -66,6 +67,20 @@ public class Game {
 //            testHand2.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
 //            player2.setHand(testHand2);
 
+
+            // custom p2 move
+            // make sure p1 can discard right out of the gate.
+//            player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+//            player1.getHand().addCard(new Card(Card.GREEN, Card.NINE, cvm));
+            // set player two's strategy
+            // player2.setStrategy(Player.STRATEGY_CAUTIOUS);
+            // stack p2's hand
+//            List<Card> testHand = new ArrayList<>();
+//            testHand.add(new Card(Card.GREEN, Card.EIGHT, cvm));
+//            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
+//            player2.setHand(testHand);
+
+
             // for testing:
             if (firstPlayedCard == null) {
                 if(deck.getSize() == 0 && discardPile.size() > 0) {
@@ -80,7 +95,6 @@ public class Game {
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
 
-            // Let the players see how many cards are in each other's decks.
             player1.updateOtherPlayersHandCount(player2.showHandCount());
             player2.updateOtherPlayersHandCount(player1.showHandCount());
         }
@@ -233,7 +247,7 @@ public class Game {
         if(isPlayerOnesTurn) {
             throw new IllegalStateException("Called while isPlayerOnesTurn == true");
         }
-        Card returnCard = playerTwoMove(printOuts);
+        Card returnCard = playerTwoDiscard(printOuts);
         if(returnCard == null) {
             Main.out("currentPlayedCard: " + currentPlayedCard + ", currentColor: " + currentColor + ".\n");
             printHand(player2);
@@ -247,12 +261,12 @@ public class Game {
     }
 
     /**
-     * A player's chance to move.
+     * Player two's discard.
      *
      * @param printOuts whether or not to mute the console output.
      * @return          the card player two has chosen to discard
      */
-    public Card playerTwoMove(boolean printOuts) { // *** MORE TESTING NEEDED - possibly functional only ***
+    public Card playerTwoDiscard(boolean printOuts) {
         if(deck.getDeckStack().empty() && discardPile.isEmpty()) {
             Main.out("WARN: Game.playerTwoMove: both deck and discard pile are empty.");
         }
@@ -263,7 +277,7 @@ public class Game {
         Card cardToDiscard = null;
         boolean playerTwoHasDiscarded = false;
         int i = 0;
-        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping
+        while(!playerTwoHasDiscarded && i < MAX_P2_DRAW_LOOP) {  // prevent infinite looping in case of error
             cardToDiscard = player2.decidePlayerTwoDiscard(currentPlayedCard, currentColor);
             if (cardToDiscard == null) {
                 draw(player2, printOuts);
@@ -345,7 +359,12 @@ public class Game {
                     // Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 }
             }
-            player.getHand().addCard(card);
+            // be careful - non-native method args are pass by value in java!
+            if(player.isPlayer2()) {
+                player2.getHand().addCard(card);
+            } else {
+                player1.getHand().addCard(card);
+            }
         }
     }
 
