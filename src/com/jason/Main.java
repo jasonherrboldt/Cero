@@ -49,10 +49,8 @@ public class Main {
             "WARN: Main.getUserResponse received a null or empty question. No action taken, returned null.";
 
     // various global attributes
-    private static final int PAUSE_SECONDS = 1;
     private static final int WINNING_SCORE = 200;
     private static final int EMPTY_GRUMBLE_LIMIT = 10;
-
     private static Game game;
     private static boolean winnerIsPlayerOne;
     private static boolean handWinnerExists;
@@ -62,6 +60,7 @@ public class Main {
     private static boolean cardDiscarded;
     private static String playerOneName;
     private static String playerTwoName;
+    private static int pauseSeconds;
 
     /**
      * Main method.
@@ -69,10 +68,9 @@ public class Main {
      * @param args arguments
      */
     public static void main(String[] args) {
+        setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables(true);
-
-        // loop until one of the players reaches the winning score
         while (playerOneScore < WINNING_SCORE && playerTwoScore < WINNING_SCORE) {
             if(game.isPlayerOnesTurn()) {
                 handlePlayerOneTurn();
@@ -85,7 +83,6 @@ public class Main {
                 } else {
                     playerTwoScore = processWinner(game.getPlayer2());
                 }
-                // play another hand if neither player broke the winning score
                 if(playerOneScore < WINNING_SCORE && playerTwoScore < WINNING_SCORE) {
                     handWinnerExists = false;
                     game.setIsFirstMove(true);
@@ -96,6 +93,33 @@ public class Main {
             }
         }
         announceWinner();
+    }
+
+    private static void setOutputSpeed() {
+        String speedReply = "";
+        while(!speedReply.equals("1") && !speedReply.equals("2")) {
+            pauseSeconds = 2;
+            pause();
+            out("\nBefore we begin, please chose the output speed.");
+            pause();
+            out("\nRight now, the output speed is");
+            pause();
+            out("\nonce every two seconds.");
+            pause();
+            pauseSeconds = 1;
+            out("\nThis is a bit faster,");
+            pause();
+            out("\nwith outputs coming once");
+            pause();
+            out("\nevery second.");
+            pause();
+            speedReply = getUserResponse_integer("\nChoose 1 or 2, or enter 3 to see the demo again:", 1, 3);
+            if(speedReply.equals("1")) {
+                pauseSeconds = 1;
+            }
+        }
+        pause();
+        out("\nThe output timing has been set.");
     }
 
     /**
@@ -124,7 +148,7 @@ public class Main {
         if(printOuts) {
             pause();
             out("\nYou will be playing against " + playerTwoName + ".");
-            game = playNewHand();
+            playNewHand();
         }
 
         // player two occasionally grumbles when it is forced to skip a turn
@@ -169,8 +193,8 @@ public class Main {
      */
     private static String pickRandomP2Name() {
         if(playerTwoNames != null) {
-            Collections.shuffle(playerTwoNames);
             if(playerTwoNames.size() > 0) {
+                Collections.shuffle(playerTwoNames);
                 return playerTwoNames.get(0);
             }
         }
@@ -180,7 +204,7 @@ public class Main {
     /**
      * Refill player two grumbles
      */
-    public static void populatePlayerTwoComments(String commentsName) {
+    private static void populatePlayerTwoComments(String commentsName) {
         if(commentsName.equalsIgnoreCase(GRUMBLES)) {
             playerTwoGrumbles.add("(" + playerTwoName + P2_GRUMBLE_ONE);
             playerTwoGrumbles.add("(" + playerTwoName + P2_GRUMBLE_TWO);
@@ -204,7 +228,7 @@ public class Main {
     /**
      * Start a new hand. Outer game runs inner games until one of the players reaches the max score.
      */
-    private static Game playNewHand() {
+    private static void playNewHand() {
         pause();
         out("\nStarting a new game...");
         game.startGame(null, true);
@@ -235,7 +259,6 @@ public class Main {
                 out("\n" + playerTwoName + " set the current color to " + game.getCurrentColor() + ".");
             }
         }
-        return game;
     }
 
     /**
@@ -518,6 +541,8 @@ public class Main {
                 pause();
                 out("\nI'm sorry " + playerOneName + ", but that is not a legal card choice.");
                 pause();
+                out("\nSelect a card that matches the face or the color of the current card.");
+                pause();
                 out("\nPlease try again.");
                 if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
                         || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
@@ -537,7 +562,7 @@ public class Main {
      */
     static void pause() {
         try {
-            TimeUnit.SECONDS.sleep(PAUSE_SECONDS);
+            TimeUnit.SECONDS.sleep(pauseSeconds);
         } catch (InterruptedException e) {
             throw new IllegalStateException("TimeUnit.SECONDS.sleep threw an interrupted exception.");
         }
@@ -616,8 +641,8 @@ public class Main {
      * @return                the user's answer - guaranteed to be integer parsable
      */
     public static String getUserResponse_integer(String question, int minIntInclusive, int maxIntInclusive) { // tested
-        if(isNullOrEmpty(question, INVALID_QUESTION_WARNING)) {
-            return null;
+        if(question == null || question.equals("")) {
+            throw new IllegalArgumentException(INVALID_QUESTION_WARNING);
         } else {
             boolean validAnswerReceived = false;
             String response = "";

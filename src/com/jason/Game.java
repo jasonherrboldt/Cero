@@ -477,7 +477,7 @@ public class Game {
      *
      * @param player the given player
      */
-    public void printHand(Player player) { // no test needed
+    void printHand(Player player) { // no test needed
         if(player.getHand() == null) {
             Main.out("WARN: Game.printHand called with a null hand. No action taken.");
         } else {
