@@ -8,7 +8,7 @@ See [the Uno Wikipedia page](https://en.wikipedia.org/wiki/Uno_(card_game)) for 
 
 __HOW TO RUN__
 
-This program is meant to be run from the command line. Running it as a Java application from within an IDE will throw null pointer exceptions due to the command line-driven user I/O required to play the game. A terminal window is required.
+This program is meant to be run from the command line. Running it as a Java application from within an IDE will throw null pointer exceptions due to the command line-driven user I/O required to play the game.
 
 Here's how to run it from the command line.
 
@@ -17,8 +17,7 @@ Here's how to run it from the command line.
  Download the Java 1.8 SDK from [Oracle] (http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
  Windows:
-  * set PATH=[path\to\jdk\bin];%PATH%, e.g.
-  * set PATH=C:\Program Files\Java\jdk1.8.0_111\bin;%PATH% 
+  * set PATH=[path\to\jdk\bin];%PATH%
   * (must be >= java 1.8)
 
  Mac:
@@ -33,14 +32,12 @@ Here's how to run it from the command line.
 
  Windows:
   * cd C:\path\to\Cero_directory
-  * javac src/com/jason/*.java -d C:\path\to\Cero_directory\out, e.g.
-  * javac src/com/jason/*.java -d C:\Cero\out
+  * javac src/com/jason/*.java -d C:\path\to\Cero_directory\out
   * java -cp ./out com.jason.Main
 
  Mac:
   * cd /Users/yourname/path/to/Cero_directory
-  * javac src/com/jason/*.java -d /Users/yourname/path/to/out, e.g
-  * javac src/com/jason/*.java -d /Users/jasonherrboldt/Documents/My\ Code/Projects/Cero/out
+  * javac src/com/jason/*.java -d /Users/yourname/path/to/out
   * java -cp ./out com.jason.Main
 
 __UNIT TESTS__
