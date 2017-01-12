@@ -37,7 +37,7 @@ Here's how to run it from a terminal window.
 
  Mac:
   * cd /Users/yourname/path/to/Cero_directory
-  * javac src/com/jason/*.java -d /Users/yourname/path/to/out
+  * javac src/com/jason/*.java -d /Users/yourname/path/to/Cero_directory/out
   * java -cp ./out com.jason.Main
 
 __UNIT TESTS__
