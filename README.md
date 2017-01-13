@@ -23,7 +23,9 @@ Here's how to run it from a terminal window.
 
  Mac:
   * Open a terminal window and type "vim" or "emacs" to see if either is already installed. If not, you can download and install Vim [here] (http://macvim-dev.github.io/macvim/) or Emacs [here] (https://emacsformacosx.com/). There are many guides available online for both. 
-  * Use either Vim or Emacs to add the following to your .bash_profile document: export JAVA_HOME=$(/usr/path/to/java_home). For more information on what the .bash_profile document is and where to find (or create) it, click [here] (https://natelandau.com/my-mac-osx-bash_profile/).
+  * Use either Vim or Emacs to add the following to your .bash_profile document: 
+  * export JAVA_HOME=$(/usr/path/to/java_home). 
+  * For more information on what the .bash_profile document is and where to find (or create) it, click [here] (https://natelandau.com/my-mac-osx-bash_profile/).
 
 2. Download and install Git
 
