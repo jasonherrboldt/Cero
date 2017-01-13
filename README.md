@@ -17,14 +17,29 @@ Here's how to run it from a terminal window.
  Download the Java 1.8 SDK from [Oracle] (http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
  Windows:
-  * set PATH=[path\to\jdk\bin];%PATH%
+  * Open a terminal window and enter the following:
+  * set PATH=[C:\path\to\jdk\bin];%PATH%
   * (must be >= java 1.8)
 
  Mac:
-  * vim .bash_profile
-  * export JAVA_HOME=$(/usr/path/to/java_home)
+  * Open a terminal window and type "vim" or "emacs" to see if either is already installed. If not, you can download and install Vim [here] (http://macvim-dev.github.io/macvim/) or Emacs [here] (https://emacsformacosx.com/). There are many guides available online for both. 
+  * Use either Vim or Emacs to add the following to your .bash_profile document: export JAVA_HOME=$(/usr/path/to/java_home). For more information on what the .bash_profile document is and where to find (or create) it, click [here] (https://natelandau.com/my-mac-osx-bash_profile/).
 
-2. Compile and run
+2. Download and install Git
+
+ Use [this guide] (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+
+3. Download this project to your computer.
+
+ Click the green Clone or Download button.
+ 
+ Copy the URL.
+ 
+ Open a terminal window and navigate to the desired parent directory.
+ 
+ Enter "clone [URL]" in the terminal window.
+
+4. Compile and run
 
  Create a new folder in the Cero directory. Name it "out". 
 
