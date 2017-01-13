@@ -54,7 +54,7 @@ public class Game {
             deck.shuffle();
             dealHands();
 
-            // for testing:
+            // testing:
 
             // let p1 win first hand
 //            List<Card> testHand = new ArrayList<>();
@@ -112,7 +112,7 @@ public class Game {
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
         } else {
             
-            // debug
+            // testing
 //            if(printOuts) {
 //                Main.pause();
 //                Main.out("");
@@ -355,7 +355,7 @@ public class Game {
                     Main.pause();
                     Main.out("\n" + player.getName()+ " is drawing a card.");
 
-                    // debug
+                    // testing
                     // Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 }
             }

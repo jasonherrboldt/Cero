@@ -49,7 +49,7 @@ public class Main {
 
     // various global attributes
     private static final int WINNING_SCORE = 200;
-    private static final int EMPTY_GRUMBLE_LIMIT = 10;
+    private static final int EMPTY_GRUMBLE_LIMIT = 11;
     private static Game game;
     private static boolean winnerIsPlayerOne;
     private static boolean handWinnerExists;
@@ -60,6 +60,7 @@ public class Main {
     private static String playerOneName;
     private static String playerTwoName;
     private static int pauseSeconds;
+    // testing
     // private static int pauseSeconds = 1;
 
     /**
@@ -71,7 +72,7 @@ public class Main {
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables(true);
-        while (playerOneScore < WINNING_SCORE && playerTwoScore < WINNING_SCORE) {
+        while (noWinnerExists()) {
             if(game.isPlayerOnesTurn()) {
                 handlePlayerOneTurn();
             } else {
@@ -83,7 +84,7 @@ public class Main {
                 } else {
                     playerTwoScore = processWinner(game.getPlayer2());
                 }
-                if(playerOneScore < WINNING_SCORE && playerTwoScore < WINNING_SCORE) {
+                if(noWinnerExists()) {
                     handWinnerExists = false;
                     game.setIsFirstMove(true);
                     pause();
@@ -148,7 +149,7 @@ public class Main {
         playerOneName = game.getPlayer1().getName();
         playerTwoName = game.getPlayer2().getName();
 
-        // debug
+        // testing
 //        if(printOuts) {
 //            pause();
 //            out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
@@ -174,7 +175,7 @@ public class Main {
      */
     private static void welcomeUser() {
 
-        // debug
+        // testing
         // userName = "David Lightman";
 
         pause();
@@ -238,14 +239,10 @@ public class Main {
         out("\nStarting a new game...");
         game.startGame(null, true);
 
-        // for testing - allow p1 or p2 to win 1st hand
+        // testing - allow p1 or p2 to win 1st hand
         // (comment out call to game.startGame above)
 //        CardValueMap cvm = new CardValueMap();
 //        game.startGame(new Card(Card.YELLOW, Card.ONE, cvm), true);
-
-        // debug
-//        pause();
-//        out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
 
         pause();
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString() + ".");
@@ -270,6 +267,13 @@ public class Main {
     }
 
     /**
+     * @return true if a winner exists, false otherwise
+     */
+    private static boolean noWinnerExists() {
+        return playerOneScore < WINNING_SCORE && playerTwoScore < WINNING_SCORE;
+    }
+
+    /**
      * Handle player one's turn.
      */
     private static void handlePlayerOneTurn() {
@@ -279,7 +283,7 @@ public class Main {
             playerOnesTurn();
             if(game.getPlayer1().getHand().getSize() == 1) {
                 pause();
-                out("\n" + playerOneName + " has only one card left!");
+                out("\n" + playerOneName + " only has one card left!");
             }
             if(game.getPlayer1().getHand().getSize() == 0) {
                 game.setPlayerOnesTurn(false);
@@ -312,7 +316,7 @@ public class Main {
     private static void handlePlayerTwoTurn() {
         if(!game.skipTurn(game.getPlayer2(), true)) {
 
-            // debug
+            // testing
 //            pause();
 //            out("");
 //            game.printHand(game.getPlayer2());
@@ -327,7 +331,7 @@ public class Main {
             }
             if(game.getPlayer2().getHand().getSize() == 1) {
                 pause();
-                out("\n" + playerTwoName + " has only one card left!");
+                out("\n" + playerTwoName + " only has one card left!");
             }
             if(game.getPlayer2().getHand().getSize() == 0) {
                 game.setPlayerOnesTurn(true);
@@ -376,13 +380,13 @@ public class Main {
             out("\nCongratulations, " + playerOneName + "! You won the game.");
             pause();
             out("\n(Humanity is safe. For now...)");
-            pause();
+            out("");
         } else {
             out("\n" + playerTwoName + " was the first to break " + WINNING_SCORE
                     + " points.\n\nCongratulations, " + playerTwoName + "! You won the game.");
             pause();
             out("\n(" + playerTwoName + " is not surprised.)");
-            pause();
+            out("");
         }
     }
 
