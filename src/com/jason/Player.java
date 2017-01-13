@@ -248,14 +248,19 @@ public class Player {
         }
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
                 || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-            // return the highest numeric face of currentColor
-            return hand.getHighestFace(currentColor, false); // tested
-
-            // todo
-            // don't we need an else if here for WD4?
-            // if P2 discarded a WD4 last time, shouldn't it try to match the color that it just set?
-            // ditto cautious strategy
-
+            // return the highest non-numeric face of currentColor
+            Card highestFace = hand.getHighestFace(currentColor, false); // tested
+            if(highestFace != null) {
+               return highestFace;
+            } else {
+                // don't go looking for a new card if a wild or wd4 is already present
+                if(hand.hasCard(wild)) {
+                    return wild;
+                }
+                if(hand.hasCard(wildDrawFour)) {
+                    return wildDrawFour;
+                }
+            }
         } else {
             // Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
             int matchingColorGroupSize = hand.getColorGroupSize(currentColor);
@@ -338,7 +343,18 @@ public class Player {
         if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
                 || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
             // return the highest non-numeric face of currentColor
-            return hand.getHighestFace(currentColor, false); // tested
+            Card highestFace = hand.getHighestFace(currentColor, false); // tested
+            if(highestFace != null) {
+                return highestFace;
+            } else {
+                // don't go looking for a new card if a wild or wd4 is already present
+                if(hand.hasCard(wild)) {
+                    return wild;
+                }
+                if(hand.hasCard(wildDrawFour)) {
+                    return wildDrawFour;
+                }
+            }
         } else {
 
             // highest-value cards go first

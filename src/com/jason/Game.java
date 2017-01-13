@@ -70,16 +70,22 @@ public class Game {
 
             // custom p2 move
             // make sure p1 can discard right out of the gate.
-//            player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-//            player1.getHand().addCard(new Card(Card.GREEN, Card.NINE, cvm));
+            // player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+            // player1.getHand().addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
             // set player two's strategy
             // player2.setStrategy(Player.STRATEGY_CAUTIOUS);
             // stack p2's hand
 //            List<Card> testHand = new ArrayList<>();
 //            testHand.add(new Card(Card.GREEN, Card.EIGHT, cvm));
+//            testHand.add(new Card(Card.RED, Card.FOUR, cvm));
+//            testHand.add(new Card(Card.GREEN, Card.NINE, cvm));
+//            testHand.add(new Card(Card.BLUE, Card.SIX, cvm));
 //            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
 //            player2.setHand(testHand);
 
+            // testing
+//            Main.pause();
+//            Main.out("\nPlayer two is playing with a " + player2.getStrategy() + " strategy.");
 
             // for testing:
             if (firstPlayedCard == null) {

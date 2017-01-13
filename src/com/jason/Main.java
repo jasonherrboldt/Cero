@@ -24,7 +24,7 @@ public class Main {
 
     // player two grumbles
     private static List<String> playerTwoGrumbles;
-    public static final int NUMBER_OF_GRUMBLES = 15;
+    public static final int NUMBER_OF_GRUMBLES = 16;
     public static final String GRUMBLES = "grumbles";
     private static final String P2_GRUMBLE_ONE = " is not amused.)";
     private static final String P2_GRUMBLE_TWO = "'s patience is running thin.)";
@@ -69,6 +69,7 @@ public class Main {
      * @param args arguments
      */
     public static void main(String[] args) {
+        // testing
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables(true);
@@ -148,12 +149,6 @@ public class Main {
 
         playerOneName = game.getPlayer1().getName();
         playerTwoName = game.getPlayer2().getName();
-
-        // testing
-//        if(printOuts) {
-//            pause();
-//            out("\n" + playerTwoName + " is playing with a " + game.getPlayer2().getStrategy() + " strategy.");
-//        }
 
         if(printOuts) {
             pause();
