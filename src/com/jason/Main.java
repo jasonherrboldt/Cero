@@ -72,7 +72,7 @@ public class Main {
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables(true);
-        while (noWinnerExists()) {
+        while (!winnerExists()) {
             if(game.isPlayerOnesTurn()) {
                 handlePlayerOneTurn();
             } else {
@@ -84,7 +84,7 @@ public class Main {
                 } else {
                     playerTwoScore = processWinner(game.getPlayer2());
                 }
-                if(noWinnerExists()) {
+                if(!winnerExists()) {
                     handWinnerExists = false;
                     game.setIsFirstMove(true);
                     pause();
@@ -208,7 +208,9 @@ public class Main {
     }
 
     /**
-     * Refill player two grumbles
+     * Populate player two comments
+     *
+     * @param commentsName which comments to populate
      */
     private static void populatePlayerTwoComments(String commentsName) {
         if(commentsName.equalsIgnoreCase(GRUMBLES)) {
@@ -269,8 +271,8 @@ public class Main {
     /**
      * @return true if a winner exists, false otherwise
      */
-    private static boolean noWinnerExists() {
-        return playerOneScore < WINNING_SCORE && playerTwoScore < WINNING_SCORE;
+    private static boolean winnerExists() {
+        return playerOneScore >= WINNING_SCORE || playerTwoScore >= WINNING_SCORE;
     }
 
     /**
