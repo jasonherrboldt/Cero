@@ -19,7 +19,7 @@ Here's how to run it from a terminal window.
  Windows:
   * Open a terminal window and enter the following:
   * set PATH=[C:\path\to\jdk\bin];%PATH%
-  * (must be >= java 1.8)
+  * This will set your Java version to 1.8 for the current terminal session. (Will not compile with < 1.8.) 
 
  Mac:
   * Open a terminal window and type "vim" or "emacs" to see if either is already installed. If not, you can download and install Vim [here] (http://macvim-dev.github.io/macvim/) or Emacs [here] (https://emacsformacosx.com/). There are many guides available online for both. 
