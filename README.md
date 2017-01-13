@@ -27,21 +27,13 @@ Here's how to run it from a terminal window.
   * export JAVA_HOME=$(/usr/path/to/java_home). 
   * For more information on what the .bash_profile document is and where to find (or create) it, click [here] (https://natelandau.com/my-mac-osx-bash_profile/).
 
-2. Download and install Git
+2. Download this project to your computer.
 
- Use [this guide] (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-
-3. Download this project to your computer.
-
- Click the green Clone or Download button.
+ Click on the Release tab of this project and download the zip. 
  
- Copy the URL.
- 
- Open a terminal window and navigate to the desired parent directory.
- 
- Enter "clone [URL]" in the terminal window.
+ Unzip the directory to your local drive. 
 
-4. Compile and run
+3. Compile and run
 
  Create a new folder in the Cero directory. Name it "out". 
 
