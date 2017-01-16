@@ -1,6 +1,59 @@
 
 
 
+
+
+Logging
+
+When user starts a new game
+If a log does not exist with a filename equal to today's date
+    Start a new log file with a filename equal to today's date
+
+
+
+From MusicOrganizer:
+
+    /**
+     * Print the sorted songs to output file by genre block.
+     */
+    public void printSongsToOutputFile() {
+        try {
+            PrintWriter writer = new PrintWriter(outputFileName, "UTF-8");
+            if(!sortBy.equalsIgnoreCase("song") && !sortBy.equalsIgnoreCase("time")) {
+                for(Album album : sortedAlbums) {
+                    List<Song> songs = album.getSongs();
+                        for(Song song : songs) {
+                            writer.println(song.printSong(sortBy));
+                    }
+                }
+            } else {
+                for(Song song : unsortedSongs) {
+                    writer.println(song.printSong(sortBy));
+                }
+            }
+            writer.close();
+        } catch (Exception e) {
+            System.out.println("Something went wrong while trying to write to " + outputFileName + ".");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRAVEYARD:
+
+
         /* main pseudocode
         Welcome the user, get name.
         inner winner exists = false
@@ -52,26 +105,6 @@ if player one discards a wild or a wd4
     player two must be able to get that color to decide its next move (Game.playerTwoMove calls Game.getCurrentColor)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-GRAVEYARD:
 
 
 @Ignore tests:
