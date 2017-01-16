@@ -82,10 +82,8 @@ public class Game {
 //            testHand.add(new Card(Card.BLUE, Card.SIX, cvm));
 //            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
 //            player2.setHand(testHand);
-
-            // testing
-//            Main.pause();
-//            Main.out("\nPlayer two is playing with a " + player2.getStrategy() + " strategy.");
+            
+            Main.logEntry("\nPlayer two is playing with a " + player2.getStrategy() + " strategy.");
 
             // for testing:
             if (firstPlayedCard == null) {
@@ -360,9 +358,7 @@ public class Game {
                 } else {
                     Main.pause();
                     Main.out("\n" + player.getName()+ " is drawing a card.");
-
-                    // testing
-                    // Main.out("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+                    Main.logEntry("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 }
             }
             // be careful - non-native method args are pass by value in java!
@@ -515,6 +511,35 @@ public class Game {
                     count++;
                 } else {
                     Main.out(count + ": " + s);
+                    count++;
+                }
+            }
+        }
+    }
+
+    /**
+     * Log the hand for player two.
+     *
+     * @param player the given player
+     */
+    void logHand(Player player) { // no test needed
+        if(!player.isPlayer2()) {
+            Main.logEntry("Game.printHand called with player one injected. Throwing illegal argument exception...");
+            throw new IllegalArgumentException("Game.printHand called with player one injected.");
+        }
+        if(player.getHand() == null) {
+            Main.out("WARN: Game.printHand called with a null hand. No action taken.");
+            Main.logEntry("WARN: Game.printHand called with a null hand. No action taken.");
+        } else {
+            int count = 1;
+            Main.logEntry(player.getName() + "'s hand:");
+            List<String> allCards = player.getHand().getHandPrintStringList();
+            for(String s : allCards) {
+                if(count < 10) {
+                    Main.logEntry(" " + count + ": " + s);
+                    count++;
+                } else {
+                    Main.logEntry(count + ": " + s);
                     count++;
                 }
             }

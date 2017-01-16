@@ -55,6 +55,7 @@ public class Main {
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
     private static final String DATE_STR = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
     private static final String FILENAME = "logs/" + DATE_STR + ".txt";
+    private static final File FILE = new File(FILENAME);
     private static final String LOG_DIRECTORY = "";
     private static Game game;
     private static boolean winnerIsPlayerOne;
@@ -66,6 +67,9 @@ public class Main {
     private static String playerOneName;
     private static String playerTwoName;
     private static int pauseSeconds;
+
+    // testing
+    // private static int pauseSeconds = 1;
 
     /**
      * Main method.
@@ -118,22 +122,25 @@ public class Main {
             pauseSeconds = 1;
             out("\nThis is a bit faster,");
             pause();
-            out("\nwith outputs coming once");
+            out("\nwith outputs coming");
             pause();
-            out("\nevery second.");
+            out("\nonce every second.");
             pause();
             speedReply = getUserResponse_integer("\nChoose 1 or 2, or enter 3 to see the demo again:", 1, 3);
             if(speedReply.equals("1")) {
                 pauseSeconds = 1;
             }
+            if(speedReply.equals("2")) {
+                pauseSeconds = 2;
+            }
         }
         pause();
         out("\nThe output speed has been set.");
+        logEntry("The output speed was set to " + pauseSeconds + " seconds.");
     }
 
     /**
-     * Open a new logging session. Create a new directory as needed. Create a new document as needed,
-     * or append to an existing one.
+     * Open a new logging session. Create a new /log directory as needed.
      */
     private static void startLog() {
         File dir = new File("logs");
@@ -142,19 +149,27 @@ public class Main {
                 Main.out("WARN: unable to create directory 'logs'.");
             }
         }
-        File file = new File(FILENAME);
+        logEntry("New game started.");
+    }
+
+    /**
+     * Add a new log entry. Create a new document as needed, or append to an existing one.
+     *
+     * @param log the log entry
+     */
+    public static void logEntry(String log) {
         try {
             FileWriter fw;
             BufferedWriter bw;
             PrintWriter out;
             String time;
-            if (!file.exists()){
-                if(file.createNewFile()) {
-                    fw = new FileWriter(file);
+            if (!FILE.exists()){
+                if(FILE.createNewFile()) {
+                    fw = new FileWriter(FILE);
                     bw = new BufferedWriter(fw);
                     out = new PrintWriter(bw);
                     time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
-                    out.println(time + " New game started.");
+                    out.println(time + " " + log);
                     out.close();
                 } else {
                     Main.out("WARN: Main.startLog unable to create new log file.");
@@ -164,16 +179,12 @@ public class Main {
                 bw = new BufferedWriter(fw);
                 out = new PrintWriter(bw);
                 time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
-                out.println(time + " New game started.");
+                out.println(time + " " + log);
                 out.close();
             }
         } catch (IOException e) {
             Main.out("WARN: Main.startLog encountered an IO exception: " + e.getMessage());
         }
-    }
-
-    private static void logEntry(String log) {
-
     }
 
     /**
@@ -212,6 +223,7 @@ public class Main {
         // player two taunts player one when it wins a hand
         playerTwoTaunts = new ArrayList<>();
         populatePlayerTwoComments(TAUNTS);
+        logEntry("Reached the end of Main.initializeGlobalVariables.");
     }
 
     /**
@@ -236,6 +248,7 @@ public class Main {
         userName = getUserResponse_string("\nPlease enter your name:");
         pause();
         System.out.println("\nHello, " + userName + "! Let's begin.");
+        logEntry("userName was set to " + userName + ".");
     }
 
     /**
@@ -361,12 +374,7 @@ public class Main {
      */
     private static void handlePlayerTwoTurn() {
         if(!game.skipTurn(game.getPlayer2(), true)) {
-
-            // testing
-//            pause();
-//            out("");
-//            game.printHand(game.getPlayer2());
-
+            game.logHand(game.getPlayer2());
             Card playedCard = game.playerTwosTurn(true);
             pause();
             out("\n" + playerTwoName + " discarded the card " + playedCard.getPrintString() + ".");
@@ -646,6 +654,7 @@ public class Main {
      */
     public static void out(String s) {
         System.out.println(s);
+        logEntry(s);
     }
 
     /**

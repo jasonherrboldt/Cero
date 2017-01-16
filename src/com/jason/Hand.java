@@ -258,17 +258,6 @@ public class Hand {
     }
 
     /**
-     * Print each card in hand to console.
-     */
-    void showCards() { // no test needed
-        int i = 1;
-        for(Card c : getAllCards()) {
-            Main.out(i + ": " + c.getPrintString());
-            i++;
-        }
-    }
-
-    /**
      * @return the color of the highest color group.
      */
     public String getHighestColor() { // tested
