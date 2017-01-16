@@ -3,6 +3,9 @@ package test.jason;
 import com.jason.*;
 import org.junit.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,31 @@ public class TestMain {
         assertEquals(Main.isNullOrEmpty(nonNullQuestion, nullQuestionWarning), false);
     }
 
+    @Test
+    public void testMain_createLogs() {
+
+        File dir = new File("logs");
+        if(!dir.exists()) {
+            if(!dir.mkdir()) {
+                Main.out("WARN: unable to create directory 'logs'.");
+            } else {
+                File file = new File("logs/file.txt");
+                try {
+                    if (!file.exists()){
+                        if(file.createNewFile()) {
+                            FileWriter writer = new FileWriter(file);
+                            writer.write("oh herros");
+                            writer.close();
+                        } else {
+                            Main.out("WARN: Main.startLog unable to create new log file.");
+                        }
+                    }
+                } catch (IOException e) {
+                    Main.out("WARN: Main.startLog encountered an IO exception: " + e.getMessage());
+                }
+            }
+        }
+    }
 
     @Test
     // Happy path is only functionally testable.

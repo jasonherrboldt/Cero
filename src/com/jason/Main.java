@@ -1,5 +1,8 @@
 package com.jason;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +53,7 @@ public class Main {
     // various global attributes
     private static final int WINNING_SCORE = 200;
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
+    private static final String LOG_DIRECTORY = "";
     private static Game game;
     private static boolean winnerIsPlayerOne;
     private static boolean handWinnerExists;
@@ -69,6 +73,7 @@ public class Main {
      * @param args arguments
      */
     public static void main(String[] args) {
+        // startLog();
         // testing
         setOutputSpeed();
         welcomeUser();
@@ -595,7 +600,7 @@ public class Main {
      *
      * @param s The string to getPrintString.
      */
-    static void out(String s) {
+    public static void out(String s) {
         System.out.println(s);
     }
 
