@@ -59,6 +59,7 @@ public class Game {
             // let p1 win first hand
 //            List<Card> testHand = new ArrayList<>();
 //            testHand.add(new Card(Card.YELLOW, Card.ONE, cvm));
+//            testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
 //            player1.setHand(testHand);
 
             // let p2 win first hand
@@ -82,8 +83,8 @@ public class Game {
 //            testHand.add(new Card(Card.BLUE, Card.SIX, cvm));
 //            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
 //            player2.setHand(testHand);
-            
-            Main.logEntry("\nPlayer two is playing with a " + player2.getStrategy() + " strategy.");
+
+            Main.logEntry("Player two is playing with a " + player2.getStrategy() + " strategy.");
 
             // for testing:
             if (firstPlayedCard == null) {
@@ -358,7 +359,7 @@ public class Game {
                 } else {
                     Main.pause();
                     Main.out("\n" + player.getName()+ " is drawing a card.");
-                    Main.logEntry("\nAdding to " + player.getName()+ "'s hand: " + card.getPrintString());
+                    Main.logEntry("Adding to " + player.getName()+ "'s hand: " + card.getPrintString());
                 }
             }
             // be careful - non-native method args are pass by value in java!

@@ -654,7 +654,7 @@ public class Main {
      */
     public static void out(String s) {
         System.out.println(s);
-        logEntry(s);
+        logEntry(s.replace("\n", ""));
     }
 
     /**
