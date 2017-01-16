@@ -2,13 +2,6 @@ package test.jason;
 
 import com.jason.*;
 import org.junit.*;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
@@ -33,31 +26,75 @@ public class TestMain {
         assertEquals(Main.isNullOrEmpty(nonNullQuestion, nullQuestionWarning), false);
     }
 
-    @Test
-    public void testMain_createLogs() {
+//    @Test
+//    public void testMain_createLogs() {
+//
+//        LocalDateTime now = LocalDateTime.now();
+//        int year = now.getYear();
+//        int month = now.getMonthValue();
+//        int day = now.getDayOfMonth();
+//
+//        String yearStr = Integer.toString(year);
+//        String monthStr = Integer.toString(month);
+//        String dayStr = Integer.toString(day);
+//
+//        if(monthStr.length() == 1) {
+//            monthStr = "0" + monthStr;
+//        }
+//        if(dayStr.length() == 1) {
+//            dayStr = "0" + monthStr;
+//        }
+//
+//        String dateStr = yearStr + "-" + monthStr + "-" + dayStr;
+//
+//        File dir = new File("logs");
+//        if(!dir.exists()) {
+//            if(!dir.mkdir()) {
+//                Main.out("WARN: unable to create directory 'logs'.");
+//            }
+//        }
+//        String filename = "logs/" + dateStr + ".txt";
+//        File file = new File(filename);
+//        try {
+//            FileWriter fw;
+//            BufferedWriter bw;
+//            PrintWriter out;
+//            String time;
+//            if (!file.exists()){
+//                if(file.createNewFile()) {
+//                    fw = new FileWriter(file);
+//                    bw = new BufferedWriter(fw);
+//                    out = new PrintWriter(bw);
+//                    time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
+//                    out.println(time + " oh herros - this is a new log.");
+//                    Main.pause();
+//                    time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
+//                    out.println(time + " this is moar text");
+//                    out.close();
+//                } else {
+//                    Main.out("WARN: Main.startLog unable to create new log file.");
+//                }
+//            } else {
+//                fw = new FileWriter(filename, true);
+//                bw = new BufferedWriter(fw);
+//                out = new PrintWriter(bw);
+//                time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
+//                out.println(time + " this is not a new log");
+//                Main.pause();
+//                time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
+//                out.println(time + " this is even moar text");
+//                out.close();
+//            }
+//        } catch (IOException e) {
+//            Main.out("WARN: Main.startLog encountered an IO exception: " + e.getMessage());
+//        }
+//    }
 
-        File dir = new File("logs");
-        if(!dir.exists()) {
-            if(!dir.mkdir()) {
-                Main.out("WARN: unable to create directory 'logs'.");
-            } else {
-                File file = new File("logs/file.txt");
-                try {
-                    if (!file.exists()){
-                        if(file.createNewFile()) {
-                            FileWriter writer = new FileWriter(file);
-                            writer.write("oh herros");
-                            writer.close();
-                        } else {
-                            Main.out("WARN: Main.startLog unable to create new log file.");
-                        }
-                    }
-                } catch (IOException e) {
-                    Main.out("WARN: Main.startLog encountered an IO exception: " + e.getMessage());
-                }
-            }
-        }
-    }
+//    @Test
+//    public void testDate() {
+//        String date = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
+//        Main.out("date: " + date);
+//    }
 
     @Test
     // Happy path is only functionally testable.

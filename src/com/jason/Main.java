@@ -1,10 +1,10 @@
 package com.jason;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +53,8 @@ public class Main {
     // various global attributes
     private static final int WINNING_SCORE = 200;
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
+    private static final String DATE_STR = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
+    private static final String FILENAME = "logs/" + DATE_STR + ".txt";
     private static final String LOG_DIRECTORY = "";
     private static Game game;
     private static boolean winnerIsPlayerOne;
@@ -64,8 +66,6 @@ public class Main {
     private static String playerOneName;
     private static String playerTwoName;
     private static int pauseSeconds;
-    // testing
-    // private static int pauseSeconds = 1;
 
     /**
      * Main method.
@@ -73,8 +73,7 @@ public class Main {
      * @param args arguments
      */
     public static void main(String[] args) {
-        // startLog();
-        // testing
+        startLog();
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables(true);
@@ -130,6 +129,51 @@ public class Main {
         }
         pause();
         out("\nThe output speed has been set.");
+    }
+
+    /**
+     * Open a new logging session. Create a new directory as needed. Create a new document as needed,
+     * or append to an existing one.
+     */
+    private static void startLog() {
+        File dir = new File("logs");
+        if(!dir.exists()) {
+            if(!dir.mkdir()) {
+                Main.out("WARN: unable to create directory 'logs'.");
+            }
+        }
+        File file = new File(FILENAME);
+        try {
+            FileWriter fw;
+            BufferedWriter bw;
+            PrintWriter out;
+            String time;
+            if (!file.exists()){
+                if(file.createNewFile()) {
+                    fw = new FileWriter(file);
+                    bw = new BufferedWriter(fw);
+                    out = new PrintWriter(bw);
+                    time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
+                    out.println(time + " New game started.");
+                    out.close();
+                } else {
+                    Main.out("WARN: Main.startLog unable to create new log file.");
+                }
+            } else {
+                fw = new FileWriter(FILENAME, true);
+                bw = new BufferedWriter(fw);
+                out = new PrintWriter(bw);
+                time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
+                out.println(time + " New game started.");
+                out.close();
+            }
+        } catch (IOException e) {
+            Main.out("WARN: Main.startLog encountered an IO exception: " + e.getMessage());
+        }
+    }
+
+    private static void logEntry(String log) {
+
     }
 
     /**
@@ -576,7 +620,7 @@ public class Main {
     /**
      * Pause for two seconds.
      */
-    static void pause() {
+    public static void pause() {
         try {
             TimeUnit.SECONDS.sleep(pauseSeconds);
         } catch (InterruptedException e) {
