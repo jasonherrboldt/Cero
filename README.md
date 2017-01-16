@@ -148,6 +148,12 @@ Here's how to run it from a terminal window.
   * javac src/com/jason/*.java -d /Users/yourname/path/to/Cero_directory/out
   * java -cp ./out com.jason.Main
 
+__LOGGING__
+
+Every line sent to System.out is also sent to a log file, along with some additional information such as player two's hand, and the cards player two draws. This aids the reproduction of critical issues. I elected to roll my own logging infrastructure instead of using Log4J for the simple reason that there is not enough demand for the full utility of Log4J's features.
+
+Logs are created in the /log directory and named with today's date, e.g. 2016-01-24.txt. Games that start before midnight and carry over will be logged to the same file. New games started after midnight will be logged to a new file. Each entry line has the following format: HH:MM:SS:SSS [log message]. Log uses military time. 
+
 __UNIT TESTS__
 
 The unit tests can be run locally in any IDE using junit-4.12.jar and hamcrest-core-1.3.jar dependencies. 
