@@ -6,6 +6,105 @@ There are two players. The user is player one, and player two is the program.
 
 See [the Uno Wikipedia page](https://en.wikipedia.org/wiki/Uno_(card_game)) for a full list of game rules.
 
+__SAMPLE OUTPUT__
+
+    Welcome to Cero! The rules are essentially the same as Uno.
+    
+    The first player to discard all cards wins the round,
+    
+    and the winner takes the value of the loser's cards.
+    
+    The first player to reach 200 points wins the game.
+    
+    Good luck!
+    
+    Please enter your name: Barbarella
+    
+    Hello, Barbarella! Let's begin.
+    
+    You will be playing against MASTER CONTROL PROGRAM.
+    
+    Starting a new game...
+    
+    The first played card is (Blue) 5.
+    
+    By toss of a coin, MASTER CONTROL PROGRAM has the first move.
+    
+    MASTER CONTROL PROGRAM discarded the card (Red) 5.
+    
+    
+          === game status update ===
+    
+    Barbarella's score is 0, and MASTER CONTROL PROGRAM's score is 0.
+    MASTER CONTROL PROGRAM has 6 cards left.
+    
+          === game status update === 
+    
+    
+    Barbarella's hand:
+     1: (Green) 1
+     2: (Green) 3
+     3: (Green) 7
+     4: (Green) Skip
+     5: (Red) 0
+     6: (Red) Skip
+     7: (Yellow) Draw Two
+    
+    The current played card is (Red) 5.
+    
+    Which card would you like to discard?
+    
+    Enter the number to the left of the card, or 0 to draw: 6
+    
+    You have successfully discarded the card (Red) Skip.
+    
+    MASTER CONTROL PROGRAM was forbidden from discarding.
+    
+    
+          === game status update ===
+    
+    Barbarella's score is 0, and MASTER CONTROL PROGRAM's score is 0.
+    MASTER CONTROL PROGRAM has 6 cards left.
+    
+          === game status update === 
+    
+    
+    Barbarella's hand:
+     1: (Green) 1
+     2: (Green) 3
+     3: (Green) 7
+     4: (Green) Skip
+     5: (Red) 0
+     6: (Yellow) Draw Two
+    
+    The current played card is (Red) Skip.
+    
+    Which card would you like to discard?
+    
+    Enter the number to the left of the card, or 0 to draw: 4
+    
+    You have successfully discarded the card (Green) Skip.
+    
+    MASTER CONTROL PROGRAM was forbidden from discarding.
+    
+    
+          === game status update ===
+    
+    Barbarella's score is 0, and MASTER CONTROL PROGRAM's score is 0.
+    MASTER CONTROL PROGRAM has 6 cards left.
+    
+          === game status update === 
+    
+    
+    Barbarella's hand:
+     1: (Green) 1
+     2: (Green) 3
+     3: (Green) 7
+     4: (Red) 0
+     5: (Yellow) Draw Two
+    
+    The current played card is (Green) Skip.
+
 __HOW TO RUN__
 
 This program is meant to be run from the command line. Running it as a Java application from within an IDE will throw null pointer exceptions due to the command line-driven user I/O required to play the game.
