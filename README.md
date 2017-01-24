@@ -8,12 +8,12 @@ See [the Uno Wikipedia page](https://en.wikipedia.org/wiki/Uno_(card_game)) for 
 
 __HIGHLIGHTED FUNCTIONALITY__
 
-Player two randomly selects one of three strategies at the beginning of the game: bold, cautious, and dumb. 
+Player two randomly selects one of three strategies at the beginning of the game: bold, cautious, or dumb. This decision is made behind the scenes, but the user can review the log after the game to see which strategy was chosen.
 
 Bold
  * Saves non-numeric cards for when it gets backed into a corner.
  * 1st choice is a numeric card, 2nd choice is a non-numeric color, 3rd choice is a wild or wd4.
- * If a current played card can be matched by color and number from p2's hand, p2 will play the card from the larger card group.
+ * If a current played card can be matched by color and number from p2's hand, p2 will play the card from the larger color group.
  * Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
  
 Cautious
@@ -178,6 +178,8 @@ Here's how to run it from a terminal window.
   * cd /Users/yourname/path/to/Cero_directory
   * javac src/com/jason/*.java -d /Users/yourname/path/to/Cero_directory/out
   * java -cp ./out com.jason.Main
+  
+  The program will terminate when one of the players has a score of 200 or greater. 
 
 __LOGGING__
 
