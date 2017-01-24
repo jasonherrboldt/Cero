@@ -6,6 +6,33 @@ There are two players. The user is player one, and player two is the program.
 
 See [the Uno Wikipedia page](https://en.wikipedia.org/wiki/Uno_(card_game)) for a full list of game rules.
 
+__HIGHLIGHTED FUNCTIONALITY__
+
+Player two randomly selects one of three strategies at the beginning of the game: bold, cautious, and dumb. 
+
+Bold
+ * Saves non-numeric cards for when it gets backed into a corner.
+ * 1st choice is a numeric card, 2nd choice is a non-numeric color, 3rd choice is a wild or wd4.
+ * If a current played card can be matched by color and number from p2's hand, p2 will play the card from the larger card group.
+ * Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
+ 
+Cautious
+ * Discards non-numeric cards ASAP to prevent giving player one a higher score if p2 loses.
+ * If a current played card can be matched by color and number from p2's hand, p2 will play the card with the higher value.
+ * 1st choice is a wild or wd4, 2nd choice is a non-numeric color, 3rd choice is numeric.
+ 
+Dumb
+ * Will look blindly for first matching card in hand - will not try to switch the deck color to its favor.
+ * Randomly decides to play a non-numeric card if any are present. Picks a color at random from its hand when discarding a wild or WD4.
+ 
+Player one's hand is displayed with cards of the same color grouped together in ascending card order: numeric, non-numeric, wild. 
+
+Printouts of game activities are spaced out to give the illusion of a tempo similar to a real game. Player one may choose 1 or 2 second intervals between printouts of new events. 
+
+Program will automatically add cards to either player's hand for draw two and wild draw four cards. 
+
+Program will automatically skip turns as required. 
+
 __SAMPLE OUTPUT__
 
     Welcome to Cero! The rules are essentially the same as Uno.
