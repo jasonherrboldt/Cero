@@ -12,22 +12,20 @@ Player two randomly selects one of three strategies at the beginning of the game
 
 Bold
  * Saves non-numeric cards for when it gets backed into a corner.
- * 1st choice is a numeric card, 2nd choice is a non-numeric color, 3rd choice is a wild or wd4.
- * If a current played card can be matched by color and number from p2's hand, p2 will play the card from the larger color group.
+ * First choice is a numeric card, second choice is a non-numeric color, third choice is a wild or wild draw four.
+ * If a current played card can be matched by color and number from player two's hand, player two will play the card from the larger color group.
  * Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
  
 Cautious
- * Discards non-numeric cards ASAP to prevent giving player one a higher score if p2 loses.
- * If a current played card can be matched by color and number from p2's hand, p2 will play the card with the higher value.
- * 1st choice is a wild or wd4, 2nd choice is a non-numeric color, 3rd choice is numeric.
+ * Discards non-numeric cards ASAP to prevent giving player one a higher score if player two loses.
+ * If a current played card can be matched by color and number from player two's hand, player two will play the card with the higher value.
+ * First choice is a wild or wild draw four, second choice is a non-numeric color, third choice is numeric.
  
 Dumb
- * Will look blindly for first matching card in hand - will not try to switch the deck color to its favor.
- * Randomly decides to play a non-numeric card if any are present. Picks a color at random from its hand when discarding a wild or WD4.
+ * Will look blindly for first matching card in hand -- will not try to switch the deck color to its favor. ("Blindly" means player two's hand is shuffled before it marches through the cards, one by one, looking for a match.) 
+ * Randomly decides to play a non-numeric card if any are present. Picks a color at random from its hand when discarding a wild or wild draw four.
  
-Player one's hand is displayed with cards of the same color grouped together in ascending card order: numeric, non-numeric, wild. 
-
-Printouts of game activities are spaced out to give the illusion of a tempo similar to a real game. Player one may choose 1 or 2 second intervals between printouts of new events. 
+Player one's hand is displayed with cards of the same color grouped together in ascending card value order. First numeric cards are shown, then non-numeric, then wild / wild draw four. 
 
 Program will automatically add cards to either player's hand for draw two and wild draw four cards. 
 
@@ -35,7 +33,7 @@ Program will automatically skip turns as required.
 
 Program has very defensive user I/O rules -- illegal input is detected immediately, and the user is warned and given another chance to enter a legal value. Input code block will loop until legal input is detected. This applies to all user I/O throughout the game. 
 
-Program has been rigorously tested, and most (if not all) corner cases have been detected and mitigated. Should something go wrong, code is defensively structured to either warn the user via console that something has gone wrong and continue, or throw a fatal error. All program actions are logged (see below). 
+Program has been rigorously tested, and most (if not all) corner cases have been detected and mitigated. Should something go wrong, the code is defensively structured to either warn the user via console that something has gone wrong and continue, or throw a fatal error. All program actions are logged (see below). 
 
 __SAMPLE OUTPUT__
 
