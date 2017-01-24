@@ -33,6 +33,10 @@ Program will automatically add cards to either player's hand for draw two and wi
 
 Program will automatically skip turns as required. 
 
+Program has very defensive user I/O rules -- illegal input is detected immediately, and the user is warned and given another chance to enter a legal value. Input code block will loop until legal input is detected. This applies to all user I/O throughout the game. 
+
+Program has been rigorously tested, and most (if not all) corner cases have been detected and mitigated. Should something go wrong, code is defensively structured to either warn the user via console that something has gone wrong and continue, or throw a fatal error. All program actions are logged (see below). 
+
 __SAMPLE OUTPUT__
 
     Welcome to Cero! The rules are essentially the same as Uno.
