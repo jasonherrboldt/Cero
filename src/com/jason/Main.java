@@ -2,10 +2,7 @@ package com.jason;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +50,8 @@ public class Main {
     // various global attributes
     private static final int WINNING_SCORE = 200;
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
-    private static final String DATE_STR = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
+    // private static final String DATE_STR = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
+    private static final String DATE_STR = getTodaysDate();
     private static final String FILENAME = "logs/" + DATE_STR + ".txt";
     private static final File FILE = new File(FILENAME);
     private static final String LOG_DIRECTORY = "";
@@ -827,6 +825,31 @@ public class Main {
             return true;
         }
         return false;
+    }
+
+    private static String getTodaysDate() {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1; // months are zero-indexed
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String monthStr = "";
+        if(month < 10) {
+            monthStr = "0" + Integer.toString(month);
+        } else {
+            monthStr = Integer.toString(month);
+        }
+
+        String dayStr = "";
+        if(month < 10) {
+            dayStr = "0" + Integer.toString(day);
+        } else {
+            dayStr = Integer.toString(day);
+        }
+
+        return Integer.toString(year) + "-" + monthStr + "-" + dayStr;
     }
 
     /**
