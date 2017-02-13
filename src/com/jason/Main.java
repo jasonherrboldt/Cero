@@ -843,7 +843,7 @@ public class Main {
         }
 
         String dayStr = "";
-        if(month < 10) {
+        if(day < 10) {
             dayStr = "0" + Integer.toString(day);
         } else {
             dayStr = Integer.toString(day);
