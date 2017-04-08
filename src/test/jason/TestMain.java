@@ -47,7 +47,7 @@ public class TestMain {
     public void testMain_getRandomPlayerTwoComment_grumbles() {
 
         // make sure the grumbles list is getting populated to the correct size
-        Main.initializeGlobalVariables(false);
+        Main.initializeGlobalVariables();
         assertEquals(Main.getPlayerTwoGrumbles().size(), Main.NUMBER_OF_GRUMBLES);
 
         // drain the grumbles list
@@ -73,7 +73,7 @@ public class TestMain {
     public void testMain_getRandomPlayerTwoComment_taunts() {
 
         // make sure the grumbles list is getting populated to the correct size
-        Main.initializeGlobalVariables(false);
+        Main.initializeGlobalVariables();
         assertEquals(Main.getPlayerTwoTaunts().size(), Main.NUMBER_OF_TAUNTS);
 
         // drain the grumbles list

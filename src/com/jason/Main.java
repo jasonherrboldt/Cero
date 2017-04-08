@@ -50,6 +50,7 @@ public class Main {
     // various global attributes
     private static final int WINNING_SCORE = 200;
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
+    private static final int MAX_ARG_LENGTH = 2;
     // private static final String DATE_STR = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
     private static final String DATE_STR = getTodaysDate();
     private static final String FILENAME = "logs/" + DATE_STR + ".txt";
@@ -65,6 +66,7 @@ public class Main {
     private static String playerOneName;
     private static String playerTwoName;
     private static int pauseSeconds;
+    private static boolean argsReceived = false;
 
     // testing
     // private static int pauseSeconds = 1;
@@ -75,10 +77,12 @@ public class Main {
      * @param args arguments
      */
     public static void main(String[] args) {
+        parseArgs(args);
         startLog();
         setOutputSpeed();
         welcomeUser();
-        initializeGlobalVariables(true);
+        initializeGlobalVariables();
+        playNewHand();
         while (!winnerExists()) {
             if(game.isPlayerOnesTurn()) {
                 handlePlayerOneTurn();
@@ -104,37 +108,79 @@ public class Main {
     }
 
     /**
+     * Parse the main args.
+     *
+     * @param args to parse
+     */
+    private static void parseArgs(String[] args) {
+        if(args.length > 0) {
+            if (args.length != MAX_ARG_LENGTH) {
+                throw new IllegalArgumentException("The number of main args must either be "
+                        + MAX_ARG_LENGTH + " or 0.");
+            } else {
+                argsReceived = true;
+                String arg_0 = args[0];
+                String arg_1 = args[1];
+
+                // parse first arg
+                try {
+                    pauseSeconds = Integer.parseInt(arg_0);
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("The first argument could not be converted to an integer.");
+                }
+                if(pauseSeconds != 1 && pauseSeconds != 2) {
+                    throw new IllegalArgumentException("The first argument must either be '1' or '2'.");
+                }
+                logEntry("The output speed was set to " + pauseSeconds + " seconds.");
+
+                // parse second arg
+                if(isValid(arg_1)) {
+                    userName = arg_1;
+                    logEntry("userName was set to " + userName + ".");
+                } else {
+                    throw new IllegalArgumentException("The second argument can only contain the characters " +
+                            "a-z, A-Z, and space.");
+                }
+            }
+        }
+    }
+
+    /**
      * Set the speed of the terminal print lines.
      */
     private static void setOutputSpeed() {
-        String speedReply = "";
-        while(!speedReply.equals("1") && !speedReply.equals("2")) {
-            pauseSeconds = 2;
-            pause();
-            out("\nBefore we begin, please chose the output speed.");
-            pause();
-            out("\nRight now, the output speed is");
-            pause();
-            out("\nonce every two seconds.");
-            pause();
-            pauseSeconds = 1;
-            out("\nThis is a bit faster,");
-            pause();
-            out("\nwith outputs coming");
-            pause();
-            out("\nonce every second.");
-            pause();
-            speedReply = getUserResponse_integer("\nChoose 1 or 2, or enter 3 to see the demo again:", 1, 3);
-            if(speedReply.equals("1")) {
+        if(!argsReceived) {
+            String speedReply = "";
+            while(!speedReply.equals("1") && !speedReply.equals("2")) {
                 pauseSeconds = 1;
-            }
-            if(speedReply.equals("2")) {
+                pause();
+                out("\nBefore we begin, please chose the output speed.");
+                pause();
+                out("\nRight now, the output speed is");
+                pause();
+                out("\nonce every second.");
                 pauseSeconds = 2;
+                pause();
+                out("\nThis is a bit slower,");
+                pause();
+                out("\nwith outputs coming");
+                pause();
+                out("\nonce every two seconds.");
+                pause();
+                speedReply = getUserResponse_integer("\nChoose 1 or 2, or enter 3 to see the demo again:", 1, 3);
+                // getUserResponse_integer filters out all values that could throw a
+                // null pointer exception in .equals.
+                if(speedReply.equals("1")) {
+                    pauseSeconds = 1;
+                }
+                if(speedReply.equals("2")) {
+                    pauseSeconds = 2;
+                }
             }
+            pause();
+            out("\nThe output speed has been set.");
+            logEntry("The output speed was set to " + pauseSeconds + " seconds.");
         }
-        pause();
-        out("\nThe output speed has been set.");
-        logEntry("The output speed was set to " + pauseSeconds + " seconds.");
     }
 
     /**
@@ -187,10 +233,8 @@ public class Main {
 
     /**
      * Initialize class-level variables, play first hand of game.
-     *
-     * @param printOuts whether or not to mute the console output.
      */
-    public static void initializeGlobalVariables(boolean printOuts) {
+    public static void initializeGlobalVariables() {
         handWinnerExists = false;
         winnerIsPlayerOne = false;
 
@@ -208,10 +252,9 @@ public class Main {
         playerOneName = game.getPlayer1().getName();
         playerTwoName = game.getPlayer2().getName();
 
-        if(printOuts) {
+        if(!argsReceived) {
             pause();
             out("\nYou will be playing against " + playerTwoName + ".");
-            playNewHand();
         }
 
         // player two occasionally grumbles when it is forced to skip a turn
@@ -232,21 +275,25 @@ public class Main {
         // testing
         // userName = "David Lightman";
 
-        pause();
-        out("\nWelcome to Cero! The rules are essentially the same as Uno.");
-        pause();
-        out("\nThe first player to discard all cards wins the round,");
-        pause();
-        out("\nand the winner takes the value of the loser's cards.");
-        pause();
-        out("\nThe first player to reach " + WINNING_SCORE + " points wins the game.");
-        pause();
-        out("\nGood luck!");
-        pause();
-        userName = getUserResponse_string("\nPlease enter your name:");
-        pause();
-        System.out.println("\nHello, " + userName + "! Let's begin.");
-        logEntry("userName was set to " + userName + ".");
+        if(!argsReceived) {
+            pause();
+            out("\nWelcome to Cero! The rules are essentially the same as Uno.");
+            pause();
+            out("\nThe first player to discard all cards wins the round,");
+            pause();
+            out("\nand the winner takes the value of the loser's cards.");
+            pause();
+            out("\nThe first player to reach " + WINNING_SCORE + " points wins the game.");
+            pause();
+            out("\nGood luck!");
+            if(!argsReceived) {
+                pause();
+                userName = getUserResponse_string("\nPlease enter your name:");
+                pause();
+                System.out.println("\nHello, " + userName + "! Let's begin.");
+                logEntry("userName was set to " + userName + ".");
+            }
+        }
     }
 
     /**
@@ -292,8 +339,10 @@ public class Main {
      * Start a new hand. Outer game runs inner games until one of the players reaches the max score.
      */
     private static void playNewHand() {
-        pause();
-        out("\nStarting a new game...");
+        if(!argsReceived) {
+            pause();
+            out("\nStarting a new game...");
+        }
         game.startGame(null, true);
 
         // testing - allow p1 or p2 to win 1st hand
@@ -637,8 +686,9 @@ public class Main {
     /**
      * Checks for invalid characters in submitted name.
      *
-     * @param str  The user's name.
-     * @return      True if name contains only alphanumeric characters, false otherwise.
+     * @param str   The user's name.
+     * @return      True if string consists of the characters (empty),
+     *              and/or a-z, and/or A-Z, and/or space. False otherwise.
      */
     private static boolean isValid(String str) {
         Pattern p = Pattern.compile("[^A-Za-z\\s]");
