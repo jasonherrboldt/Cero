@@ -51,7 +51,6 @@ public class Main {
     private static final int WINNING_SCORE = 200;
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
     private static final int MAX_ARG_LENGTH = 2;
-    // private static final String DATE_STR = new SimpleDateFormat("YYYY-MM-DD").format(new Date());
     private static final String DATE_STR = getTodaysDate();
     private static final String FILENAME = "logs/" + DATE_STR + ".txt";
     private static final File FILE = new File(FILENAME);
@@ -77,8 +76,8 @@ public class Main {
      * @param args arguments
      */
     public static void main(String[] args) {
-        parseArgs(args);
         startLog();
+        parseArgs(args);
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables();
