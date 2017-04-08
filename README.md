@@ -171,11 +171,15 @@ Here's how to run it from a terminal window.
   * cd C:\path\to\Cero_directory
   * javac src/com/jason/*.java -d C:\path\to\Cero_directory\out
   * java -cp ./out com.jason.Main
+  
+  Optional program arguments: output delay seconds, user name. Skips right to the game, e.g.
+  * java -cp ./out com.jason.Main 1 John
 
  Mac:
   * cd /Users/yourname/path/to/Cero_directory
   * javac src/com/jason/*.java -d /Users/yourname/path/to/Cero_directory/out
   * java -cp ./out com.jason.Main
+  * java -cp ./out com.jason.Main 2 Amy
   
   The program will terminate when one of the players has a score of 200 or greater. 
 
