@@ -1,10 +1,15 @@
 package com.jason;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * Main class. Create a new game and run it. See README for compile / run instructions.
@@ -48,13 +53,12 @@ public class Main {
     private static final String INVALID_QUESTION_WARNING = "Main.getUserResponse received a null or empty question.";
 
     // various global attributes
-    private static final int WINNING_SCORE = 200;
+    private static final int WINNING_SCORE = 100;
     private static final int EMPTY_GRUMBLE_LIMIT = 11;
-    private static final int MAX_ARG_LENGTH = 2;
     private static final String DATE_STR = getTodaysDate();
-    private static final String FILENAME = "logs/" + DATE_STR + ".txt";
-    private static final File FILE = new File(FILENAME);
-    private static final String LOG_DIRECTORY = "";
+    private static final String LOG_DIR = "logs/";
+    private static final String LOG_FILENAME = LOG_DIR + DATE_STR + ".txt";
+    private static final File LOG_FILE = new File(LOG_FILENAME);
     private static Game game;
     private static boolean winnerIsPlayerOne;
     private static boolean handWinnerExists;
@@ -65,10 +69,9 @@ public class Main {
     private static String playerOneName;
     private static String playerTwoName;
     private static int pauseSeconds;
-    private static boolean argsReceived = false;
-
-    // testing
-    // private static int pauseSeconds = 1;
+    private static boolean skipIntro;
+    private static boolean gameRequested;
+    private static String PLAYER_TWO_STRATEGY = "Player two strategy";
 
     /**
      * Main method.
@@ -78,6 +81,17 @@ public class Main {
     public static void main(String[] args) {
         startLog();
         parseArgs(args);
+        if(gameRequested) {
+            playGame();
+        } else {
+            printStrategyLogs();
+        }
+    }
+
+    /**
+     * Play a game.
+     */
+    private static void playGame() {
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables();
@@ -112,43 +126,159 @@ public class Main {
      * @param args to parse
      */
     private static void parseArgs(String[] args) {
+        skipIntro = false;
+        gameRequested = true;
         if(args.length > 0) {
-            if (args.length != MAX_ARG_LENGTH) {
-                throw new IllegalArgumentException("The number of main args must either be "
-                        + MAX_ARG_LENGTH + " or 0.");
+            if(!argsAreValid(args)) {
+                pauseSeconds = 1;
+                pause();
+                System.out.println("\n(At least one illegal program argument was received and ignored.");
+                pause();
+                System.out.println("\nSee log and README for details.)");
             } else {
-                argsReceived = true;
-                String arg_0 = args[0];
-                String arg_1 = args[1];
+                if(args.length == 1) {
+                    gameRequested = false;
+                } else {
+                    skipIntro = true;
+                    String arg_0 = args[0];
+                    String arg_1 = args[1];
 
-                // parse first arg
-                try {
-                    pauseSeconds = Integer.parseInt(arg_0);
-                } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("The first argument could not be converted to an integer.");
-                }
-                if(pauseSeconds != 1 && pauseSeconds != 2) {
-                    throw new IllegalArgumentException("The first argument must either be '1' or '2'.");
-                }
-                logEntry("The output speed was set to " + pauseSeconds + " seconds.");
+                    // parse first arg
+                    try {
+                        pauseSeconds = Integer.parseInt(arg_0);
+                    } catch (NumberFormatException e){
+                        // Do nothing -- all validation for this method is handled by argsAreValid().
+                    }
+                    logEntry("The output speed was set to " + pauseSeconds + " seconds.");
 
-                // parse second arg
-                if(isValid(arg_1)) {
+                    // parse second arg
                     userName = arg_1;
                     logEntry("userName was set to " + userName + ".");
-                } else {
-                    throw new IllegalArgumentException("The second argument can only contain the characters " +
-                            "a-z, A-Z, and space.");
                 }
             }
         }
     }
 
     /**
+     * @param args Program arguments
+     * @return true if args are valid, false otherwise.
+     */
+    private static boolean argsAreValid(String[] args) {
+        if(args.length > 0) {
+            if (args.length != 1 && args.length != 2) {
+                logEntry("An illegal program argument error was ignored: the number of main args must be 0, 1, or 2. " +
+                        "Number of args received: " + args.length + ". Please see the README file for program arg usage.");
+                return false;
+            } else {
+                if(args.length == 1) {
+                    if(!args[0].equalsIgnoreCase("strategylogs")) {
+                        logEntry("An illegal program argument error was ignored: single arg can only be " +
+                                "'strategylogs' (case insensitive). Argument received: " + args[0] +
+                                ". Please see the README file for program arg usage.");
+                        return false;
+                    }
+                } else {
+                    int test;
+                    try {
+                        test = Integer.parseInt(args[0]);
+                    } catch (NumberFormatException e){
+                        logEntry("An illegal program argument error was ignored: the first argument could not be " +
+                                "converted to an integer. Argument received: " + args[0] +
+                                ". Please see the README file for program arg usage.");
+                        return false;
+                    }
+                    if(test != 0 && test != 1 && test != 2) {
+                        logEntry("An illegal program argument error was ignored: the first argument must be " +
+                                "0, 1 or 2. Argument received: " + test +
+                                ". Please see the README file for program arg usage.");
+                        return false;
+                    }
+                    if(!isValid(args[1])) {
+                        logEntry("An illegal program argument error was ignored: the second argument can only " +
+                                "contain the characters a-z, A-Z, and space. Argument received: " + args[1] +
+                                ". Please see the README file for program arg usage.");
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Print strategy logs to the console.
+     * Show how many wins and losses each strategy has in the logs.
+     */
+    private static void printStrategyLogs() {
+        List<String> list = getStrategyLogs();
+        if(list == null || list.size() == 0) {
+            out("\nNo games won or lost. Play more games and try again!");
+        } else {
+            for(String s : list) {
+                System.out.println(s);
+            }
+        }
+    }
+
+    /**
+     * Scan logs for player two strategy wins & losses.
+     *
+     * @return list of strings for pattern matches.
+     */
+    private static List<String> getStrategyLogs() {
+        File directory = new File(LOG_DIR);
+        if (!directory.exists()) {
+            out("\nOops! The log directory does not exist. Play a few games and try again later.");
+        } else {
+            out("\nScanning logs...");
+            List<String> list = new ArrayList<>();
+            try(Stream<Path> paths = Files.walk(Paths.get(LOG_DIR))) {
+                paths.forEach(filePath -> {
+                    if (Files.isRegularFile(filePath)) {
+                        BufferedReader reader = null;
+                        try {
+                            reader = new BufferedReader(new FileReader(filePath.toFile()));
+                            String text;
+                            while ((text = reader.readLine()) != null) {
+                                String filenamePattern = "^.+" + PLAYER_TWO_STRATEGY + ".+$";
+                                Pattern p = Pattern.compile(filenamePattern);
+                                Matcher m = p.matcher(text);
+
+                                if(m.find()) {
+                                    list.add(text);
+                                }
+                            }
+                        } catch (FileNotFoundException e) {
+                            throw new IllegalStateException("FileNotFoundException thrown while attempting to read log files: "
+                                    + e.getMessage());
+                        } catch (IOException e) {
+                            throw new IllegalStateException("IOException thrown while attempting to read log files: "
+                                    + e.getMessage());
+                        } finally {
+                            try {
+                                if (reader != null) {
+                                    reader.close();
+                                }
+                            } catch (IOException e) {
+                                out(e.getMessage());
+                            }
+                        }
+                    }
+                });
+                return list;
+            } catch (IOException e) {
+                throw new IllegalStateException("IOException thrown while attempting to read log files: "
+                        + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    /**
      * Set the speed of the terminal print lines.
      */
     private static void setOutputSpeed() {
-        if(!argsReceived) {
+        if(!skipIntro) {
             String speedReply = "";
             while(!speedReply.equals("1") && !speedReply.equals("2")) {
                 pauseSeconds = 1;
@@ -192,7 +322,7 @@ public class Main {
                 Main.out("WARN: unable to create directory 'logs'.");
             }
         }
-        logEntry("New game started.");
+        logEntry("New log started.");
     }
 
     /**
@@ -206,9 +336,9 @@ public class Main {
             BufferedWriter bw;
             PrintWriter out;
             String time;
-            if (!FILE.exists()){
-                if(FILE.createNewFile()) {
-                    fw = new FileWriter(FILE);
+            if (!LOG_FILE.exists()){
+                if(LOG_FILE.createNewFile()) {
+                    fw = new FileWriter(LOG_FILE);
                     bw = new BufferedWriter(fw);
                     out = new PrintWriter(bw);
                     time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
@@ -218,7 +348,7 @@ public class Main {
                     Main.out("WARN: Main.startLog unable to create new log file.");
                 }
             } else {
-                fw = new FileWriter(FILENAME, true);
+                fw = new FileWriter(LOG_FILENAME, true);
                 bw = new BufferedWriter(fw);
                 out = new PrintWriter(bw);
                 time = new SimpleDateFormat("kk:mm:ss:SSS").format(new Date());
@@ -251,7 +381,7 @@ public class Main {
         playerOneName = game.getPlayer1().getName();
         playerTwoName = game.getPlayer2().getName();
 
-        if(!argsReceived) {
+        if(!skipIntro) {
             pause();
             out("\nYou will be playing against " + playerTwoName + ".");
         }
@@ -270,11 +400,7 @@ public class Main {
      * Welcome the user.
      */
     private static void welcomeUser() {
-
-        // testing
-        // userName = "David Lightman";
-
-        if(!argsReceived) {
+        if(!skipIntro) {
             pause();
             out("\nWelcome to Cero! The rules are essentially the same as Uno.");
             pause();
@@ -285,7 +411,7 @@ public class Main {
             out("\nThe first player to reach " + WINNING_SCORE + " points wins the game.");
             pause();
             out("\nGood luck!");
-            if(!argsReceived) {
+            if(!skipIntro) {
                 pause();
                 userName = getUserResponse_string("\nPlease enter your name:");
                 pause();
@@ -338,7 +464,7 @@ public class Main {
      * Start a new hand. Outer game runs inner games until one of the players reaches the max score.
      */
     private static void playNewHand() {
-        if(!argsReceived) {
+        if(!skipIntro) {
             pause();
             out("\nStarting a new game...");
         }
@@ -480,14 +606,22 @@ public class Main {
             out("\nCongratulations, " + playerOneName + "! You won the game.");
             pause();
             out("\n(Humanity is safe. For now...)");
+            pause();
             out("");
         } else {
             out("\n" + playerTwoName + " was the first to break " + WINNING_SCORE
                     + " points.\n\nCongratulations, " + playerTwoName + "! You won the game.");
             pause();
             out("\n(" + playerTwoName + " is not surprised.)");
+            pause();
             out("");
         }
+        logStrategyResult();
+    }
+
+    private static void logStrategyResult() {
+        String playerTwoResult = (playerOneScore > playerTwoScore) ? "lost" : "won";
+        logEntry(PLAYER_TWO_STRATEGY + game.getPlayer2().getStrategy() + " " + playerTwoResult);
     }
 
     /**
