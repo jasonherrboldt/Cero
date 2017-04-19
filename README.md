@@ -1,6 +1,6 @@
 # Cero
 
-A Java coding exercise modeled after the card game Uno.
+A Java coding exercise modeled after the card game Uno. See below for how to run. 
 
 There are two players. The user is player one, and player two is the program. 
 
@@ -43,7 +43,7 @@ __SAMPLE OUTPUT__
     
     and the winner takes the value of the loser's cards.
     
-    The first player to reach 200 points wins the game.
+    The first player to reach 100 points wins the game.
     
     Good luck!
     
@@ -170,18 +170,24 @@ Here's how to run it from a terminal window.
  Windows:
   * cd C:\path\to\Cero_directory
   * javac src/com/jason/*.java -d C:\path\to\Cero_directory\out
-  * java -cp ./out com.jason.Main
-  
-  Optional program arguments: output delay seconds, user name. Skips right to the game, e.g.
-  * java -cp ./out com.jason.Main 1 John
+  * java -cp ./out com.jason.Main  
 
  Mac:
   * cd /Users/yourname/path/to/Cero_directory
   * javac src/com/jason/*.java -d /Users/yourname/path/to/Cero_directory/out
   * java -cp ./out com.jason.Main
-  * java -cp ./out com.jason.Main 2 Amy
+  * java -cp ./out com.jason.Main
   
-  The program will terminate when one of the players has a score of 200 or greater. 
+  Optional program arguments: 
+  
+  Output delay seconds, user name. Skips right to the game, e.g.
+  * java -cp ./out com.jason.Main 2 Barb
+  
+  Strategy log analysis -- lists the number of times the three program strategies have won and lost games. 
+  Program argument is case-insensitive. 
+  * java -cp ./out com.jason.Main strategylogs
+  
+  The program will terminate when one of the players has a score of 100 or greater. 
 
 __LOGGING__
 
