@@ -59,19 +59,21 @@ public class Main {
     private static final String LOG_DIR = "logs/";
     private static final String LOG_FILENAME = LOG_DIR + DATE_STR + ".txt";
     private static final File LOG_FILE = new File(LOG_FILENAME);
+    private static final String PLAYER_TWO_STRATEGY = "Player two strategy";
     private static Game game;
     private static boolean winnerIsPlayerOne;
     private static boolean handWinnerExists;
-    private static String userName;
-    private static int playerOneScore;
-    private static int playerTwoScore;
     private static boolean cardDiscarded;
-    private static String playerOneName;
-    private static String playerTwoName;
-    private static int pauseSeconds;
     private static boolean skipIntro;
     private static boolean gameRequested;
-    private static String PLAYER_TWO_STRATEGY = "Player two strategy";
+    private static boolean logTokensValidated;
+    private static int playerOneScore;
+    private static int playerTwoScore;
+    private static int pauseSeconds;
+    private static int STRATEGY_LOG_TOKEN_LENGTH = 6;
+    private static String userName;
+    private static String playerOneName;
+    private static String playerTwoName;
 
     /**
      * Main method.
@@ -85,6 +87,59 @@ public class Main {
             playGame();
         } else {
             printStrategyLogs();
+        }
+    }
+
+    /**
+     * Open a new logging session. Create a new /log directory as needed.
+     */
+    private static void startLog() {
+        File dir = new File("logs");
+        if(!dir.exists()) {
+            if(!dir.mkdir()) {
+                Main.out("WARN: unable to create directory 'logs'.");
+            }
+        }
+        logEntry("New log started.");
+    }
+
+    /**
+     * Parse the main args.
+     *
+     * @param args to parse
+     */
+    private static void parseArgs(String[] args) {
+        skipIntro = false;
+        gameRequested = true;
+        if(args.length > 0) {
+            if(!validateArgs(args)) {
+                pauseSeconds = 1;
+                pause();
+                System.out.println("\n(At least one illegal program argument was received and ignored.");
+                pause();
+                System.out.println("\nSee log and README for details.)");
+            } else {
+                if(args.length == 1) {
+                    gameRequested = false;
+                    logTokensValidated = false;
+                } else {
+                    skipIntro = true;
+                    String arg_0 = args[0];
+                    String arg_1 = args[1];
+
+                    // parse first arg
+                    try {
+                        pauseSeconds = Integer.parseInt(arg_0);
+                    } catch (NumberFormatException e){
+                        // Do nothing -- all validation for this method is handled by argsAreValid().
+                    }
+                    logEntry("The output speed was set to " + pauseSeconds + " seconds.");
+
+                    // parse second arg
+                    userName = arg_1;
+                    logEntry("userName was set to " + userName + ".");
+                }
+            }
         }
     }
 
@@ -120,50 +175,146 @@ public class Main {
         announceWinner();
     }
 
-    /**
-     * Parse the main args.
-     *
-     * @param args to parse
+    /* fake logs for testing:
+        09:34:05:148 Player two strategy Cautious lost
+        09:34:05:148 Player two strategy Cautious lost
+        09:34:05:148 Player two strategy Cautious won
+        09:34:05:148 Player two strategy Cautious won
+        09:34:05:148 Player two strategy Cautious won
+        09:34:05:148 Player two strategy Cautious won
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold lost
+        09:34:05:148 Player two strategy Bold won
+        09:34:05:148 Player two strategy Dumb lost
+        09:34:05:148 Player two strategy Dumb lost
+        09:34:05:148 Player two strategy Dumb lost
+        09:34:05:148 Player two strategy Dumb lost
+        09:34:05:148 Player two strategy Dumb lost
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
+        09:34:05:148 Player two strategy Dumb won
      */
-    private static void parseArgs(String[] args) {
-        skipIntro = false;
-        gameRequested = true;
-        if(args.length > 0) {
-            if(!argsAreValid(args)) {
-                pauseSeconds = 1;
-                pause();
-                System.out.println("\n(At least one illegal program argument was received and ignored.");
-                pause();
-                System.out.println("\nSee log and README for details.)");
-            } else {
-                if(args.length == 1) {
-                    gameRequested = false;
-                } else {
-                    skipIntro = true;
-                    String arg_0 = args[0];
-                    String arg_1 = args[1];
 
-                    // parse first arg
-                    try {
-                        pauseSeconds = Integer.parseInt(arg_0);
-                    } catch (NumberFormatException e){
-                        // Do nothing -- all validation for this method is handled by argsAreValid().
-                    }
-                    logEntry("The output speed was set to " + pauseSeconds + " seconds.");
+    /**
+     * Prints strategy logs to the console.
+     * Shows how many wins and losses each strategy has in the logs.
+     * Wins and losses are sorted descending.
+     *
+     * Warning: this method has a STRONG dependency on logStrategyResult()!
+     * While this method is written defensively, changes to logStrategyResult() may break it.
+     */
+    private static void printStrategyLogs() {
+        List<String> rawStrategyLogs = getRawStrategyLogs();
+        if(rawStrategyLogs == null || rawStrategyLogs.size() == 0) {
+            out("\nNo games won or lost. Play more games and try again!");
+        } else {
+            List<String> tokens = new ArrayList<>();
+            List<String> unparsableLogs = new ArrayList<>();
+            Map<String, Integer> wins = new HashMap<>();
+            Map<String, Integer> losses = new HashMap<>();
+            boolean unparsableLogsFound = false;
 
-                    // parse second arg
-                    userName = arg_1;
-                    logEntry("userName was set to " + userName + ".");
+            // Step through every relevant log string and farm out the wins and losses to be sorted.
+            for(String s : rawStrategyLogs) {
+                StringTokenizer st = new StringTokenizer(s);
+                while (st.hasMoreElements()) {
+                    tokens.add(st.nextElement().toString());
                 }
+
+                // Farm out the wins and losses if valid tokens are received.
+                if(validateTokens(tokens)) {
+                    if(tokens.get(5).equalsIgnoreCase("won")) {
+                        wins = populateLogTokenMap(tokens, wins);
+                    } else {
+                        losses = populateLogTokenMap(tokens, losses);
+                    }
+                } else {
+                    unparsableLogs.add(s);
+                    unparsableLogsFound = true;
+                }
+                tokens.clear();
             }
+            if(unparsableLogsFound) {
+                    System.out.println("\nUnable to parse one or more strategy log lines:");
+                    for(String s : unparsableLogs) {
+                        System.out.println(s);
+                    }
+            }
+
+            // Sort the wins and print them to the console.
+            Map<String, Integer> sortedWins = new LinkedHashMap<>();
+            wins.entrySet().stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                    .forEachOrdered(x -> sortedWins.put(x.getKey(), x.getValue()));
+            System.out.print("\nSorted by number of wins: \n" + sortedWins + "\n");
+
+            // Sort the losses and print them to the console.
+            Map<String, Integer> sortedLosses = new LinkedHashMap<>();
+            losses.entrySet().stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                    .forEachOrdered(x -> sortedLosses.put(x.getKey(), x.getValue()));
+            System.out.print("\nSorted by number of losses: \n" + sortedLosses + "\n\n");
         }
+    }
+
+    /**
+     * Populate a HashMap with log string tokens as needed.
+     * Blows up if token list has not first gone through validateTokens().
+     *
+     * @param tokens the tokens to parse
+     * @param map the map to populate
+     * @return the populated map
+     */
+    private static Map<String, Integer> populateLogTokenMap(List<String> tokens, Map<String, Integer> map) {
+        if(!logTokensValidated) {
+            throw new IllegalStateException("Log tokens sent to populateLogTokenMap() " +
+                    "without first being validated by validateTokens().");
+        }
+        String entry = tokens.get(4) + " " + tokens.get(5);
+        int count = 1;
+        if(map.containsKey(entry)) {
+            count = map.get(entry) + 1;
+        }
+        map.put(entry, count);
+        return map;
+    }
+
+    /**
+     * @param tokens The token list to analyze
+     * @return true if the token list contains valid tokens, false otherwise.
+     */
+    private static boolean validateTokens(List<String> tokens) {
+        logTokensValidated = true;
+        String tokens_4 = tokens.get(4);
+        String tokens_5 = tokens.get(5);
+        return tokens.size() == STRATEGY_LOG_TOKEN_LENGTH
+                && (tokens_5.equalsIgnoreCase("won") || tokens_5.equalsIgnoreCase("lost"))
+                && (tokens_4.equalsIgnoreCase("cautious") || tokens_4.equalsIgnoreCase("bold") || tokens_4.equalsIgnoreCase("dumb"));
     }
 
     /**
      * @param args Program arguments
      * @return true if args are valid, false otherwise.
      */
-    private static boolean argsAreValid(String[] args) {
+    private static boolean validateArgs(String[] args) {
         if(args.length > 0) {
             if (args.length != 1 && args.length != 2) {
                 logEntry("An illegal program argument error was ignored: the number of main args must be 0, 1, or 2. " +
@@ -206,26 +357,11 @@ public class Main {
     }
 
     /**
-     * Print strategy logs to the console.
-     * Show how many wins and losses each strategy has in the logs.
-     */
-    private static void printStrategyLogs() {
-        List<String> list = getStrategyLogs();
-        if(list == null || list.size() == 0) {
-            out("\nNo games won or lost. Play more games and try again!");
-        } else {
-            for(String s : list) {
-                System.out.println(s);
-            }
-        }
-    }
-
-    /**
      * Scan logs for player two strategy wins & losses.
      *
-     * @return list of strings for pattern matches.
+     * @return list of strings for strategy pattern matches.
      */
-    private static List<String> getStrategyLogs() {
+    private static List<String> getRawStrategyLogs() {
         File directory = new File(LOG_DIR);
         if (!directory.exists()) {
             out("\nOops! The log directory does not exist. Play a few games and try again later.");
@@ -310,19 +446,6 @@ public class Main {
             out("\nThe output speed has been set.");
             logEntry("The output speed was set to " + pauseSeconds + " seconds.");
         }
-    }
-
-    /**
-     * Open a new logging session. Create a new /log directory as needed.
-     */
-    private static void startLog() {
-        File dir = new File("logs");
-        if(!dir.exists()) {
-            if(!dir.mkdir()) {
-                Main.out("WARN: unable to create directory 'logs'.");
-            }
-        }
-        logEntry("New log started.");
     }
 
     /**
@@ -619,6 +742,10 @@ public class Main {
         logStrategyResult();
     }
 
+    /**
+     * Log the result of the randomly-selected player two strategy.
+     * Warning: printStrategyLogs has a STRONG dependency on this method!
+     */
     private static void logStrategyResult() {
         String playerTwoResult = (playerOneScore > playerTwoScore) ? "lost" : "won";
         logEntry(PLAYER_TWO_STRATEGY + game.getPlayer2().getStrategy() + " " + playerTwoResult);
