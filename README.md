@@ -178,16 +178,18 @@ Here's how to run it from a terminal window.
   * java -cp ./out com.jason.Main
   * java -cp ./out com.jason.Main
   
+  The program will terminate when one of the players has a score of 100 or greater. 
+  
   Optional program arguments: 
   
-  Output delay seconds, user name. Skips right to the game, e.g.
-  * java -cp ./out com.jason.Main 2 Barb
+  Output delay seconds, user name. First arg must be 1 or 2. Names may only contain a-z, A-Z, and space.
+  This option skips the user right to the game, e.g.
+  * java -cp ./out com.jason.Main 1 Amy
+  * java -cp ./out com.jason.Main 2 Bill
   
   Strategy log analysis -- lists the number of times the three program strategies have won and lost games. 
   Program argument is case-insensitive. 
   * java -cp ./out com.jason.Main strategylogs
-  
-  The program will terminate when one of the players has a score of 100 or greater. 
 
 __LOGGING__
 
