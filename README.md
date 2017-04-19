@@ -176,14 +176,13 @@ Here's how to run it from a terminal window.
   * cd /Users/yourname/path/to/Cero_directory
   * javac src/com/jason/*.java -d /Users/yourname/path/to/Cero_directory/out
   * java -cp ./out com.jason.Main
-  * java -cp ./out com.jason.Main
   
   The program will terminate when one of the players has a score of 100 or greater. 
   
   Optional program arguments: 
   
   Output delay seconds, user name. First arg must be 1 or 2. Names may only contain a-z, A-Z, and space.
-  This option skips the user right to the game, e.g.
+  This option skips the game intro and takes the user right to the game. 
   * java -cp ./out com.jason.Main 1 Amy
   * java -cp ./out com.jason.Main 2 Bill
   
