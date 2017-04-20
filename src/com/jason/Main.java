@@ -303,11 +303,10 @@ public class Main {
      */
     private static boolean validateTokens(List<String> tokens) {
         logTokensValidated = true;
-        String tokens_4 = tokens.get(4);
-        String tokens_5 = tokens.get(5);
         return tokens.size() == STRATEGY_LOG_TOKEN_LENGTH
-                && (tokens_5.equalsIgnoreCase("won") || tokens_5.equalsIgnoreCase("lost"))
-                && (tokens_4.equalsIgnoreCase("cautious") || tokens_4.equalsIgnoreCase("bold") || tokens_4.equalsIgnoreCase("dumb"));
+                && (tokens.get(5).equalsIgnoreCase("won") || tokens.get(5).equalsIgnoreCase("lost"))
+                && (tokens.get(4).equalsIgnoreCase("cautious") || tokens.get(4).equalsIgnoreCase("bold")
+                || tokens.get(4).equalsIgnoreCase("dumb"));
     }
 
     /**
@@ -748,7 +747,7 @@ public class Main {
      */
     private static void logStrategyResult() {
         String playerTwoResult = (playerOneScore > playerTwoScore) ? "lost" : "won";
-        logEntry(PLAYER_TWO_STRATEGY + game.getPlayer2().getStrategy() + " " + playerTwoResult);
+        logEntry(PLAYER_TWO_STRATEGY + " " + game.getPlayer2().getStrategy() + " " + playerTwoResult);
     }
 
     /**
