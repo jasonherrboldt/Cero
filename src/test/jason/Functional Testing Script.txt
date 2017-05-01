@@ -1,0 +1,266 @@
+Run these functional tests from the command line to assert the non-unit-tested methods in Main are working properly:
+
+1a. Run java -cp ./out com.jason.Main. Expected: asks user to select output speed. Confirm selecting 1 sets output speed to one second, and the user is able to get all the way to the first move of the game.
+
+
+1b. Run java -cp ./out com.jason.Main. Expected: asks user to select output speed. Confirm selecting 2 sets output speed to two seconds, and the user is able to get all the way to the first move of the game.
+
+
+1c. Run java -cp ./out com.jason.Main. Expected: asks user to select output speed. Confirm selecting 3 repeats the output speed demo.
+
+
+1d. Run java -cp ./out com.jason.Main. Expected: asks user to select output speed. Confirm selecting 4 displays illegal arguments message, asks the user to try again.
+
+
+1e. Run java -cp ./out com.jason.Main. Expected: asks user to select output speed. Confirm selecting x displays illegal arguments message, asks the user to try again.
+
+
+2a. Run java -cp ./out com.jason.Main 0 Name. Expected: skips right to game with 0-second timing. Confirm user is able to get all the way to the first move of the game.
+
+
+2b. Run java -cp ./out com.jason.Main 1 Name. Expected: skips right to game with 1-second timing. Confirm user is able to get all the way to the first move of the game.
+
+
+2c. Run java -cp ./out com.jason.Main 2 Name. Expected: skips right to game with 2-second timing. Confirm user is able to get all the way to the first move of the game.
+
+
+2d. Run java -cp ./out com.jason.Main 3 Name. Expected: displays illegal arguments received message, starts game as if no args received. 
+
+(At least one illegal program argument was received and ignored.
+
+See log and README for details.)
+
+In the logs: An illegal program argument error was ignored: the first argument must be 0, 1 or 2. Argument received: 3. Please see the README file for program arg usage.
+
+
+2e. Run java -cp ./out com.jason.Main x Name. Expected: displays illegal arguments received message, starts game as if no args received. 
+
+(At least one illegal program argument was received and ignored.
+
+See log and README for details.)
+
+In the logs: An illegal program argument error was ignored: the first argument could not be converted to an integer. Argument received: x. Please see the README file for program arg usage.
+
+2e. Run java -cp ./out com.jason.Main 1 Name4. Expected: displays illegal arguments received message, starts game as if no args received. 
+
+(At least one illegal program argument was received and ignored.
+
+See log and README for details.)
+
+In the logs: An illegal program argument error was ignored: the second argument can only contain the characters a-z, A-Z, and space. Argument received: Name4. Please see the README file for program arg usage.
+
+
+3a. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with non-zero values for all strategies, both wins and losses. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold won
+00:00:00:000 Player two strategy Dumb lost
+00:00:00:000 Player two strategy Dumb lost
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+
+The program picks one of three strategies at random for each game:
+
+Bold, cautious, and dumb.
+
+Bold saves non-numeric cards for when it gets backed into a corner,
+
+cautious discards non-numeric cards ASAP to prevent big losses,
+
+and dumb looks blindly for the first playable card in its hand.
+
+Here's how each strategy did:
+
+Dumb won 3
+Cautious won 3
+Bold won 1
+
+Bold lost 4
+Dumb lost 2
+Cautious lost 2
+
+
+3b. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with at least one zero value for one strategy win and one strategy loss. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold won
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+
+The program picks one of three strategies at random for each game:
+
+Bold, cautious, and dumb.
+
+Bold saves non-numeric cards for when it gets backed into a corner,
+
+cautious discards non-numeric cards ASAP to prevent big losses,
+
+and dumb looks blindly for the first playable card in its hand.
+
+Here's how each strategy did:
+
+Dumb won 3
+Bold won 1
+Cautious won 0
+
+Bold lost 4
+Cautious lost 2
+Dumb lost 0
+
+
+3c. Run java -cp ./out com.jason.Main strategylogs, with at least one incorrectly-formatted strategy log and at least one correctly-formatted strategy log present. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+
+00:00:00:000 Player two strategy Cautious lostt
+00:00:00:000 Player two strategy Cautious lost 5%
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+
+The program picks one of three strategies at random for each game:
+
+Bold, cautious, and dumb.
+
+Bold saves non-numeric cards for when it gets backed into a corner,
+
+cautious discards non-numeric cards ASAP to prevent big losses,
+
+and dumb looks blindly for the first playable card in its hand.
+
+Here's how each strategy did:
+
+Unable to parse one or more strategy log lines:
+00:00:00:000 Player two strategy Cautious lostt
+00:00:00:000 Player two strategy Cautious lost 5%
+
+Cautious won 3
+Dumb won 0
+Bold won 0
+
+Bold lost 4
+Dumb lost 0
+Cautious lost 0
+
+
+3d. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with wins for all strategies and no losses for all strategies. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+00:00:00:000 Player two strategy Dumb won 
+
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Bold won
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+
+The program picks one of three strategies at random for each game:
+
+Bold, cautious, and dumb.
+
+Bold saves non-numeric cards for when it gets backed into a corner,
+
+cautious discards non-numeric cards ASAP to prevent big losses,
+
+and dumb looks blindly for the first playable card in its hand.
+
+Here's how each strategy did:
+
+Dumb won 3
+Cautious won 3
+Bold won 1
+
+Dumb lost 0
+Cautious lost 0
+Bold lost 0
+
+
+3e. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with losses for all strategies and no wins for all strategies. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Dumb lost
+00:00:00:000 Player two strategy Dumb lost
+
+The program picks one of three strategies at random for each game:
+
+Bold, cautious, and dumb.
+
+Bold saves non-numeric cards for when it gets backed into a corner,
+
+cautious discards non-numeric cards ASAP to prevent big losses,
+
+and dumb looks blindly for the first playable card in its hand.
+
+Here's how each strategy did:
+
+Dumb won 0
+Cautious won 0
+Bold won 0
+
+Bold lost 4
+Dumb lost 2
+Cautious lost 2
+
+
+3f. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with no strategy wins and losses. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+
+The program picks one of three strategies at random for each game:
+
+Bold, cautious, and dumb.
+
+Bold saves non-numeric cards for when it gets backed into a corner,
+
+cautious discards non-numeric cards ASAP to prevent big losses,
+
+and dumb looks blindly for the first playable card in its hand.
+
+Here's how each strategy did:
+
+No games won or lost. Play more games and try again!
+
+
+3g. Run java -cp ./out com.jason.Main StraTEGylOGs, with any or no correctly- or incorrectly-formatted strategy logs as shown above. Expected: same result as when "strategylogs" argument is all lower case.
+
+
+3h. Enter java -cp ./out com.jason.Main strategylogs4. Expected: asks user to select output speed, but gives a warning first (see below). Confirm user is able to get all the way to the first move of the game. 
+
+(At least one illegal program argument was received and ignored.
+
+See log and README for details.)
+
+In the logs: An illegal program argument error was ignored: single arg can only be 'strategylogs' (case insensitive). Argument received: strategylogs4. Please see the README file for program arg usage.
+
+
+
+
+
+
+
+
+
+
+
+
+

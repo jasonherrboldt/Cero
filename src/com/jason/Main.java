@@ -65,7 +65,7 @@ public class Main {
     private static boolean handWinnerExists;
     private static boolean cardDiscarded;
     private static boolean skipIntro;
-    private static boolean gameRequested;
+    // private static boolean gameRequested;
     private static boolean logTokensValidated;
     private static int playerOneScore;
     private static int playerTwoScore;
@@ -74,6 +74,7 @@ public class Main {
     private static String userName;
     private static String playerOneName;
     private static String playerTwoName;
+    enum Action { GAME, STRATEGYLOGS, P1WIN, P2WIN }
 
     /**
      * Main method.
@@ -82,11 +83,23 @@ public class Main {
      */
     public static void main(String[] args) {
         startLog();
-        parseArgs(args);
-        if(gameRequested) {
-            playGame();
-        } else {
-            printStrategyLogs();
+        switch (parseArgs(args)) {
+            case GAME: {
+                playGame();
+                break;
+            }
+            case STRATEGYLOGS: {
+                printStrategyLogs();
+                break;
+            }
+            case P1WIN: {
+                out("P1WIN");
+                break;
+            }
+            case P2WIN: {
+                out("P2WIN");
+                break;
+            }
         }
     }
 
@@ -108,9 +121,10 @@ public class Main {
      *
      * @param args to parse
      */
-    private static void parseArgs(String[] args) {
+    private static Action parseArgs(String[] args) {
         skipIntro = false;
-        gameRequested = true;
+        // gameRequested = true;
+        Action returnAction = Action.GAME;
         if(args.length > 0) {
             if(!validateArgs(args)) {
                 pauseSeconds = 1;
@@ -120,7 +134,15 @@ public class Main {
                 System.out.println("\nSee log and README for details.)");
             } else {
                 if(args.length == 1) {
-                    gameRequested = false;
+                    if(args[0].equalsIgnoreCase("strategylogs")) {
+                        returnAction = Action.STRATEGYLOGS;
+                    }
+                    if(args[0].equalsIgnoreCase("p1win")) {
+                        returnAction = Action.P1WIN;
+                    }
+                    if(args[0].equalsIgnoreCase("p2win")) {
+                        returnAction = Action.P2WIN;
+                    }
                     logTokensValidated = false;
                 } else {
                     skipIntro = true;
@@ -141,6 +163,7 @@ public class Main {
                 }
             }
         }
+        return returnAction;
     }
 
     /**
@@ -176,61 +199,66 @@ public class Main {
     }
 
     /* fake logs for testing:
-        09:34:05:148 Player two strategy Cautious lost
-        09:34:05:148 Player two strategy Cautious lost
-        09:34:05:148 Player two strategy Cautious won
-        09:34:05:148 Player two strategy Cautious won
-        09:34:05:148 Player two strategy Cautious won
-        09:34:05:148 Player two strategy Cautious won
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold lost
-        09:34:05:148 Player two strategy Bold won
-        09:34:05:148 Player two strategy Dumb lost
-        09:34:05:148 Player two strategy Dumb lost
-        09:34:05:148 Player two strategy Dumb lost
-        09:34:05:148 Player two strategy Dumb lost
-        09:34:05:148 Player two strategy Dumb lost
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
-        09:34:05:148 Player two strategy Dumb won
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Cautious lost
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Cautious won
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold lost
+00:00:00:000 Player two strategy Bold won
+00:00:00:000 Player two strategy Dumb lost
+00:00:00:000 Player two strategy Dumb lost
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
+00:00:00:000 Player two strategy Dumb won
      */
 
     /**
-     * Prints strategy logs to the console.
+     * Get the strategy logs and send them to the log printer.
+     */
+    private static void printStrategyLogs() {
+        List<Map<String, Integer>> listOfLogMaps = prepareStrategyLogs();
+        if(listOfLogMaps != null && listOfLogMaps.size() == 2) {
+            for(Map<String, Integer> m : listOfLogMaps) {
+                out("");
+                printStrategyLog(m);
+            }
+        }
+    }
+
+    /**
+     * Gets strategy information from the logs
      * Shows how many wins and losses each strategy has in the logs.
      * Wins and losses are sorted descending.
      *
      * Warning: this method has a STRONG dependency on logStrategyResult()!
      * While this method is written defensively, changes to logStrategyResult() may break it.
+     *
+     * @return a list of two items: wins map and losses map (in that order)
      */
-    private static void printStrategyLogs() {
+    private static List<Map<String, Integer>> prepareStrategyLogs() {
         List<String> rawStrategyLogs = getRawStrategyLogs();
         if(rawStrategyLogs == null || rawStrategyLogs.size() == 0) {
             out("\nNo games won or lost. Play more games and try again!");
+            return null;
         } else {
             List<String> tokens = new ArrayList<>();
             List<String> unparsableLogs = new ArrayList<>();
             Map<String, Integer> wins = new HashMap<>();
             Map<String, Integer> losses = new HashMap<>();
             boolean unparsableLogsFound = false;
+            List<Map<String, Integer>> listOfLogMaps = new ArrayList<>();
+
+            wins.put("Bold won", 0);
+            wins.put("Cautious won", 0);
+            wins.put("Dumb won", 0);
+
+            losses.put("Bold lost", 0);
+            losses.put("Cautious lost", 0);
+            losses.put("Dumb lost", 0);
 
             // Step through every relevant log string and farm out the wins and losses to be sorted.
             for(String s : rawStrategyLogs) {
@@ -258,20 +286,95 @@ public class Main {
                         System.out.println(s);
                     }
             }
+            listOfLogMaps.add(wins);
+            listOfLogMaps.add(losses);
+            return listOfLogMaps;
+        }
+    }
 
-            // Sort the wins and print them to the console.
-            Map<String, Integer> sortedWins = new LinkedHashMap<>();
-            wins.entrySet().stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                    .forEachOrdered(x -> sortedWins.put(x.getKey(), x.getValue()));
-            System.out.print("\nSorted by number of wins: \n" + sortedWins + "\n");
+    /**
+     * Print strategy logs.
+     *
+     * @param strategyLog the strategy log to print.
+     */
+    private static void printStrategyLog(Map<String, Integer> strategyLog) {
+        Map<String, Integer> sorted = new LinkedHashMap<>();
+        strategyLog.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));
+        Iterator it = sorted.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            System.out.println(pair.getKey() + " " + pair.getValue());
+            it.remove();
+        }
+    }
 
-            // Sort the losses and print them to the console.
-            Map<String, Integer> sortedLosses = new LinkedHashMap<>();
-            losses.entrySet().stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                    .forEachOrdered(x -> sortedLosses.put(x.getKey(), x.getValue()));
-            System.out.print("\nSorted by number of losses: \n" + sortedLosses + "\n\n");
+    /**
+     * Scan logs for player two strategy wins & losses.
+     *
+     * @return list of strings for strategy pattern matches.
+     */
+    private static List<String> getRawStrategyLogs() {
+        File directory = new File(LOG_DIR);
+        if (!directory.exists()) {
+            // Should never happen. Heh.
+            out("\nOops! The log directory does not exist. Play a few games and try again later.");
+            return null;
+        } else {
+            pauseSeconds = 1;
+            pause();
+            out("\nThe program picks one of three strategies at random for each game:");
+            pause();
+            out("\nBold, cautious, and dumb.");
+            pause();
+            out("\nBold saves non-numeric cards for when it gets backed into a corner,");
+            pause();
+            out("\ncautious discards non-numeric cards ASAP to prevent big losses,");
+            pause();
+            out("\nand dumb looks blindly for the first playable card in its hand.");
+            pause();
+            out("\nHere's how each strategy did:");
+            pause();
+            List<String> list = new ArrayList<>();
+            try(Stream<Path> paths = Files.walk(Paths.get(LOG_DIR))) {
+                paths.forEach(filePath -> {
+                    if (Files.isRegularFile(filePath)) {
+                        BufferedReader reader = null;
+                        try {
+                            reader = new BufferedReader(new FileReader(filePath.toFile()));
+                            String text;
+                            while ((text = reader.readLine()) != null) {
+                                String filenamePattern = "^.+" + PLAYER_TWO_STRATEGY + ".+$";
+                                Pattern p = Pattern.compile(filenamePattern);
+                                Matcher m = p.matcher(text);
+
+                                if(m.find()) {
+                                    list.add(text);
+                                }
+                            }
+                        } catch (FileNotFoundException e) {
+                            throw new IllegalStateException("FileNotFoundException thrown while attempting to read log files: "
+                                    + e.getMessage());
+                        } catch (IOException e) {
+                            throw new IllegalStateException("IOException thrown while attempting to read log files: "
+                                    + e.getMessage());
+                        } finally {
+                            try {
+                                if (reader != null) {
+                                    reader.close();
+                                }
+                            } catch (IOException e) {
+                                out(e.getMessage());
+                            }
+                        }
+                    }
+                });
+                return list;
+            } catch (IOException e) {
+                throw new IllegalStateException("IOException thrown while attempting to read log files: "
+                        + e.getMessage());
+            }
         }
     }
 
@@ -321,9 +424,12 @@ public class Main {
                 return false;
             } else {
                 if(args.length == 1) {
-                    if(!args[0].equalsIgnoreCase("strategylogs")) {
-                        logEntry("An illegal program argument error was ignored: single arg can only be " +
-                                "'strategylogs' (case insensitive). Argument received: " + args[0] +
+                    List<String> validSingleArgs = new ArrayList<>();
+                    validSingleArgs.add("strategylogs");
+                    validSingleArgs.add("p1win");
+                    validSingleArgs.add("p2win");
+                    if(!validSingleArgs.contains(args[0].toLowerCase())) {
+                        logEntry("An illegal program argument error was ignored. Argument received: " + args[0] +
                                 ". Please see the README file for program arg usage.");
                         return false;
                     }
@@ -353,60 +459,6 @@ public class Main {
             }
         }
         return true;
-    }
-
-    /**
-     * Scan logs for player two strategy wins & losses.
-     *
-     * @return list of strings for strategy pattern matches.
-     */
-    private static List<String> getRawStrategyLogs() {
-        File directory = new File(LOG_DIR);
-        if (!directory.exists()) {
-            out("\nOops! The log directory does not exist. Play a few games and try again later.");
-        } else {
-            out("\nScanning logs...");
-            List<String> list = new ArrayList<>();
-            try(Stream<Path> paths = Files.walk(Paths.get(LOG_DIR))) {
-                paths.forEach(filePath -> {
-                    if (Files.isRegularFile(filePath)) {
-                        BufferedReader reader = null;
-                        try {
-                            reader = new BufferedReader(new FileReader(filePath.toFile()));
-                            String text;
-                            while ((text = reader.readLine()) != null) {
-                                String filenamePattern = "^.+" + PLAYER_TWO_STRATEGY + ".+$";
-                                Pattern p = Pattern.compile(filenamePattern);
-                                Matcher m = p.matcher(text);
-
-                                if(m.find()) {
-                                    list.add(text);
-                                }
-                            }
-                        } catch (FileNotFoundException e) {
-                            throw new IllegalStateException("FileNotFoundException thrown while attempting to read log files: "
-                                    + e.getMessage());
-                        } catch (IOException e) {
-                            throw new IllegalStateException("IOException thrown while attempting to read log files: "
-                                    + e.getMessage());
-                        } finally {
-                            try {
-                                if (reader != null) {
-                                    reader.close();
-                                }
-                            } catch (IOException e) {
-                                out(e.getMessage());
-                            }
-                        }
-                    }
-                });
-                return list;
-            } catch (IOException e) {
-                throw new IllegalStateException("IOException thrown while attempting to read log files: "
-                        + e.getMessage());
-            }
-        }
-        return null;
     }
 
     /**
@@ -837,13 +889,8 @@ public class Main {
     private static void playerOnesTurn() {
         int p1HandSize;
         String discardNumberString;
-        
-//        pause();
-//        out("\nIt's your turn, " + p1Name + ".\n");
-
         pause();
         game.printHand(game.getPlayer1());
-
         cardDiscarded = false;
         while(!cardDiscarded) {
             p1HandSize = game.getPlayer1().getHand().getSize();
@@ -950,6 +997,9 @@ public class Main {
      *              and/or a-z, and/or A-Z, and/or space. False otherwise.
      */
     private static boolean isValid(String str) {
+        if(str.trim().equals("")) {
+            return false;
+        }
         Pattern p = Pattern.compile("[^A-Za-z\\s]");
         return !p.matcher(str).find();
     }
