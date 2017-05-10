@@ -22,7 +22,7 @@ Cautious
  * First choice is a wild or wild draw four, second choice is a non-numeric color, third choice is numeric.
  
 Dumb
- * Will look blindly for first matching card in hand -- will not try to switch the deck color to its favor. ("Blindly" means player two's hand is shuffled before it marches through the cards, one by one, looking for a match.) 
+ * Will look blindly for first matching card in hand -- will not try to switch the deck color to its favor. ("Blindly" means player two's hand is shuffled before it marches through the cards, one by one, looking for a legal play.) 
  * Randomly decides to play a non-numeric card if any are present. Picks a color at random from its hand when discarding a wild or wild draw four.
  
 Player one's hand is displayed with cards of the same color grouped together in ascending card value order. First numeric cards are shown, then non-numeric, then wild / wild draw four. 
@@ -31,7 +31,9 @@ Program will automatically add cards to either player's hand for draw two and wi
 
 Program will automatically skip turns as required. 
 
-Program has very defensive user I/O rules -- illegal input is detected immediately, and the user is warned and given another chance to enter a legal value. Input code block will loop until legal input is detected. This applies to all user I/O throughout the game. 
+Program will automatically shuffle discard pile and refill the deck as needed, whether during a deal or a player draw. 
+
+Program has very defensive user I/O rules -- illegal input is detected immediately, and the user is warned and given another chance to enter a legal value. Input code block will loop until legal input is detected. This applies to all user I/O throughout the game. User input is forbidden from entering the logs (see below). 
 
 Program has been rigorously tested, and most (if not all) corner cases have been detected and mitigated. Should something go wrong, the code is defensively structured to either warn the user via console that something has gone wrong and continue, or throw a fatal error. All program actions are logged (see below). 
 
@@ -181,18 +183,19 @@ Here's how to run it from a terminal window.
   
   Optional program arguments: 
   
-  Output delay seconds, user name. First arg must be 1 or 2. Names may only contain a-z, A-Z, and space.
+  Output delay seconds, user name. First arg must be 1 or 2. Names may only contain a-z, A-Z, and space, and may not exceed 20 characters.
   This option skips the game intro and takes the user right to the game. 
   * java -cp ./out com.jason.Main 1 Amy
   * java -cp ./out com.jason.Main 2 Bill
   
-  Strategy log analysis -- lists the number of times the three program strategies have won and lost games. 
+  Strategy log analysis -- lists the number of times the three program strategies have won and lost games. Program scans logs looking for past behavior, and prepares a report for the user. Illegal win / loss log entries are reported and ignored.
   Program argument is case-insensitive. 
   * java -cp ./out com.jason.Main strategylogs
+  * java -cp ./out com.jason.Main strategylogs0 (skips the brief strategy log intro paragraph)
 
 __LOGGING__
 
-Every line sent to System.out is also sent to a log file, along with some additional information such as player two's hand, and the cards player two draws. This aids the reproduction of critical issues. I elected to roll my own logging infrastructure instead of using Log4J for the simple reason that there is not enough demand for the full utility of Log4J's features.
+Every line sent to System.out is also sent to a log file, along with some additional information such as player two's hand, and the cards player two draws. (User input is not allowed into the logs.) This aids the reproduction of critical issues. I elected to roll my own logging infrastructure instead of using Log4J for the simple reason that there is not enough demand for the full utility of Log4J's features.
 
 Logs are created in the /log directory and named with today's date, e.g. 2016-01-24.txt. Games that start before midnight and carry over will be logged to the same file. New games started after midnight will be logged to a new file. Each entry line has the following format: HH:MM:SS:SSS [log message]. Log uses military time. 
 
