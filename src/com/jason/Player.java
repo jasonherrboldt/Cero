@@ -142,6 +142,15 @@ public class Player {
     }
 
     /**
+     * Set the player's name.
+     *
+     * @param _name the name to set.
+     */
+    public void setName(String _name) {
+        this.name = _name;
+    }
+
+    /**
      * @return whether the current player is the computer.
      */
     public boolean isPlayer2() { // no test needed

@@ -65,12 +65,13 @@ public class Main {
     private static boolean handWinnerExists;
     private static boolean cardDiscarded;
     private static boolean skipIntro;
-    // private static boolean gameRequested;
     private static boolean logTokensValidated;
+    private static boolean skipStrategyLogsIntro;
+    private static final int STRATEGY_LOG_TOKEN_LENGTH = 6;
+    private static final int MAX_LENGTH_USER_INPUT = 20;
     private static int playerOneScore;
     private static int playerTwoScore;
     private static int pauseSeconds;
-    private static int STRATEGY_LOG_TOKEN_LENGTH = 6;
     private static String userName;
     private static String playerOneName;
     private static String playerTwoName;
@@ -85,7 +86,7 @@ public class Main {
         startLog();
         switch (parseArgs(args)) {
             case GAME: {
-                playGame();
+                playGame(false, false);
                 break;
             }
             case STRATEGYLOGS: {
@@ -93,11 +94,11 @@ public class Main {
                 break;
             }
             case P1WIN: {
-                out("P1WIN");
+                playGame(true, true);
                 break;
             }
             case P2WIN: {
-                out("P2WIN");
+                playGame(true, false);
                 break;
             }
         }
@@ -123,7 +124,6 @@ public class Main {
      */
     private static Action parseArgs(String[] args) {
         skipIntro = false;
-        // gameRequested = true;
         Action returnAction = Action.GAME;
         if(args.length > 0) {
             if(!validateArgs(args)) {
@@ -131,17 +131,24 @@ public class Main {
                 pause();
                 System.out.println("\n(At least one illegal program argument was received and ignored.");
                 pause();
-                System.out.println("\nSee log and README for details.)");
+                System.out.println("\nSee README for usage.)");
             } else {
                 if(args.length == 1) {
-                    if(args[0].equalsIgnoreCase("strategylogs")) {
+                    if(args[0].equalsIgnoreCase("strategylogs") || args[0].equalsIgnoreCase("strategylogs0")) {
                         returnAction = Action.STRATEGYLOGS;
+                        skipStrategyLogsIntro = args[0].equalsIgnoreCase("strategylogs0");
                     }
                     if(args[0].equalsIgnoreCase("p1win")) {
                         returnAction = Action.P1WIN;
+                        pauseSeconds = 0;
+                        skipIntro = true;
+                        userName = "Fake Player";
                     }
                     if(args[0].equalsIgnoreCase("p2win")) {
                         returnAction = Action.P2WIN;
+                        pauseSeconds = 0;
+                        skipIntro = true;
+                        userName = "Fake Player";
                     }
                     logTokensValidated = false;
                 } else {
@@ -169,11 +176,11 @@ public class Main {
     /**
      * Play a game.
      */
-    private static void playGame() {
+    private static void playGame(boolean forceFakeWin, boolean isPlayerOnesTurn) {
         setOutputSpeed();
         welcomeUser();
         initializeGlobalVariables();
-        playNewHand();
+        playNewHand(forceFakeWin, isPlayerOnesTurn);
         while (!winnerExists()) {
             if(game.isPlayerOnesTurn()) {
                 handlePlayerOneTurn();
@@ -191,7 +198,7 @@ public class Main {
                     game.setIsFirstMove(true);
                     pause();
                     out("\nNeither player has a score of " + WINNING_SCORE + " or higher.");
-                    playNewHand();
+                    playNewHand(forceFakeWin, isPlayerOnesTurn);
                 }
             }
         }
@@ -323,16 +330,18 @@ public class Main {
             return null;
         } else {
             pauseSeconds = 1;
-            pause();
-            out("\nThe program picks one of three strategies at random for each game:");
-            pause();
-            out("\nBold, cautious, and dumb.");
-            pause();
-            out("\nBold saves non-numeric cards for when it gets backed into a corner,");
-            pause();
-            out("\ncautious discards non-numeric cards ASAP to prevent big losses,");
-            pause();
-            out("\nand dumb looks blindly for the first playable card in its hand.");
+            if(!skipStrategyLogsIntro) {
+                pause();
+                out("\nThe program picks one of three strategies at random for each game:");
+                pause();
+                out("\nBold, cautious, and dumb.");
+                pause();
+                out("\nBold saves non-numeric cards for when it gets backed into a corner,");
+                pause();
+                out("\ncautious discards non-numeric cards ASAP to prevent big losses,");
+                pause();
+                out("\nand dumb looks blindly for the first playable card in its hand.");
+            }
             pause();
             out("\nHere's how each strategy did:");
             pause();
@@ -426,11 +435,12 @@ public class Main {
                 if(args.length == 1) {
                     List<String> validSingleArgs = new ArrayList<>();
                     validSingleArgs.add("strategylogs");
+                    validSingleArgs.add("strategylogs0");
                     validSingleArgs.add("p1win");
                     validSingleArgs.add("p2win");
                     if(!validSingleArgs.contains(args[0].toLowerCase())) {
-                        logEntry("An illegal program argument error was ignored. Argument received: " + args[0] +
-                                ". Please see the README file for program arg usage.");
+                        logEntry("An illegal program argument error was ignored. " +
+                                "Please see the README file for program arg usage.");
                         return false;
                     }
                 } else {
@@ -439,20 +449,18 @@ public class Main {
                         test = Integer.parseInt(args[0]);
                     } catch (NumberFormatException e){
                         logEntry("An illegal program argument error was ignored: the first argument could not be " +
-                                "converted to an integer. Argument received: " + args[0] +
-                                ". Please see the README file for program arg usage.");
+                                "converted to an integer. Please see the README file for program arg usage.");
                         return false;
                     }
                     if(test != 0 && test != 1 && test != 2) {
                         logEntry("An illegal program argument error was ignored: the first argument must be " +
-                                "0, 1 or 2. Argument received: " + test +
-                                ". Please see the README file for program arg usage.");
+                                "0, 1 or 2. Please see the README file for program arg usage.");
                         return false;
                     }
                     if(!isValid(args[1])) {
                         logEntry("An illegal program argument error was ignored: the second argument can only " +
-                                "contain the characters a-z, A-Z, and space. Argument received: " + args[1] +
-                                ". Please see the README file for program arg usage.");
+                                "contain the characters a-z, A-Z, and space, and cannot have more than " +
+                                MAX_LENGTH_USER_INPUT + " characters. Please see the README file for program arg usage.");
                         return false;
                     }
                 }
@@ -484,8 +492,8 @@ public class Main {
                 out("\nonce every two seconds.");
                 pause();
                 speedReply = getUserResponse_integer("\nChoose 1 or 2, or enter 3 to see the demo again:", 1, 3);
-                // getUserResponse_integer filters out all values that could throw a
-                // null pointer exception in .equals.
+
+                // getUserResponse_integer filters out all values that could throw a null pointer exception in .equals.
                 if(speedReply.equals("1")) {
                     pauseSeconds = 1;
                 }
@@ -637,17 +645,17 @@ public class Main {
     /**
      * Start a new hand. Outer game runs inner games until one of the players reaches the max score.
      */
-    private static void playNewHand() {
+    private static void playNewHand(boolean forceFakeWin, boolean isPlayerOnesTurn) {
         if(!skipIntro) {
             pause();
             out("\nStarting a new game...");
         }
-        game.startGame(null, true);
-
-        // testing - allow p1 or p2 to win 1st hand
-        // (comment out call to game.startGame above)
-//        CardValueMap cvm = new CardValueMap();
-//        game.startGame(new Card(Card.YELLOW, Card.ONE, cvm), true);
+        if(!forceFakeWin) {
+            game.startGame(null, true);
+        } else {
+            CardValueMap cvm = new CardValueMap();
+            game.startGame(new Card(Card.YELLOW, Card.ONE, cvm), isPlayerOnesTurn);
+        }
 
         pause();
         out("\nThe first played card is " + game.getCurrentPlayedCard().getPrintString() + ".");
@@ -839,7 +847,6 @@ public class Main {
             pause();
             out("\nHey, " + losingPlayer.getName() + " -- " + winningPlayer.getName() + " has a message for you...");
             pause();
-            // out("\n" + getRandomTaunt());
             out("\n" + getRandomPlayerTwoComment(playerTwoTaunts, TAUNTS));
         }
         return score;
@@ -995,9 +1002,13 @@ public class Main {
      * @param str   The user's name.
      * @return      True if string consists of the characters (empty),
      *              and/or a-z, and/or A-Z, and/or space. False otherwise.
+     *              Returns false for strings longer than MAX_LENGTH_USER_INPUT.
      */
-    private static boolean isValid(String str) {
+    public static boolean isValid(String str) { // tested
         if(str.trim().equals("")) {
+            return false;
+        }
+        if(str.length() > MAX_LENGTH_USER_INPUT) {
             return false;
         }
         Pattern p = Pattern.compile("[^A-Za-z\\s]");
@@ -1124,7 +1135,11 @@ public class Main {
                     validAnswerReceived = true;
                 } else {
                     pause();
-                    out(USER_CORRECTION_MESSAGE + "\n\n(Acceptable characters are A-Z, a-z, and space.)");
+                    out(USER_CORRECTION_MESSAGE);
+                    pause();
+                    out("\n(Acceptable characters are A-Z, a-z, and space. Max length is " +
+                            MAX_LENGTH_USER_INPUT + " characters.)");
+                    pause();
                 }
             }
             return response;

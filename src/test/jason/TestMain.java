@@ -94,4 +94,53 @@ public class TestMain {
         // assert it has been refilled (minus the one taken just above)
         assertEquals(Main.getPlayerTwoTaunts().size(), Main.NUMBER_OF_TAUNTS - 1);
     }
+
+    /*
+
+    private static boolean isValid(String str) { // ******** NOT TESTED! ***************
+        if(str.trim().equals("")) {
+            return false;
+        }
+        if(str.length() > MAX_LENGTH_USER_INPUT) {
+            return false;
+        }
+        Pattern p = Pattern.compile("[^A-Za-z\\s]");
+        return !p.matcher(str).find();
+    }
+
+     */
+
+    @Test
+    public void testIsValid() {
+        assertEquals(false, Main.isValid(""));
+        assertEquals(false, Main.isValid("   "));
+        assertEquals(false, Main.isValid("Jason1"));
+        assertEquals(false, Main.isValid("Jason*"));
+        assertEquals(false, Main.isValid("aaaaaaaaaaaaaaaaaaaaa"));
+
+        assertEquals(true, Main.isValid("aaaaaaaaaaaaaaaaaaaa"));
+        assertEquals(true, Main.isValid("Jason"));
+        assertEquals(true, Main.isValid("Jason Herrboldt"));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

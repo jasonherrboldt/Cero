@@ -53,49 +53,33 @@ public class Game {
         } else {
             deck.shuffle();
             dealHands();
-
-            // testing:
-
-            // let p1 win first hand
-//            List<Card> testHand = new ArrayList<>();
-//            testHand.add(new Card(Card.YELLOW, Card.ONE, cvm));
-//            testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-//            player1.setHand(testHand);
-
-            // let p2 win first hand
-//            player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-//            List<Card> testHand2 = new ArrayList<>();
-//            testHand2.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
-//            player2.setHand(testHand2);
-
-
-            // custom p2 move
-            // make sure p1 can discard right out of the gate.
-            // player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
-            // player1.getHand().addCard(new Card(Card.COLORLESS, Card.WILD, cvm));
-            // set player two's strategy
-            // player2.setStrategy(Player.STRATEGY_CAUTIOUS);
-            // stack p2's hand
-//            List<Card> testHand = new ArrayList<>();
-//            testHand.add(new Card(Card.GREEN, Card.EIGHT, cvm));
-//            testHand.add(new Card(Card.RED, Card.FOUR, cvm));
-//            testHand.add(new Card(Card.GREEN, Card.NINE, cvm));
-//            testHand.add(new Card(Card.BLUE, Card.SIX, cvm));
-//            testHand.add(new Card(Card.COLORLESS, Card.WILD, cvm));
-//            player2.setHand(testHand);
-
-            Main.logEntry("Player two is playing with a " + player2.getStrategy() + " strategy.");
-
-            // for testing:
-            if (firstPlayedCard == null) {
+            if(firstPlayedCard == null) {
+                // play a normal game
                 if(deck.getSize() == 0 && discardPile.size() > 0) {
                     refreshDeck();
                 }
                 currentPlayedCard = verifyFirstCard(deck.popCard());
             } else {
+                // force a fake win
                 currentPlayedCard = firstPlayedCard;
                 setPlayerOnesTurn(_isPlayerOnesTurn);
+                if(_isPlayerOnesTurn) {
+                    // let p1 win first hand
+                    List<Card> testHand = new ArrayList<>();
+                    testHand.add(new Card(Card.YELLOW, Card.ONE, cvm));
+                    testHand.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+                    player1.setHand(testHand);
+                } else {
+                    // let p2 win first hand
+                    player1.getHand().addCard(new Card(Card.YELLOW, Card.ONE, cvm));
+                    List<Card> testHand2 = new ArrayList<>();
+                    testHand2.add(new Card(Card.YELLOW, Card.ONE, cvm));
+                    testHand2.add(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+                    player2.setHand(testHand2);
+                }
             }
+
+            Main.logEntry("Player two is playing with a " + player2.getStrategy() + " strategy.");
 
             discardPile.add(currentPlayedCard);
             currentColor = currentPlayedCard.getColor();
@@ -116,14 +100,6 @@ public class Game {
             // tested
             throw new IllegalStateException("Game.playFirstHand called after first move has already been played.");
         } else {
-            
-            // testing
-//            if(printOuts) {
-//                Main.pause();
-//                Main.out("");
-//                printHand(player2);
-//            }
-
             Card returnCard = null;
             if (!isPlayerOnesTurn) {
                 if(skipFirstTurn(player2, printOuts)) {
