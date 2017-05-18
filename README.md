@@ -8,7 +8,7 @@ See [the Uno Wikipedia page](https://en.wikipedia.org/wiki/Uno_(card_game)) for 
 
 __HIGHLIGHTED FUNCTIONALITY__
 
-Player two randomly selects one of three strategies at the beginning of the game: bold, cautious, or dumb. This decision is made behind the scenes, but the user can review the log after the game to see which strategy was chosen.
+Player two randomly selects one of three strategies at the beginning of the game: bold, cautious, or dumb. This decision is made behind the scenes, but the user can review the log after the game to see which strategy was chosen. (See below for more on the logging system.)
 
 Bold
  * Saves non-numeric cards for when it gets backed into a corner.
@@ -46,7 +46,7 @@ Program will automatically skip turns as required.
 
 Program will automatically shuffle discard pile and refill the deck as needed, whether during a deal or a player draw. 
 
-Program has very defensive user I/O rules -- illegal input is detected immediately, and the user is warned and given another chance to enter a legal value. Input code block will loop until legal input is detected. This applies to all user I/O throughout the game. User input is forbidden from entering the logs (see below). 
+Program has very defensive user I/O rules -- illegal input is detected immediately, and the user is warned and given another chance to enter a legal value. Input code block will loop until legal input is detected. This applies to all user I/O throughout the game. User input is forbidden from entering the logs. 
 
 Program has been rigorously tested, and most (if not all) corner cases have been detected and mitigated. Should something go wrong, the code is defensively structured to either warn the user via console that something has gone wrong and continue, or throw a fatal error. All program actions are logged (see below). 
 
