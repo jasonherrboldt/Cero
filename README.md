@@ -25,7 +25,20 @@ Dumb
  * Will look blindly for first matching card in hand -- will not try to switch the deck color to its favor. ("Blindly" means player two's hand is shuffled before it marches through the cards, one by one, looking for a legal play.) 
  * Randomly decides to play a non-numeric card if any are present. Picks a color at random from its hand when discarding a wild or wild draw four.
  
-Player one's hand is displayed with cards of the same color grouped together in ascending card value order. First numeric cards are shown, then non-numeric, then wild / wild draw four. 
+Player one's hand is displayed with cards of the same color grouped together in ascending card value order. First numeric cards are shown, then non-numeric, and finally wild / wild draw four cards are shown separately at the bottom. Color groups are themselves sorted, with largest groups at the top, and smallest at the bottom; drawing and discarding maintains both types of sorting. Example:
+
+    Player One's hand:
+    1: (Yellow) 1
+    2: (Yellow) 5
+    3: (Yellow) 6
+    4: (Yellow) Skip
+    5: (Green) 2
+    6: (Green) 8
+    7: (Green) 9
+    8: (Blue) 5
+    9: (Blue) 7
+    10: (Red) 4
+    11: Wild Draw Four
 
 Program will automatically add cards to either player's hand for draw two and wild draw four cards. 
 
