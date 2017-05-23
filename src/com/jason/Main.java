@@ -928,7 +928,7 @@ public class Main {
                 pause();
                 out("\nWhoa there, partner!");
                 pause();
-                out("\nLooks like you already have three playable cards in your hand.");
+                out("\nLooks like you already have two playable cards in your hand.");
                 pause();
                 out("\nHave another look and try again.");
                 pause();
