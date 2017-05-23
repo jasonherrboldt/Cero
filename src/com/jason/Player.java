@@ -6,34 +6,9 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created in December 2016 by Jason Herrboldt (intothefuture@gmail.com).
  *
- * A player. Has a hand, can manipulate that hand. Has a randomly-selected strategy.
+ * A player. Has a hand, can manipulate that hand. Has a randomly-selected strategy if it is player 2 (computer).
+ * (See README for Player Two strategy descriptions.)
  * Can play a card from its hand and react to previously played hand.
- *
- * Strategy descriptions for player2 (computer):
- *
- *     BOLD:
- *           Saves non-numeric cards for when it gets backed into a corner.
- *           1st choice is a numeric card, 2nd choice is a non-numeric color, 3rd choice is a wild or wd4.
- *           If a current played card can be matched by color and number from p2's hand, p2 will play the card from
- *               the larger card group.
- *           Will play zero value cards to keep deck color in its favor before playing higher cards of the same color.
- *
- *     CAUTIOUS:
- *           Discards non-numeric cards ASAP to prevent giving player one a higher score if p2 loses.
- *           If a current played card can be matched by color and number from p2's hand, p2 will play the card with
- *               the higher value.
- *           1st choice is a wild or wd4, 2nd choice is a non-numeric color, 3rd choice is numeric.
- *
- *     NEUTRAL: (for player1)
- *
- *     DUMB: will look blindly for first matching card in hand - will not try to switch the deck color to its favor.
- *             Randomly decides to play a non-numeric card if any are present. Picks a color at random from its
- *             hand when discarding a wild or WD4.
- *
- *    "A defensive strategy would advise playing a high card in order to reduce the point value of the hand.
- *    However, an offensive strategy would suggest playing a 0 when the player wants to continue on the current
- *    color, because it is less likely to be matched by another 0 of a different color (there is only one 0 of
- *    each color, but two of each 1–9)." - uno wikipedia page
  */
 public class Player {
 
@@ -455,7 +430,6 @@ public class Player {
             List<String> existingColors = getHand().getColors();
             Collections.shuffle(existingColors);
             if(existingColors.size() == 0) {
-                // throw new IllegalStateException("Hand.getColors() returned an empty list to Player.selectNewColor().");
                 // here the player has a wild or a WD4 as the last card and is asked to pick a color
                 // any color will do, since the round is now effectively over
                 return getHand().getRandomColor();
@@ -464,6 +438,19 @@ public class Player {
         } else { // must be bold or cautious
             return hand.getHighestColor(); // tested
         }
+    }
+
+    /**
+     * @return true if hand contains at least three legally playable cards, false otherwise.
+     */
+    public boolean hasAtLeastTwoPlayableCards(Card currentPlayedCard, String currentColor) { // tested
+        int numberOfPlayableCardsFound = 0;
+        for(Card c : hand.getAllCards()) {
+            if(isLegalDiscard(c, currentPlayedCard, currentColor)) {
+                numberOfPlayableCardsFound++;
+            }
+        }
+        return numberOfPlayableCardsFound >= 2;
     }
 
     /**

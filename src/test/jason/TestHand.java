@@ -3,6 +3,8 @@ package test.jason;
 import com.jason.*;
 import org.junit.*;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.*;
 
@@ -97,11 +99,14 @@ public class TestHand {
     }
 
     @Test
-    public void testHand_discard() {
+    public void testHand_discard_size() {
         Hand tempRealHand = realHand;
         int tempRealHandSizeBefore = tempRealHand.getSize();
-        Card inTempRealHand = new Card(Card.BLUE, Card.NINE, cvm);
-        // Card inTempRealHand = new Card(Card.BLUE, Card.EIGHT, cvm); // test the test - should fail
+        Card inTempRealHand = getRandomCardFromHand(tempRealHand);
+        if(inTempRealHand == null) {
+            fail("Object inTempRealHand is null.");
+        }
+        // Card inTempRealHand = new Card(Card.BLUE, Card.SEVEN, cvm); // test the test - should fail
         try {
             realHand.discard(inTempRealHand);
         } catch (IllegalArgumentException e) {
@@ -109,6 +114,44 @@ public class TestHand {
         }
         int tempRealHandSizeAfter = realHand.getSize();
         assertEquals(tempRealHandSizeBefore, (tempRealHandSizeAfter + 1));
+    }
+
+    @Test
+    public void testHand_discard_sort() {
+        Hand tempRealHand = realHand;
+
+        // Same as mockHand, but only one blue.
+        List<List<Card>> tempMockHand = new ArrayList<>();
+
+        List<Card> yellowCards = new ArrayList<>();
+        yellowCards.add(new Card(Card.YELLOW, Card.SIX, cvm));
+        yellowCards.add(new Card(Card.YELLOW, Card.REVERSE, cvm));
+        tempMockHand.add(yellowCards);
+
+        List<Card> blueCards = new ArrayList<>();
+        blueCards.add(new Card(Card.BLUE, Card.ONE, cvm));
+        tempMockHand.add(blueCards);
+
+        List<Card> redCards = new ArrayList<>();
+        redCards.add(new Card(Card.RED, Card.ZERO, cvm));
+        tempMockHand.add(redCards);
+
+        List<Card> greenCards = new ArrayList<>();
+        greenCards.add(new Card(Card.GREEN, Card.TWO, cvm));
+        tempMockHand.add(greenCards);
+
+        // Discard two blues, reducing the blue color group count to 1.
+        // Now the yellow color group should appear first.
+        tempRealHand.discard(new Card(Card.BLUE, Card.EIGHT, cvm));
+        tempRealHand.discard(new Card(Card.BLUE, Card.NINE, cvm));
+
+        List<Card> allMockHandCards = getAllCardsFromMockHand(tempMockHand);
+        List<Card> allTempRealHandCards = tempRealHand.getAllCards();
+        try {
+            assertFalse(mismatchFound(allTempRealHandCards, allMockHandCards));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
@@ -234,8 +277,13 @@ public class TestHand {
         assertEquals(getNumberOfMostColorsHand.getColorGroupSize(Card.GREEN), 1);
     }
 
-    /*
-     * Private helper method
+    /**
+     * Private helper method. Looks for mismatch between two hands.
+     *
+     * @param cList1 First card list.
+     * @param cList2 Second card list.
+     * @return true if card lists are identical, false otherwise.
+     * @throws IllegalArgumentException throws up if lists are not the same size.
      */
     private boolean mismatchFound(List<Card> cList1, List<Card> cList2) throws IllegalArgumentException {
         boolean mismatchFound = false;
@@ -250,6 +298,38 @@ public class TestHand {
             throw new IllegalArgumentException("cList1 must be the same size as cList2.");
         }
         return mismatchFound;
+    }
+
+    /**
+     * Private helper method. Gets a random card from a hand. DOES NOT DISCARD.
+     *
+     * @param hand Hand to select card from.
+     * @return A randomly selected card, or null if hand is empty.
+     */
+    private Card getRandomCardFromHand(Hand hand) {
+        if(hand == null || hand.getSize() == 0) {
+            return null;
+        }
+        return hand.getAllCards().get(ThreadLocalRandom.current().nextInt(0, hand.getSize()));
+    }
+
+    /**
+     * Testing private helper method getRandomCardFromHand.
+     * Run it 100 times to get a large data set of random cards from testHand,
+     * and assert they are all indeed in testHand.
+     * Also make sure List.get doesn't throw an IndexOutOfBoundsException.
+     */
+    @Test
+    public void testGetRandomCardFromHand() {
+        for(int i = 0; i < 100; i++) {
+            try {
+                Card randomCard = getRandomCardFromHand(realHand);
+                assertTrue(realHand.hasCard(randomCard));
+                assertFalse(realHand.hasCard(new Card(Card.GREEN, Card.NINE, cvm)));
+            } catch (IndexOutOfBoundsException e) {
+                fail("hand.getAllCards().get threw up in TestHand.getRandomCardFromHand.");
+            }
+        }
     }
 
     /*

@@ -37,11 +37,17 @@ public class Hand {
                 newList.add(card);
                 listOfListOfCards.add(newList);
             }
-            // Sort the hand descending by color group size (NOT by face value sum size).
-            // For example, if there are more blues than any other type of card, put the blues first. And so on.
-            Collections.sort(listOfListOfCards, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
-            moveColorlessListToEnd();
+            sortHand();
         }
+    }
+
+    /**
+     * Sort the hand descending by color group size (NOT by face value sum size).
+     * For example, if there are more blues than any other type of card, put the blues first. And so on.
+     */
+    public void sortHand() {
+        Collections.sort(listOfListOfCards, (List<Card> l1, List<Card> l2) -> l2.size() - l1.size());
+        moveColorlessListToEnd();
     }
 
     /**
@@ -99,6 +105,7 @@ public class Hand {
                 throw new IllegalArgumentException("Card not in hand.");
             } else {
                 colorList.remove(index);
+                sortHand();
             }
         }
     }

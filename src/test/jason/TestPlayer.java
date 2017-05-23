@@ -612,4 +612,22 @@ public class TestPlayer {
         player2.setStrategy(Player.STRATEGY_CAUTIOUS);
         assertEquals(player2.selectNewColor(), Card.YELLOW);
     }
+
+    @Test
+    public void testHasAtLeastTwoPlayableCards() {
+        // Make the player, give it a hand.
+        Player player2 = new Player("Three Playable Cards Test", true);
+        Hand threePlayableCardsHand = strategyHand;
+        player2.setHand(threePlayableCardsHand.getAllCards());
+
+        // Make it harder to find playable cards:
+        player2.getHand().discard(new Card(Card.COLORLESS, Card.WILD, cvm));
+        player2.getHand().discard(new Card(Card.COLORLESS, Card.WILD_DRAW_FOUR, cvm));
+
+        Card currentPlayedCard_1 = new Card(Card.YELLOW, Card.ONE, cvm);
+        assertTrue(player2.hasAtLeastTwoPlayableCards(currentPlayedCard_1, Card.BLUE));
+
+        Card currentPlayedCard_2 = new Card(Card.BLUE, Card.SEVEN, cvm);
+        assertFalse(player2.hasAtLeastTwoPlayableCards(currentPlayedCard_2, Card.BLUE));
+    }
 }

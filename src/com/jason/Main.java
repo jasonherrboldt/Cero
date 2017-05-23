@@ -205,24 +205,6 @@ public class Main {
         announceWinner();
     }
 
-    /* fake logs for testing:
-00:00:00:000 Player two strategy Cautious lost
-00:00:00:000 Player two strategy Cautious lost
-00:00:00:000 Player two strategy Cautious won
-00:00:00:000 Player two strategy Cautious won
-00:00:00:000 Player two strategy Cautious won
-00:00:00:000 Player two strategy Bold lost
-00:00:00:000 Player two strategy Bold lost
-00:00:00:000 Player two strategy Bold lost
-00:00:00:000 Player two strategy Bold lost
-00:00:00:000 Player two strategy Bold won
-00:00:00:000 Player two strategy Dumb lost
-00:00:00:000 Player two strategy Dumb lost
-00:00:00:000 Player two strategy Dumb won
-00:00:00:000 Player two strategy Dumb won
-00:00:00:000 Player two strategy Dumb won
-     */
-
     /**
      * Get the strategy logs and send them to the log printer.
      */
@@ -241,7 +223,7 @@ public class Main {
      * Shows how many wins and losses each strategy has in the logs.
      * Wins and losses are sorted descending.
      *
-     * Warning: this method has a STRONG dependency on logStrategyResult()!
+     * Warning: this method has a STRONG dependency on logStrategyResult(), which writes data to the log.
      * While this method is written defensively, changes to logStrategyResult() may break it.
      *
      * @return a list of two items: wins map and losses map (in that order)
@@ -906,15 +888,12 @@ public class Main {
                 out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString()
                         + " and the current color is "
                         + game.getCurrentColor().toLowerCase() + ".");
-                out("\nWhich card would you like to discard?");
-                discardNumberString = getUserResponse_integer("\nEnter the number to the left of the card, " +
-                        "or 0 to draw:", 0, p1HandSize);
             } else {
                 out("\nThe current played card is " + game.getCurrentPlayedCard().getPrintString() + ".");
-                out("\nWhich card would you like to discard?");
-                discardNumberString = getUserResponse_integer("\nEnter the number to the left of the card, " +
-                        "or 0 to draw:", 0, p1HandSize);
             }
+            out("\nWhich card would you like to discard?");
+            discardNumberString = getUserResponse_integer("\nEnter the number to the left of the card, " +
+                    "or 0 to draw:", 0, p1HandSize);
             if(discardNumberString == null) {
                 throw new IllegalStateException("Main.getUserResponse_integer returned null to Main.playerOnesTurn.");
             }
@@ -935,21 +914,31 @@ public class Main {
      * @param discardNumberString player one's integer choice
      */
     private static void handlePlayerOneIntChoice(String discardNumberString) throws NumberFormatException {
-        Card currentPlayedCard;
-        String currentColor;
+        Card currentPlayedCard = game.getCurrentPlayedCard();
+        String currentColor = game.getCurrentColor();
         String p1_chosenColor;
         int discardNumberInt = Integer.parseInt(discardNumberString);
         if(discardNumberInt == 0) {
-            game.draw(game.getPlayer1(), true);
-            out("");
-            pause();
-            game.printHand(game.getPlayer1());
-        } else { // only other option is to be > 1.
+            if (!game.getPlayer1().hasAtLeastTwoPlayableCards(currentPlayedCard, currentColor)) {
+                game.draw(game.getPlayer1(), true);
+                out("");
+                pause();
+                game.printHand(game.getPlayer1());
+            } else {
+                pause();
+                out("\nWhoa there, partner!");
+                pause();
+                out("\nLooks like you already have three playable cards in your hand.");
+                pause();
+                out("\nHave another look and try again.");
+                pause();
+                out("");
+                game.printHand(game.getPlayer1());
+            }
+        } else { // only other option is > 1.
             discardNumberInt--;
             List<Card> hand = game.getPlayer1().getHand().getAllCards();
             Card cardToDiscard = hand.get(discardNumberInt);
-            currentPlayedCard = game.getCurrentPlayedCard();
-            currentColor = game.getCurrentColor();
             if(game.getPlayer1().isLegalDiscard(cardToDiscard, currentPlayedCard, currentColor)) {
                 if(cardToDiscard.getFace().equalsIgnoreCase(Card.WILD)
                         || cardToDiscard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
@@ -972,12 +961,6 @@ public class Main {
                 out("\nSelect a card that matches the face or the color of the current card.");
                 pause();
                 out("\nPlease try again.");
-                if(currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD)
-                        || currentPlayedCard.getFace().equalsIgnoreCase(Card.WILD_DRAW_FOUR)) {
-                    pause();
-                    out("\nThe current played card is " + currentPlayedCard.getPrintString()
-                            + ", and the current color is " + currentColor.toLowerCase() + ".");
-                }
                 pause();
                 out("");
                 game.printHand(game.getPlayer1());

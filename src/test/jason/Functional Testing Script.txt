@@ -77,7 +77,7 @@ See README for usage.)
 In the logs: An illegal program argument error was ignored: the second argument can only contain the characters a-z, A-Z, and space, and cannot have more than 20 characters. Please see the README file for program arg usage.
 
 
-3a. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with no strategy wins and losses. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+3a. Run java -cp ./out com.jason.Main strategylogs, with no strategy wins and losses. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
 
 The program picks one of three strategies at random for each game:
 
@@ -205,6 +205,7 @@ Cautious lost 0
 
 
 3e. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with wins for all strategies and no losses for all strategies. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
+
 00:00:00:000 Player two strategy Dumb won 
 00:00:00:000 Player two strategy Cautious won
 00:00:00:000 Player two strategy Cautious won
