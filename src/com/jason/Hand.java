@@ -105,7 +105,6 @@ public class Hand {
                 throw new IllegalArgumentException("Card not in hand.");
             } else {
                 colorList.remove(index);
-                sortHand();
             }
         }
     }

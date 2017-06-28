@@ -198,6 +198,8 @@ public class Main {
                     game.setIsFirstMove(true);
                     pause();
                     out("\nNeither player has a score of " + WINNING_SCORE + " or higher.");
+                    pause();
+                    out("\nStarting a new hand.");
                     playNewHand(forceFakeWin, isPlayerOnesTurn);
                 }
             }
@@ -289,7 +291,7 @@ public class Main {
     private static void printStrategyLog(Map<String, Integer> strategyLog) {
         Map<String, Integer> sorted = new LinkedHashMap<>();
         strategyLog.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .sorted(Map.Entry.comparingByKey())
                 .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));
         Iterator it = sorted.entrySet().iterator();
         while (it.hasNext()) {
@@ -949,7 +951,7 @@ public class Main {
                 }
                 game.getPlayer1().getHand().discard(cardToDiscard);
                 pause();
-                out("\nYou have successfully discarded the card " + cardToDiscard.getPrintString() + ".");
+                out("\nYou have discarded the card " + cardToDiscard.getPrintString() + ".");
                 game.setCurrentPlayedCard(cardToDiscard);
                 game.getPlayer1().setLastPlayedCard(cardToDiscard);
                 game.getDiscardPile().add(cardToDiscard);

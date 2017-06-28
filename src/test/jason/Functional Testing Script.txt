@@ -124,13 +124,13 @@ and dumb looks blindly for the first playable card in its hand.
 
 Here's how each strategy did:
 
-Dumb won 3
-Cautious won 3
 Bold won 1
+Cautious won 3
+Dumb won 3
 
 Bold lost 4
-Dumb lost 2
 Cautious lost 2
+Dumb lost 2
 
 
 3c. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with at least one zero value for one strategy win and one strategy loss. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
@@ -158,9 +158,9 @@ and dumb looks blindly for the first playable card in its hand.
 
 Here's how each strategy did:
 
-Dumb won 3
 Bold won 1
 Cautious won 0
+Dumb won 3
 
 Bold lost 4
 Cautious lost 2
@@ -195,13 +195,13 @@ Unable to parse one or more strategy log lines:
 00:00:00:000 Player two strategy Cautious lostt
 00:00:00:000 Player two strategy Cautious lost 5%
 
+Bold won 0
 Cautious won 3
 Dumb won 0
-Bold won 0
 
 Bold lost 4
-Dumb lost 0
 Cautious lost 0
+Dumb lost 0
 
 
 3e. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with wins for all strategies and no losses for all strategies. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
@@ -227,13 +227,13 @@ and dumb looks blindly for the first playable card in its hand.
 
 Here's how each strategy did:
 
-Dumb won 4
-Cautious won 3
 Bold won 1
+Cautious won 3
+Dumb won 4
 
-Dumb lost 0
-Cautious lost 0
 Bold lost 0
+Cautious lost 0
+Dumb lost 0
 
 
 3f. Run java -cp ./out com.jason.Main strategylogs, with correctly-formatted strategy logs present, with losses for all strategies and no wins for all strategies. Expected: user is shown a strategy logs introduction and shown the scan results, e.g.
@@ -259,13 +259,13 @@ and dumb looks blindly for the first playable card in its hand.
 
 Here's how each strategy did:
 
-Dumb won 0
-Cautious won 0
 Bold won 0
+Cautious won 0
+Dumb won 0
 
 Bold lost 4
-Dumb lost 2
 Cautious lost 2
+Dumb lost 2
 
 
 3g. Run java -cp ./out com.jason.Main StraTEGylOGs, with any or no correctly- or incorrectly-formatted strategy logs as shown above. Expected: same result as when "strategylogs" argument is all lower case.

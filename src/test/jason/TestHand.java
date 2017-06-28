@@ -117,44 +117,6 @@ public class TestHand {
     }
 
     @Test
-    public void testHand_discard_sort() {
-        Hand tempRealHand = realHand;
-
-        // Same as mockHand, but only one blue.
-        List<List<Card>> tempMockHand = new ArrayList<>();
-
-        List<Card> yellowCards = new ArrayList<>();
-        yellowCards.add(new Card(Card.YELLOW, Card.SIX, cvm));
-        yellowCards.add(new Card(Card.YELLOW, Card.REVERSE, cvm));
-        tempMockHand.add(yellowCards);
-
-        List<Card> blueCards = new ArrayList<>();
-        blueCards.add(new Card(Card.BLUE, Card.ONE, cvm));
-        tempMockHand.add(blueCards);
-
-        List<Card> redCards = new ArrayList<>();
-        redCards.add(new Card(Card.RED, Card.ZERO, cvm));
-        tempMockHand.add(redCards);
-
-        List<Card> greenCards = new ArrayList<>();
-        greenCards.add(new Card(Card.GREEN, Card.TWO, cvm));
-        tempMockHand.add(greenCards);
-
-        // Discard two blues, reducing the blue color group count to 1.
-        // Now the yellow color group should appear first.
-        tempRealHand.discard(new Card(Card.BLUE, Card.EIGHT, cvm));
-        tempRealHand.discard(new Card(Card.BLUE, Card.NINE, cvm));
-
-        List<Card> allMockHandCards = getAllCardsFromMockHand(tempMockHand);
-        List<Card> allTempRealHandCards = tempRealHand.getAllCards();
-        try {
-            assertFalse(mismatchFound(allTempRealHandCards, allMockHandCards));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
     public void testHand_discard_exception() {
         Hand tempRealHand = realHand;
         Card notInTempRealHand = new Card(Card.BLUE, Card.TWO, cvm);
